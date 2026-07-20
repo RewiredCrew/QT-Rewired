@@ -1,0 +1,41 @@
+{
+  "version": "2.2.4",
+  "songName": "Obliterated Erect",
+  "artist": "CharaWhy (feat. Mochoco)",
+  "charter": "FatzFries + CorySoddy",
+  "offsets": {},
+  "playData": {
+    "difficulties": ["erect", "nightmare"],
+    "stickerPack": "kbStickers",
+    "characters": {
+      "player": "bf-qt",
+      "girlfriend": "gf-qt",
+      "opponent": "kb",
+      "instrumental": "erect",
+      "opponentVocals": ["kb-erect"],
+      "playerVocals": ["bf-erect"]
+    },
+    "stage": "qtStageObliteratedErect",
+    "noteStyle": "funkin",
+    "ratings": {
+      "erect": 0,
+      "nightmare": 0
+    },
+    "album": "qt-vol2"
+  },
+  "generatedBy": "Friday Night Funkin' - v0.8.4",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 152,
+      "bt": [4, 4, 4, 4]
+    },
+    {
+      "t": 131052.631578947,
+      "b": 332.0001,
+      "bpm": 160,
+      "bt": [4, 4, 4, 4]
+    }
+  ]
+}

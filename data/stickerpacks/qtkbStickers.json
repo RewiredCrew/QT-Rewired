@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "name": "qtkbStickers",
+  "artist": "JoaDash",
+  "stickers": [
+    "stickers/qtStickers/qtSticker2",
+    "stickers/qtStickers/qtSticker3",
+    "stickers/qtStickers/flowerSticker1",
+    "stickers/qtStickers/flowerSticker2",
+    "stickers/qtStickers/starSticker",
+    "stickers/qtStickers/crayonSticker",
+    "stickers/qtStickers/cloudSticker",
+    "stickers/qtStickers/skullSticker",
+    "stickers/kbstickers/kbSticker1",
+    "stickers/kbstickers/kbSticker2",
+    "stickers/kbstickers/kbSticker3",
+    "stickers/kbstickers/dangerSticker",
+    "stickers/kbstickers/nutSticker",
+    "stickers/kbstickers/tvSticker",
+    "stickers/kbstickers/sawSticker",
+    "stickers/kbstickers/qtKbSticker"
+  ]
+}

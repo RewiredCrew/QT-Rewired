@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="qt-text-volume2.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="idle0000" x="10" y="10" width="266" height="135"/>
+	<SubTexture name="switch0000" x="10" y="155" width="266" height="135" frameX="0" frameY="0" frameWidth="266" frameHeight="140"/>
+	<SubTexture name="switch0001" x="10" y="155" width="266" height="135" frameX="0" frameY="0" frameWidth="266" frameHeight="140"/>
+	<SubTexture name="switch0002" x="10" y="10" width="266" height="135" frameX="0" frameY="-5" frameWidth="266" frameHeight="135"/>
+	<SubTexture name="switch0003" x="10" y="10" width="266" height="135" frameX="0" frameY="-5" frameWidth="266" frameHeight="135"/>
+</TextureAtlas>

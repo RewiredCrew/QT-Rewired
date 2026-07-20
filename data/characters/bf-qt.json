@@ -1,0 +1,479 @@
+{
+  "renderType": "multianimateatlas",
+  "offsets": [17, 14],
+  "applyStageMatrix": false,
+  "startingAnimation": "idle",
+  "death": {
+    "cameraZoom": 1,
+    "cameraOffsets": [-73, 42]
+  },
+  "assetPath": "shared:characters/bf",
+  "healthIcon": {
+    "isPixel": false,
+    "offsets": [0, 0],
+    "scale": 1,
+    "id": "bf",
+    "flipX": false
+  },
+  "version": "1.0.0",
+  "danceEvery": 1,
+  "scale": 1,
+  "name": "Boyfriend (Rewired)",
+  "flipX": true,
+  "cameraOffsets": [-18, 36],
+  "isPixel": false,
+  "singTime": 8,
+  "atlasSettings": {
+    "applyStageMatrix": false,
+    "useRenderTexture": false,
+    "filterQuality": 1,
+    "cacheOnLoad": false,
+    "swfMode": true
+  },
+  "animations": [
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Idle",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "idle"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Left",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFT"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Down",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWN"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Up",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUP"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Right",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHT"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Left Miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFTmiss"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Down Miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWNmiss"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Up Miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUPmiss"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Right Miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHTmiss"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Hey",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "hey"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Cheer",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "cheer"
+    },
+    {
+      "offsets": [22, 15],
+      "asset": "shared:characters/bf-death",
+      "prefix": "Death Intro",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "firstDeath",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [22, 15],
+      "prefix": "Death Loop",
+      "animType": "framelabel",
+      "flipX": false,
+      "name": "deathLoop",
+      "looped": true,
+      "flipY": false,
+      "assetPath": "shared:characters/bf-death",
+      "frameRate": 24
+    },
+    {
+      "offsets": [22, 15],
+      "asset": "shared:characters/bf-death",
+      "prefix": "Death Confirm",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "deathConfirm",
+      "flipY": false,
+      "frameRate": 24
+    },
+    {
+      "offsets": [420, 62],
+      "prefix": "bf fuckin dies lol",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "firstDeath-saw",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf_saw_death",
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [420, 62],
+      "asset": "shared:characters/BF/bf_saw_death",
+      "prefix": "bf dead loop",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": true,
+      "name": "deathLoop-saw",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [420, 62],
+      "asset": "shared:characters/BF/bf_saw_death",
+      "prefix": "bf undeading",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "deathConfirm-saw",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "prefix": "pre dance",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "preDance",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt",
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "dance",
+      "frameIndices": [14, 15, 16, 17, 18, 19, 0, 1, 2, 3],
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "danceLeft-alt",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "dance",
+      "frameIndices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "danceRight-alt",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "obliterated intro",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "intro",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "dodge back",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "dodge-0",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "dodge",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "dodge-1",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "hurt back",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "sawHit-0",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [67, -51],
+      "asset": "shared:characters/BF/bf-qt",
+      "prefix": "hurt",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "sawHit-1",
+      "flipY": false,
+      "frameRate": 24,
+      "atlasSettings": {
+        "uniqueInCache": true
+      }
+    },
+    {
+      "offsets": [-3, -65],
+      "prefix": "fake out death BF",
+      "flipX": false,
+      "looped": false,
+      "name": "fakeoutDeath",
+      "animType": "symbol",
+      "flipY": false,
+      "assetPath": "shared:characters/bfFakeOut",
+      "frameRate": 24
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "Scared",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "scared"
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen left",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFT-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen right",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHT-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen up",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUP-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen down",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWN-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen left miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFTmiss-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen right miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHTmiss-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen up miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUPmiss-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "caramelldansen down miss",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWNmiss-caramella",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "super hey",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "superHey",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "shoulder swish",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "shoulderSwish",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [6, 0],
+      "prefix": "obliterated erect ending",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "tired",
+      "flipY": false,
+      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "frameRate": 24
+    }
+  ]
+}

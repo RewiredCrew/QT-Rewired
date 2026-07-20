@@ -1,0 +1,38 @@
+import flixel.FlxG;
+import funkin.audio.FunkinSound;
+import funkin.play.character.SparrowCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.Preferences;
+import funkin.util.Constants;
+import funkin.util.HapticUtil;
+import funkin.FunkinMemory;
+
+using StringTools;
+
+import flixel.util.FlxTimer;
+import funkin.play.character.CharacterType;
+import funkin.util.TouchUtil;
+import funkin.save.Save;
+
+class QTKBLEGACYCharacter extends SparrowCharacter
+{
+  function new()
+  {
+    super('qt-kb-legacy');
+  }
+
+  function onNoteHit(event:HitNoteScriptEvent)
+  {
+    // Override the hit note animation.
+    switch (event.note.kind)
+    {
+      case "mom":
+        holdTimer = 0;
+        this.playSingAnimation(event.note.noteData.getDirection(), false, 'alt');
+        return;
+    }
+
+    super.onNoteHit(event);
+  }
+}

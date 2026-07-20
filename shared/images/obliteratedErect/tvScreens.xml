@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="tvScreens.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="tvStatic0000" x="10" y="10" width="723" height="384"/>
+	<SubTexture name="tvStatic0001" x="743" y="10" width="723" height="384"/>
+	<SubTexture name="tvStatic0002" x="10" y="404" width="723" height="384"/>
+	<SubTexture name="tvStatic0003" x="743" y="404" width="723" height="384"/>
+</TextureAtlas>

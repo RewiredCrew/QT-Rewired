@@ -1,0 +1,440 @@
+package funkin.play.character;
+
+import funkin.play.character.MultiAnimateAtlasCharacter;
+import funkin.play.PlayState;
+import flixel.FlxG;
+import funkin.graphics.FunkinSprite;
+import funkin.audio.visualize.ABotVis;
+import funkin.play.character.NeneState;
+import funkin.play.character.PupilState;
+
+class NeneBaseCharacterQT extends MultiAnimateAtlasCharacter
+{
+  var currentState:NeneState = NeneState.DEFAULT;
+  var pupilState:PupilState = PupilState.RIGHT;
+  final VULTURE_THRESHOLD:Float = 0.25 * 2;
+  final MIN_BLINK_DELAY:Int = 3;
+  final MAX_BLINK_DELAY:Int = 7;
+  var blinkCountdown:Int = MIN_BLINK_DELAY;
+  var trainPassing:Bool = false;
+  var canAlternate:Bool = true;
+  var altSuffix:String = "";
+
+  public function new(characterId:String)
+  {
+    super('nene-qt');
+  }
+
+  var abot:FunkinSprite;
+  var abotViz:ABotVis;
+  var stereoBG:FunkinSprite;
+  var eyeWhites:FunkinSprite;
+  var pupil:FunkinSprite;
+
+  public override function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+
+    stereoBG = new FunkinSprite(0, 0, Paths.image('characters/abot/stereoBG'));
+    eyeWhites = new FunkinSprite().makeSolidColor(160, 60);
+
+    pupil = FunkinSprite.createTextureAtlas(0, 0, "characters/abot/systemEyes", "shared");
+    pupil.x = this.x;
+    pupil.y = this.y;
+    pupil.zIndex = this.zIndex - 5;
+
+    pupil.anim.onFrameChange.add(function(name:String, frameNumber:Int, frameIndex:Int)
+    {
+      if (frameNumber == 16)
+      {
+        pupil.anim.pause();
+      }
+    });
+
+    abot = new ABotAtlasSprite(0, 0);
+    abot.x = this.x;
+    abot.y = this.y;
+    abot.zIndex = this.zIndex - 1;
+
+    abotViz = new ABotVis(FlxG.sound.music, false);
+    abotViz.x = this.x;
+    abotViz.y = this.y;
+    abotViz.zIndex = abot.zIndex + 1;
+    abotViz.alpha = 0;
+  }
+
+  public override function dance(forceRestart:Bool):Void
+  {
+    if (abot?.anim != null)
+    {
+      abot.anim.play("", true, false, 1);
+    }
+
+    switch (currentState)
+    {
+      case NeneState.DEFAULT:
+        if (canAlternate)
+        {
+          if (hasDanced) playAnimation('danceRight', forceRestart);
+          else
+            playAnimation('danceLeft', forceRestart);
+        }
+        else
+        {
+          playAnimation('idle' + altSuffix, forceRestart);
+        }
+        hasDanced = !hasDanced;
+      case NeneState.PRE_RAISE:
+        playAnimation('danceLeft', false);
+        hasDanced = false;
+      case NeneState.READY:
+        if (blinkCountdown == 0)
+        {
+          playAnimation('idleKnife', false);
+          blinkCountdown = FlxG.random.int(MIN_BLINK_DELAY, MAX_BLINK_DELAY);
+        }
+        else
+        {
+          blinkCountdown--;
+        }
+      case NeneState.LOWER:
+        if (getCurrentAnimation() != 'lowerKnife')
+        {
+          playAnimation('lowerKnife');
+        }
+      default:
+    }
+  }
+
+  public override function onSongEvent(scriptEvent:SongEventScriptEvent)
+  {
+    super.onSongEvent(scriptEvent);
+    if (scriptEvent.eventData.eventKind == "FocusCamera")
+    {
+      var eventProps = scriptEvent.eventData.value;
+      switch (Std.parseInt(eventProps.char))
+      {
+        case 0:
+          movePupilsRight();
+        case 1:
+          movePupilsLeft();
+        default:
+      }
+    }
+  }
+
+  function movePupilsLeft():Void
+  {
+    trace('Move pupils left');
+    pupil.anim.play('', true, false, 0);
+  }
+
+  function movePupilsRight():Void
+  {
+    trace('Move pupils right');
+    pupil.anim.play('', true, false, 17);
+  }
+
+  function moveByNoteKind(kind:String):Void
+  {
+    switch (event.note.kind)
+    {
+      case "weekend-1-lightcan":
+        movePupilsLeft();
+      case "weekend-1-kickcan":
+      case "weekend-1-kneecan":
+      case "weekend-1-cockgun":
+      case "weekend-1-firegun":
+      default:
+    }
+  }
+
+  public override function onNoteHit(event:HitNoteScriptEvent):Void
+  {
+    super.onNoteHit(event);
+    moveByNoteKind(event.note.kind);
+  }
+
+  public override function onNoteMiss(event:NoteScriptEvent):Void
+  {
+    super.onNoteMiss(event);
+    moveByNoteKind(event.note.kind);
+  }
+
+  var hasSetupAbot:Bool = false;
+
+  public override function onUpdate(event:UpdateScriptEvent):Void
+  {
+    super.onUpdate(event);
+
+    synchronizeShader();
+
+    abot.visible = this.visible;
+    pupil.visible = this.visible;
+    eyeWhites.visible = this.visible;
+    stereoBG.visible = this.visible;
+
+    if (pupil?.anim?.isPlaying)
+    {
+      switch (pupilState)
+      {
+        case PupilState.RIGHT:
+          if (pupil.anim.curFrame >= 17)
+          {
+            trace('Done moving pupils left');
+            pupilState = PupilState.LEFT;
+            pupil.anim.pause();
+          }
+        case PupilState.LEFT:
+          if (pupil.anim.curFrame >= 30)
+          {
+            trace('Done moving pupils right');
+            pupilState = PupilState.RIGHT;
+            pupil.anim.pause();
+          }
+      }
+    }
+
+    if (!hasSetupAbot)
+    {
+      setupAbot();
+    }
+
+    if (shouldTransitionState())
+    {
+      transitionState();
+    }
+  }
+
+  function setupAbot():Void
+  {
+    abot.x = this.x - 95 - (-this.globalOffsets[0] * this.scale.x);
+    abot.y = this.y + 384 - (-this.globalOffsets[1] * this.scale.y);
+    abot.zIndex = this.zIndex - 10;
+
+    currentStage.add(abot);
+
+    abotViz.x = abot.x + 207;
+    abotViz.y = abot.y + 84;
+    abotViz.zIndex = abot.zIndex - 1;
+    currentStage.add(abotViz);
+
+    eyeWhites.x = abot.x + 40;
+    eyeWhites.y = abot.y + 250;
+    eyeWhites.zIndex = abot.zIndex - 10;
+    currentStage.add(eyeWhites);
+
+    pupil.x = abot.x + 50;
+    pupil.y = abot.y + 238;
+    pupil.zIndex = eyeWhites.zIndex + 5;
+    currentStage.add(pupil);
+
+    stereoBG.x = abot.x + 150;
+    stereoBG.y = abot.y + 30;
+    stereoBG.zIndex = abot.zIndex - 8;
+    currentStage.add(stereoBG);
+
+    currentStage.refresh();
+    hasSetupAbot = true;
+  }
+
+  var currentShader:FlxRuntimeShader = null;
+
+  function synchronizeShader():Void
+  {
+    if (currentShader == this.shader) return;
+
+    currentShader = this.shader;
+
+    abot.shader = currentShader;
+    abotViz.shader = currentShader;
+    stereoBG.shader = currentShader;
+    eyeWhites.shader = currentShader;
+
+    for (member in abotViz.members)
+    {
+      member.shader = currentShader;
+    }
+
+    trace("Synchronized shader between children!");
+  }
+
+  public override function onSongStart(event:ScriptEvent):Void
+  {
+    abotViz.snd = FlxG.sound.music;
+    abotViz.initAnalyzer();
+    abotViz.alpha = 1;
+  }
+
+  public override function onSongRetry(event:SongRetryEvent):Void
+  {
+    super.onSongRetry();
+    abotViz.dumpSound();
+    abotViz.alpha = 0;
+    altSuffix = "";
+    canAlternate = true;
+  }
+
+  public override function onSongEnd(event:ScriptEvent):Void
+  {
+    super.onSongEnd();
+    abotViz.dumpSound();
+  }
+
+  var animationFinished:Bool = false;
+
+  override function onAnimationFinished(name:String)
+  {
+    super.onAnimationFinished(name);
+
+    if (PlayState.instance != null)
+    {
+      switch (name)
+      {
+        case "huh":
+          altSuffix = '-alt';
+          canAlternate = false;
+      }
+    }
+
+    switch (currentState)
+    {
+      case NeneState.RAISE, NeneState.LOWER, NeneState.HAIR_BLOWING, NeneState.HAIR_FALLING, NeneState.HAIR_BLOWING_RAISE, NeneState.HAIR_FALLING_RAISE:
+        animationFinished = true;
+        transitionState();
+      default:
+    }
+  }
+
+  override function onAnimationFrame(name:String, frameNumber:Int, frameIndex:Int)
+  {
+    super.onAnimationFrame(name, frameNumber, frameIndex);
+
+    switch (currentState)
+    {
+      case NeneState.PRE_RAISE:
+        if (name == "danceLeft" && frameNumber == 13)
+        {
+          animationFinished = true;
+          transitionState();
+        }
+      default:
+    }
+  }
+
+  override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
+  {
+    super.playAnimation(name, restart, ignoreOther, reversed);
+
+    if (PlayState.instance != null)
+    {
+      switch (name)
+      {
+        case "cheer":
+          altSuffix = "";
+          canAlternate = true;
+      }
+    }
+  }
+
+  function shouldTransitionState():Bool
+  {
+    return currentStage.getBoyfriend()?.characterId != "pico-blazin";
+  }
+
+  function checkTrainPassing(raised:Bool = false):Void
+  {
+    if (!trainPassing) return;
+
+    if (raised)
+    {
+      currentState = NeneState.HAIR_BLOWING_RAISE;
+      playAnimation('hairBlowKnife');
+      animationFinished = false;
+    }
+    else
+    {
+      currentState = NeneState.HAIR_BLOWING;
+      playAnimation('hairBlowNormal');
+      animationFinished = false;
+    }
+  }
+
+  function transitionState():Void
+  {
+    if (PlayState.instance == null) return;
+
+    switch (currentState)
+    {
+      case NeneState.DEFAULT:
+        if (PlayState.instance.health <= VULTURE_THRESHOLD) currentState = NeneState.PRE_RAISE;
+        else
+          currentState = NeneState.DEFAULT;
+        checkTrainPassing();
+      case NeneState.PRE_RAISE:
+        if (PlayState.instance.health > VULTURE_THRESHOLD) currentState = NeneState.DEFAULT;
+        else if (animationFinished)
+        {
+          currentState = NeneState.RAISE;
+          playAnimation('raiseKnife');
+          animationFinished = false;
+        }
+        checkTrainPassing();
+      case NeneState.RAISE:
+        if (animationFinished)
+        {
+          currentState = NeneState.READY;
+          animationFinished = false;
+        }
+        checkTrainPassing(true);
+      case NeneState.READY:
+        if (PlayState.instance.health > VULTURE_THRESHOLD) currentState = NeneState.LOWER;
+        checkTrainPassing(true);
+      case NeneState.LOWER:
+        if (animationFinished)
+        {
+          currentState = NeneState.DEFAULT;
+          animationFinished = false;
+        }
+        checkTrainPassing();
+      case NeneState.HAIR_BLOWING:
+        if (!trainPassing)
+        {
+          currentState = NeneState.HAIR_FALLING;
+          playAnimation('hairFallNormal');
+          animationFinished = false;
+        }
+        else if (animationFinished)
+        {
+          playAnimation('hairBlowNormal');
+          animationFinished = false;
+        }
+      case NeneState.HAIR_FALLING:
+        if (animationFinished)
+        {
+          currentState = NeneState.DEFAULT;
+          animationFinished = false;
+        }
+      case NeneState.HAIR_BLOWING_RAISE:
+        if (!trainPassing)
+        {
+          currentState = NeneState.HAIR_FALLING_RAISE;
+          playAnimation('hairFallKnife');
+          animationFinished = false;
+        }
+        else if (animationFinished)
+        {
+          playAnimation('hairBlowKnife');
+          animationFinished = false;
+        }
+      case NeneState.HAIR_FALLING_RAISE:
+        if (animationFinished)
+        {
+          currentState = NeneState.READY;
+          animationFinished = false;
+        }
+      default:
+        currentState = NeneState.DEFAULT;
+    }
+  }
+}

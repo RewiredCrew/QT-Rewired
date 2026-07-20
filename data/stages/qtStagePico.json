@@ -1,0 +1,246 @@
+{
+  "version": "1.0.2",
+  "name": "QT Stage [Pico]",
+  "props": [
+    {
+      "assetPath": "outskirts/sunlightAdd",
+      "name": "sunOv",
+      "position": [-811, -683],
+      "scroll": [1.04, 1.04],
+      "scale": [1, 1],
+      "blend": "add",
+      "alpha": 0.7,
+      "zIndex": 520
+    },
+    {
+      "assetPath": "outskirts/overlayOverlay",
+      "name": "difOv",
+      "position": [-917.5, 458.5],
+      "scale": [1, 1],
+      "blend": "overlay",
+      "alpha": 0.25,
+      "zIndex": 510
+    },
+    {
+      "assetPath": "outskirts/foregroundTV",
+      "name": "tvFG",
+      "position": [-770, 790],
+      "scroll": [1.2, 1.2],
+      "scale": [1, 1],
+      "zIndex": 420
+    },
+    {
+      "assetPath": "outskirts/foregroundReeds",
+      "name": "reeds",
+      "position": [397, 700],
+      "scroll": [1.15, 1.15],
+      "scale": [1, 1],
+      "zIndex": 410
+    },
+    {
+      "assetPath": "outskirts/grassPico",
+      "name": "picoGrass",
+      "position": [394, 691],
+      "scale": [1, 1],
+      "zIndex": 400
+    },
+    {
+      "assetPath": "outskirts/grassSpeaker",
+      "name": "speakerGrass",
+      "position": [199, 708],
+      "scale": [1, 1],
+      "zIndex": 290
+    },
+    {
+      "assetPath": "outskirts/overlayMultiply",
+      "name": "multOv",
+      "position": [-901, -331],
+      "scale": [1, 1],
+      "blend": "multiply",
+      "alpha": 0.6,
+      "zIndex": 180
+    },
+    {
+      "assetPath": "outskirts/overlayAdd",
+      "name": "addOv",
+      "position": [-924, -344.5],
+      "scale": [1, 1],
+      "blend": "add",
+      "alpha": 0.25,
+      "zIndex": 90
+    },
+    {
+      "assetPath": "outskirts/TVs",
+      "name": "tvs",
+      "position": [-852, 242],
+      "scale": [1, 1],
+      "zIndex": 80
+    },
+    {
+      "assetPath": "outskirts/lucky",
+      "name": "lucky",
+      "position": [-411, 489],
+      "scroll": [0.98, 0.98],
+      "scale": [1, 1],
+      "zIndex": 70
+    },
+    {
+      "assetPath": "outskirts/grass",
+      "name": "floorGrass",
+      "position": [158, 460],
+      "scale": [1, 1],
+      "zIndex": 60
+    },
+    {
+      "assetPath": "outskirts/bridge",
+      "name": "bridge",
+      "position": [-926, -366],
+      "scale": [1, 1],
+      "zIndex": 55
+    },
+    {
+      "assetPath": "outskirts/wall",
+      "name": "wall",
+      "position": [-58.5, 99],
+      "scale": [1, 1],
+      "zIndex": 50
+    },
+    {
+      "assetPath": "outskirts/busStop",
+      "name": "stopBus",
+      "position": [1157, -59],
+      "scroll": [0.96, 0.96],
+      "scale": [1, 1],
+      "zIndex": 45
+    },
+    {
+      "assetPath": "outskirts/lightPole2",
+      "name": "pole2",
+      "position": [1848, -135.5],
+      "scroll": [0.93, 0.93],
+      "scale": [1, 1],
+      "zIndex": 40
+    },
+    {
+      "assetPath": "outskirts/lightPole1",
+      "name": "pole1",
+      "position": [238, -140],
+      "scroll": [0.93, 0.93],
+      "scale": [1, 1],
+      "zIndex": 40
+    },
+    {
+      "assetPath": "outskirts/cars",
+      "name": "randomCars",
+      "position": [-600, 30],
+      "scroll": [0.9, 1],
+      "scale": [1, 1],
+      "animType": "animateatlas",
+      "isPixel": false,
+      "danceEvery": 0,
+      "atlasSettings": {
+        "applyStageMatrix": false
+      },
+      "zIndex": 40,
+      "animations": [
+        {
+          "name": "car-0",
+          "prefix": "car-0",
+          "frameRate": 24,
+          "flipX": false,
+          "flipY": false,
+          "offsets": [0, 0]
+        },
+        {
+          "name": "car-1",
+          "prefix": "car-1",
+          "frameRate": 24,
+          "flipX": false,
+          "flipY": false,
+          "offsets": [0, 0]
+        },
+        {
+          "name": "car-2",
+          "prefix": "car-2",
+          "frameRate": 24,
+          "flipX": false,
+          "flipY": false,
+          "offsets": [0, 0]
+        },
+        {
+          "name": "car-3",
+          "prefix": "car-3",
+          "frameRate": 24,
+          "flipX": false,
+          "flipY": false,
+          "offsets": [0, 0]
+        }
+      ]
+    },
+    {
+      "assetPath": "outskirts/electricPoles",
+      "name": "electricPoles",
+      "position": [101, -139],
+      "scroll": [0.9, 0.9],
+      "scale": [1, 1],
+      "zIndex": 35
+    },
+    {
+      "assetPath": "outskirts/tree",
+      "name": "tree",
+      "position": [537, -73.5],
+      "scroll": [0.85, 0.85],
+      "scale": [1, 1],
+      "zIndex": 30
+    },
+    {
+      "assetPath": "outskirts/cityFront",
+      "name": "cityFront",
+      "position": [66, -177],
+      "scroll": [0.7, 0.7],
+      "scale": [1, 1],
+      "zIndex": 25
+    },
+    {
+      "assetPath": "outskirts/cityBack",
+      "name": "cityBehind",
+      "position": [-977, -57],
+      "scroll": [0.6, 0.6],
+      "scale": [1, 1],
+      "zIndex": 20
+    },
+    {
+      "assetPath": "outskirts/sky",
+      "name": "sky",
+      "position": [-270, -356],
+      "scale": [1, 1],
+      "zIndex": 10
+    },
+    {
+      "assetPath": "#4B7334",
+      "name": "floorUnder",
+      "position": [158, 460],
+      "scroll": [1, 1],
+      "scale": [2045, 728],
+      "zIndex": 5
+    }
+  ],
+  "characters": {
+    "bf": {
+      "cameraOffsets": [-226, -110],
+      "position": [1025, 848],
+      "zIndex": 300
+    },
+    "dad": {
+      "cameraOffsets": [330, -100],
+      "position": [-29, 864],
+      "zIndex": 200
+    },
+    "gf": {
+      "cameraOffsets": [35, 17],
+      "position": [495, 786.5],
+      "zIndex": 100
+    }
+  },
+  "cameraZoom": 0.69
+}

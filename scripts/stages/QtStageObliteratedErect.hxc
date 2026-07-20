@@ -1,0 +1,176 @@
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.play.character.CharacterType;
+import funkin.play.character.BaseCharacter;
+import flixel.addons.display.FlxBackdrop;
+import flixel.FlxG;
+
+class QtStageObliteratedErect extends Stage
+{
+  var colorShader = new AdjustColorShader();
+  var isKiller:Bool;
+  var _timer:Float = 0;
+  var backFogOffsetY:Float = -380;
+  var frontFogOffsetY:Float = 50;
+  var backFogScale:Float = 0.7;
+  var frontFogScale:Float = 1.0;
+  var backMistBack:FlxBackdrop;
+  var backMistFront:FlxBackdrop;
+  var frontMistBack:FlxBackdrop;
+  var frontMistMid:FlxBackdrop;
+  var frontMistFront:FlxBackdrop;
+
+  function new()
+  {
+    super("qtStageObliteratedErect");
+  }
+
+  override function onCreate(event:ScriptEvent)
+  {
+    super.onCreate(event);
+  }
+
+  override function buildStage()
+  {
+    isKiller = true;
+
+    super.buildStage();
+
+    updateColorShader(-30, -65, 10, -60);
+
+    // Fog runs so bad I had to remove a layer wtf
+    backMistBack = new FlxBackdrop(Paths.image('obliteratedErect/mistBack'), 0x01);
+    backMistBack.setPosition(-650, 0);
+    backMistBack.scrollFactor.set(0.5, 0.5);
+    backMistBack.zIndex = 39;
+    backMistBack.blend = 0;
+    backMistBack.color = 0xFF5c5c5c;
+    backMistBack.alpha = 1;
+    backMistBack.velocity.x = -20;
+    backMistBack.scale.set(1.1 * backFogScale, 1.1 * backFogScale);
+    add(backMistBack);
+
+    backMistFront = new FlxBackdrop(Paths.image('obliteratedErect/mistFront'), 0x01);
+    backMistFront.setPosition(-650, 0);
+    backMistFront.scrollFactor.set(0.95, 0.95);
+    backMistFront.zIndex = 41;
+    backMistFront.blend = 0;
+    backMistFront.color = 0xFF5c5c5c;
+    backMistFront.alpha = 0.5;
+    backMistFront.velocity.x = 50;
+    backMistFront.scale.set(0.8 * backFogScale, 0.8 * backFogScale);
+    add(backMistFront);
+
+    frontMistBack = new FlxBackdrop(Paths.image('obliteratedErect/mistBack'), 0x01);
+    frontMistBack.setPosition(-650, 0);
+    frontMistBack.scrollFactor.set(1.1, 1.1);
+    frontMistBack.zIndex = 469;
+    frontMistBack.blend = 0;
+    frontMistBack.color = 0xFF5c5c5c;
+    frontMistBack.alpha = 0.8;
+    frontMistBack.velocity.x = 80;
+    frontMistBack.scale.set(1.0 * frontFogScale, 1.0 * frontFogScale);
+    add(frontMistBack);
+
+    frontMistMid = new FlxBackdrop(Paths.image('obliteratedErect/mistMid'), 0x01);
+    frontMistMid.setPosition(-650, 0);
+    frontMistMid.scrollFactor.set(1.2, 1.2);
+    frontMistMid.zIndex = 470;
+    frontMistMid.blend = 0;
+    frontMistMid.color = 0xFF5c5c5c;
+    frontMistMid.alpha = 0.6;
+    frontMistMid.velocity.x = -150;
+    frontMistMid.scale.set(1.0 * frontFogScale, 1.0 * frontFogScale);
+    add(frontMistMid);
+
+    frontMistFront = new FlxBackdrop(Paths.image('obliteratedErect/mistFront'), 0x01);
+    frontMistFront.setPosition(-650, 0);
+    frontMistFront.scrollFactor.set(1.3, 1.3);
+    frontMistFront.zIndex = 471;
+    frontMistFront.blend = 0;
+    frontMistFront.color = 0xFF5c5c5c;
+    frontMistFront.alpha = 0.6;
+    frontMistFront.velocity.x = -172;
+    frontMistFront.scale.set(1.0 * frontFogScale, 1.0 * frontFogScale);
+    add(frontMistFront);
+
+    refresh();
+  }
+
+  override function onUpdate(event:UpdateScriptEvent)
+  {
+    super.onUpdate(event);
+
+    _timer += event.elapsed;
+
+    backMistBack.y = (backFogOffsetY - 80) + (Math.sin(_timer * 0.08) * 100);
+    backMistFront.y = (backFogOffsetY + 230) + (Math.sin(_timer * 0.3) * 70);
+
+    frontMistBack.y = (frontFogOffsetY + 540) + (Math.sin(_timer * 0.4) * 60);
+    frontMistMid.y = (frontFogOffsetY + 500) + (Math.sin(_timer * 0.3) * 80);
+    frontMistFront.y = (frontFogOffsetY + 660) + (Math.sin(_timer * 0.35) * 70);
+  }
+
+  function onGameOver(event:ScriptEvent)
+  {
+    super.onGameOver(event);
+
+    if (getBoyfriend() != null) getBoyfriend().shader = null;
+  }
+
+  override function addCharacter(c:BaseCharacter, t:CharacterType)
+  {
+    super.addCharacter(c, t);
+
+    switch (t)
+    {
+      case CharacterType.BF:
+        c.shader = colorShader;
+
+      case CharacterType.DAD:
+        var rimDad = new DropShadowShader();
+        rimDad.setAdjustColor(colorShader.brightness, colorShader.hue, colorShader.contrast, colorShader.saturation);
+        rimDad.color = 0xFFFFFFFF;
+
+        rimDad.threshold = 0.25;
+        c.shader = rimDad;
+        rimDad.attachedSprite = c;
+        rimDad.angle = 90;
+        rimDad.distance = 13;
+
+        var dadPersist:BaseCharacter = c;
+        c.animation.onFrameChange.add(function()
+        {
+          if (dadPersist != null && dadPersist.frame != null) rimDad.updateFrameInfo(dadPersist.frame);
+        });
+
+      case CharacterType.GF:
+        var rimGf = new DropShadowShader();
+        rimGf.setAdjustColor(colorShader.brightness, colorShader.hue, colorShader.contrast, colorShader.saturation);
+        rimGf.color = 0xFFFFFFFF;
+        c.shader = rimGf;
+        rimGf.attachedSprite = c;
+        rimGf.angle = 135;
+        rimGf.distance = 13;
+
+        var gfPersist:BaseCharacter = c;
+        c.animation.onFrameChange.add(function()
+        {
+          if (gfPersist != null && gfPersist.frame != null) rimGf.updateFrameInfo(gfPersist.frame);
+        });
+
+      default:
+        c.shader = colorShader;
+    }
+  }
+
+  private function updateColorShader(h:Int, s:Int, co:Int, b:Int)
+  {
+    colorShader.hue = h;
+    colorShader.saturation = s;
+    colorShader.contrast = co;
+    colorShader.brightness = b;
+  }
+}

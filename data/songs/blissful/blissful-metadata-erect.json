@@ -1,0 +1,35 @@
+{
+  "version": "2.2.4",
+  "songName": "Blissful Erect",
+  "artist": "CheeseWithCake",
+  "charter": "FatzFries",
+  "offsets": {},
+  "playData": {
+    "difficulties": ["erect", "nightmare"],
+    "stickerPack": "qtStickers",
+    "characters": {
+      "player": "bf-qt",
+      "girlfriend": "gf",
+      "opponent": "qt",
+      "instrumental": "erect",
+      "opponentVocals": ["qt"],
+      "playerVocals": ["bf-qt"]
+    },
+    "stage": "qtStageCityErect",
+    "noteStyle": "funkin",
+    "ratings": {
+      "erect": 8,
+      "nightmare": 10
+    },
+    "album": "qt-vol2"
+  },
+  "generatedBy": "Friday Night Funkin' - v0.8.4",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 152,
+      "bt": [4, 4, 4, 4]
+    }
+  ]
+}

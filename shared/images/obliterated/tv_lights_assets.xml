@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="tv_lights_assets.png" width="5937" height="4731">
+	<SubTexture name="tv lights animated0000" x="3967" y="1184" width="1967" height="1180" frameX="-56" frameY="-57" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0001" x="1" y="1191" width="1980" height="1180" frameX="-50" frameY="-64" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0002" x="1984" y="1191" width="1980" height="1180" frameX="-50" frameY="-64" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0003" x="3969" y="1" width="1967" height="1180" frameX="-56" frameY="-57" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0004" x="3967" y="2367" width="1967" height="1180" frameX="-56" frameY="-57" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0005" x="1986" y="1" width="1980" height="1180" frameX="-50" frameY="-64" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0006" x="1971" y="2374" width="1967" height="1173" frameX="-56" frameY="-64" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0007" x="1" y="2374" width="1967" height="1180" frameX="-56" frameY="-57" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="tv lights animated0008" x="1971" y="3550" width="1967" height="1180" frameX="-56" frameY="-57" frameWidth="2086" frameHeight="1290"/>
+	<SubTexture name="blue" x="1" y="1" width="1982" height="1187" frameX="-50" frameY="-58" frameWidth="2090" frameHeight="1293"/>
+	<SubTexture name="red" x="1" y="3557" width="1957" height="1161" frameX="-62" frameY="-70" frameWidth="2090" frameHeight="1293"/>
+</TextureAtlas>

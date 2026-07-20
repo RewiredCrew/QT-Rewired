@@ -1,0 +1,1194 @@
+﻿{
+  "ATLAS": {
+    "SPRITES": [
+      {
+        "SPRITE": {
+          "name": "0000",
+          "x": 1067,
+          "y": 1,
+          "w": 429,
+          "h": 633,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0001",
+          "x": 1,
+          "y": 1,
+          "w": 1065,
+          "h": 406,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0002",
+          "x": 2827,
+          "y": 1036,
+          "w": 173,
+          "h": 180,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0003",
+          "x": 1943,
+          "y": 823,
+          "w": 332,
+          "h": 178,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0004",
+          "x": 2357,
+          "y": 593,
+          "w": 157,
+          "h": 438,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0005",
+          "x": 3845,
+          "y": 1,
+          "w": 209,
+          "h": 452,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0006",
+          "x": 1,
+          "y": 668,
+          "w": 197,
+          "h": 346,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0007",
+          "x": 999,
+          "y": 1244,
+          "w": 147,
+          "h": 93,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0008",
+          "x": 1822,
+          "y": 1149,
+          "w": 198,
+          "h": 87,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0009",
+          "x": 635,
+          "y": 1052,
+          "w": 90,
+          "h": 205,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0010",
+          "x": 2276,
+          "y": 823,
+          "w": 79,
+          "h": 145,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0011",
+          "x": 3175,
+          "y": 1040,
+          "w": 143,
+          "h": 204,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0012",
+          "x": 490,
+          "y": 1052,
+          "w": 144,
+          "h": 201,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0013",
+          "x": 173,
+          "y": 1047,
+          "w": 172,
+          "h": 181,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0014",
+          "x": 680,
+          "y": 594,
+          "w": 146,
+          "h": 223,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0015",
+          "x": 2594,
+          "y": 1216,
+          "w": 71,
+          "h": 95,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0016",
+          "x": 1935,
+          "y": 1237,
+          "w": 74,
+          "h": 90,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0017",
+          "x": 1321,
+          "y": 1253,
+          "w": 85,
+          "h": 65,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0018",
+          "x": 1235,
+          "y": 1253,
+          "w": 85,
+          "h": 68,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0019",
+          "x": 739,
+          "y": 818,
+          "w": 85,
+          "h": 69,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0020",
+          "x": 1,
+          "y": 1015,
+          "w": 171,
+          "h": 233,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0021",
+          "x": 1979,
+          "y": 593,
+          "w": 377,
+          "h": 229,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0022",
+          "x": 2882,
+          "y": 1,
+          "w": 497,
+          "h": 237,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0023",
+          "x": 346,
+          "y": 408,
+          "w": 481,
+          "h": 185,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0024",
+          "x": 346,
+          "y": 408,
+          "w": 481,
+          "h": 185,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0025",
+          "x": 2300,
+          "y": 1032,
+          "w": 159,
+          "h": 226,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0026",
+          "x": 726,
+          "y": 1232,
+          "w": 133,
+          "h": 107,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0027",
+          "x": 3199,
+          "y": 615,
+          "w": 343,
+          "h": 218,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0028",
+          "x": 3042,
+          "y": 834,
+          "w": 286,
+          "h": 205,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0029",
+          "x": 1691,
+          "y": 1099,
+          "w": 130,
+          "h": 159,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0030",
+          "x": 1253,
+          "y": 1155,
+          "w": 172,
+          "h": 97,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0031",
+          "x": 1601,
+          "y": 764,
+          "w": 341,
+          "h": 178,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0032",
+          "x": 1014,
+          "y": 408,
+          "w": 41,
+          "h": 67,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0033",
+          "x": 2460,
+          "y": 1250,
+          "w": 94,
+          "h": 93,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0034",
+          "x": 1352,
+          "y": 764,
+          "w": 248,
+          "h": 252,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0035",
+          "x": 199,
+          "y": 668,
+          "w": 141,
+          "h": 162,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0036",
+          "x": 1352,
+          "y": 635,
+          "w": 139,
+          "h": 123,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0037",
+          "x": 3817,
+          "y": 1222,
+          "w": 155,
+          "h": 97,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0038",
+          "x": 90,
+          "y": 1249,
+          "w": 63,
+          "h": 95,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0039",
+          "x": 912,
+          "y": 1078,
+          "w": 175,
+          "h": 158,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0040",
+          "x": 2594,
+          "y": 1118,
+          "w": 76,
+          "h": 97,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0041",
+          "x": 3817,
+          "y": 1074,
+          "w": 192,
+          "h": 147,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0042",
+          "x": 481,
+          "y": 845,
+          "w": 257,
+          "h": 206,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0043",
+          "x": 4025,
+          "y": 936,
+          "w": 63,
+          "h": 97,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0044",
+          "x": 1014,
+          "y": 839,
+          "w": 241,
+          "h": 238,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0045",
+          "x": 4055,
+          "y": 1,
+          "w": 39,
+          "h": 212,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0046",
+          "x": 2530,
+          "y": 1,
+          "w": 351,
+          "h": 368,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0047",
+          "x": 2154,
+          "y": 1,
+          "w": 375,
+          "h": 404,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0048",
+          "x": 3329,
+          "y": 834,
+          "w": 201,
+          "h": 281,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0049",
+          "x": 2680,
+          "y": 886,
+          "w": 291,
+          "h": 149,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0050",
+          "x": 2165,
+          "y": 1002,
+          "w": 134,
+          "h": 304,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0051",
+          "x": 1256,
+          "y": 1017,
+          "w": 285,
+          "h": 137,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0052",
+          "x": 2946,
+          "y": 1221,
+          "w": 175,
+          "h": 87,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0053",
+          "x": 173,
+          "y": 1229,
+          "w": 167,
+          "h": 88,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0054",
+          "x": 3319,
+          "y": 1116,
+          "w": 174,
+          "h": 101,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0055",
+          "x": 4055,
+          "y": 349,
+          "w": 39,
+          "h": 48,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0056",
+          "x": 199,
+          "y": 845,
+          "w": 281,
+          "h": 201,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0057",
+          "x": 3714,
+          "y": 936,
+          "w": 310,
+          "h": 137,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0058",
+          "x": 1875,
+          "y": 1002,
+          "w": 289,
+          "h": 146,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0059",
+          "x": 1601,
+          "y": 943,
+          "w": 273,
+          "h": 155,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0060",
+          "x": 2515,
+          "y": 852,
+          "w": 164,
+          "h": 265,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0061",
+          "x": 739,
+          "y": 890,
+          "w": 268,
+          "h": 159,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0062",
+          "x": 1426,
+          "y": 1155,
+          "w": 97,
+          "h": 172,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0063",
+          "x": 1256,
+          "y": 839,
+          "w": 95,
+          "h": 168,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0064",
+          "x": 3319,
+          "y": 1218,
+          "w": 170,
+          "h": 96,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0065",
+          "x": 346,
+          "y": 408,
+          "w": 481,
+          "h": 185,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0066",
+          "x": 2717,
+          "y": 493,
+          "w": 481,
+          "h": 184,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0067",
+          "x": 4094,
+          "y": 214,
+          "w": 1,
+          "h": 1,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0068",
+          "x": 4094,
+          "y": 214,
+          "w": 1,
+          "h": 1,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0069",
+          "x": 4094,
+          "y": 214,
+          "w": 1,
+          "h": 1,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0070",
+          "x": 4094,
+          "y": 214,
+          "w": 1,
+          "h": 1,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0071",
+          "x": 4094,
+          "y": 214,
+          "w": 1,
+          "h": 1,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0072",
+          "x": 4094,
+          "y": 214,
+          "w": 1,
+          "h": 1,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0073",
+          "x": 1497,
+          "y": 1,
+          "w": 656,
+          "h": 392,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0074",
+          "x": 4092,
+          "y": 214,
+          "w": 1,
+          "h": 6,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0075",
+          "x": 346,
+          "y": 1052,
+          "w": 143,
+          "h": 204,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0076",
+          "x": 3672,
+          "y": 1074,
+          "w": 144,
+          "h": 201,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0077",
+          "x": 739,
+          "y": 1050,
+          "w": 172,
+          "h": 181,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0078",
+          "x": 2680,
+          "y": 1036,
+          "w": 146,
+          "h": 223,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0079",
+          "x": 3001,
+          "y": 1040,
+          "w": 173,
+          "h": 180,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0080",
+          "x": 346,
+          "y": 408,
+          "w": 481,
+          "h": 185,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0081",
+          "x": 828,
+          "y": 408,
+          "w": 185,
+          "h": 481,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0082",
+          "x": 3238,
+          "y": 429,
+          "w": 481,
+          "h": 185,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0083",
+          "x": 3238,
+          "y": 242,
+          "w": 481,
+          "h": 186,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0084",
+          "x": 3720,
+          "y": 454,
+          "w": 185,
+          "h": 481,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0085",
+          "x": 3906,
+          "y": 454,
+          "w": 185,
+          "h": 481,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0086",
+          "x": 2530,
+          "y": 370,
+          "w": 186,
+          "h": 481,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0087",
+          "x": 1497,
+          "y": 581,
+          "w": 481,
+          "h": 182,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0088",
+          "x": 1497,
+          "y": 394,
+          "w": 481,
+          "h": 186,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0089",
+          "x": 1979,
+          "y": 406,
+          "w": 481,
+          "h": 186,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0090",
+          "x": 3380,
+          "y": 1,
+          "w": 464,
+          "h": 240,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0091",
+          "x": 3543,
+          "y": 615,
+          "w": 170,
+          "h": 363,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0092",
+          "x": 4055,
+          "y": 214,
+          "w": 36,
+          "h": 134,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0093",
+          "x": 4055,
+          "y": 398,
+          "w": 29,
+          "h": 19,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0094",
+          "x": 2827,
+          "y": 1217,
+          "w": 118,
+          "h": 141,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0095",
+          "x": 1542,
+          "y": 1099,
+          "w": 148,
+          "h": 167,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0096",
+          "x": 3042,
+          "y": 678,
+          "w": 147,
+          "h": 145,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0097",
+          "x": 3531,
+          "y": 979,
+          "w": 140,
+          "h": 302,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0098",
+          "x": 2882,
+          "y": 239,
+          "w": 355,
+          "h": 253,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0099",
+          "x": 1147,
+          "y": 1244,
+          "w": 87,
+          "h": 141,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0100",
+          "x": 2021,
+          "y": 1149,
+          "w": 115,
+          "h": 146,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0101",
+          "x": 1,
+          "y": 1249,
+          "w": 88,
+          "h": 103,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0102",
+          "x": 2717,
+          "y": 678,
+          "w": 324,
+          "h": 207,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0103",
+          "x": 860,
+          "y": 1237,
+          "w": 138,
+          "h": 103,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0104",
+          "x": 4010,
+          "y": 1074,
+          "w": 85,
+          "h": 138,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0105",
+          "x": 1,
+          "y": 408,
+          "w": 344,
+          "h": 259,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0106",
+          "x": 1014,
+          "y": 635,
+          "w": 337,
+          "h": 203,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0107",
+          "x": 346,
+          "y": 594,
+          "w": 333,
+          "h": 250,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0108",
+          "x": 2460,
+          "y": 1118,
+          "w": 133,
+          "h": 131,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0109",
+          "x": 2717,
+          "y": 370,
+          "w": 152,
+          "h": 119,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0110",
+          "x": 3720,
+          "y": 242,
+          "w": 116,
+          "h": 166,
+          "rotated": true
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0111",
+          "x": 1088,
+          "y": 1078,
+          "w": 164,
+          "h": 165,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0112",
+          "x": 3122,
+          "y": 1245,
+          "w": 99,
+          "h": 108,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0113",
+          "x": 3222,
+          "y": 1245,
+          "w": 94,
+          "h": 109,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0114",
+          "x": 3973,
+          "y": 1222,
+          "w": 111,
+          "h": 133,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0115",
+          "x": 1822,
+          "y": 1237,
+          "w": 112,
+          "h": 125,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0116",
+          "x": 2972,
+          "y": 886,
+          "w": 67,
+          "h": 109,
+          "rotated": false
+        }
+      },
+      {
+        "SPRITE": {
+          "name": "0117",
+          "x": 2461,
+          "y": 406,
+          "w": 68,
+          "h": 111,
+          "rotated": false
+        }
+      }
+    ]
+  },
+  "meta": {
+    "app": "Adobe Animate",
+    "version": "24.0.0.305",
+    "image": "spritemap1.png",
+    "format": "RGBA8888",
+    "size": { "w": 4096, "h": 1386 },
+    "resolution": "1"
+  }
+}

@@ -1,0 +1,27 @@
+import funkin.ui.story.Level;
+import funkin.save.Save;
+
+class QTWeek extends Level
+{
+  function new()
+  {
+    super('QTWeek');
+  }
+
+  override function isUnlocked():Bool
+  {
+    return true;
+  }
+
+  function hasBeatenLevel():Bool
+  {
+    return Save.instance.hasBeatenLevel('QTWeek');
+  }
+
+  override function getSongDisplayNames(difficultyId:String):Array<String>
+  {
+    if (hasBeatenLevel()) return ["Blissful", "Obliterated"];
+    else
+      return ["Blissful"];
+  }
+}

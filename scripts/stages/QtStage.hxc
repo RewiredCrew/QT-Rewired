@@ -1,0 +1,84 @@
+import flixel.FlxG;
+import funkin.play.character.CharacterType;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.play.character.BaseCharacter;
+
+class QtStage extends Stage
+{
+  private var colorShader:AdjustColorShader = new AdjustColorShader();
+
+  function new()
+  {
+    super('qtStage');
+  }
+
+  override function buildStage()
+  {
+    super.buildStage();
+    resetBlackScreens();
+
+    for (prop in ["blackScreenR"])
+    {
+      getNamedProp(prop).scale.set(FlxG.width, FlxG.height);
+    }
+
+    getNamedProp("TVFrontShine").color = 0xFFC986BD;
+    updateColorShader(-10, 3, 0, 0);
+    getNamedProp("lightOverlay").animation.play("Normal");
+  }
+
+  override function onGameOver(event)
+  {
+    super.onGameOver(event);
+    updateColorShader(0, 0, 0, 0);
+  }
+
+  override function onSongLoaded(event)
+  {
+    super.onSongLoaded(event);
+    PlayState.instance.comboPopUps.offsets = [55, 300];
+    PlayState.instance.iconP2.zIndex += 1;
+  }
+
+  function fetchAssetPaths():Array<String>
+  {
+    var results:Array<String> = super.fetchAssetPaths();
+    results.push(Paths.animateAtlas("characters/QT_assets/qtCutscene", "shared"));
+    results.push(Paths.sound('qtsfx'));
+    results.push(Paths.sound('hi_cutie'));
+    return results;
+  }
+
+  override public function onSongEvent(event:SongEventScriptEvent):Void
+  {
+    super.onSongEvent(event);
+    if (event.eventData.eventKind == "blackIn")
+    {
+      getNamedProp('blackScreenR').alpha = 1;
+    }
+  }
+
+  override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
+  {
+    super.addCharacter(character, charType);
+    character.shader = colorShader;
+  }
+
+  private function updateColorShader(hue:Int, saturation:Int, contrast:Int, brightness:Int):Void
+  {
+    colorShader.hue = hue;
+    colorShader.saturation = saturation;
+    colorShader.contrast = contrast;
+    colorShader.brightness = brightness;
+  }
+
+  function resetBlackScreens():Void
+  {
+    for (prop in ["blackScreen", "blackScreenVideo", "spotLight", "redScreen"])
+    {
+      getNamedProp(prop).alpha = 0;
+    }
+  }
+}

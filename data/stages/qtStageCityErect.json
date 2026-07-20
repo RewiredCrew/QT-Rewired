@@ -1,0 +1,265 @@
+{
+  "version": "1.0.0",
+  "name": "QT Stage [Erect]",
+  "props": [
+    {
+      "assetPath": "erectCity/overlayAdd",
+      "name": "overlayAdd",
+      "position": [-1242, -1060],
+      "scroll": [1, 0.5],
+      "scale": [1, 1],
+      "blend": "add",
+      "alpha": 0.15,
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 500,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/overlayOverlay",
+      "name": "overlayOverlay",
+      "position": [-1025, -665],
+      "scroll": [1, 0.5],
+      "scale": [1, 1],
+      "blend": "overlay",
+      "alpha": 0.6,
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 490,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/car",
+      "name": "car",
+      "position": [-1048, 810],
+      "scroll": [1.03, 1.03],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 400,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/poster",
+      "name": "poster",
+      "position": [1665, 846],
+      "scroll": [1, 1],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "poster",
+      "danceEvery": -1,
+      "zIndex": 80,
+      "animations": [
+        {
+          "name": "poster",
+          "prefix": "poster",
+          "frameRate": 24,
+          "looped": true
+        }
+      ]
+    },
+    {
+      "assetPath": "erectCity/grass",
+      "name": "grass",
+      "position": [1598, 1115],
+      "scroll": [1, 1],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "grass",
+      "danceEvery": -1,
+      "zIndex": 70,
+      "animations": [
+        {
+          "name": "grass",
+          "prefix": "grass",
+          "frameRate": 24,
+          "looped": true
+        }
+      ]
+    },
+    {
+      "assetPath": "erectCity/flower",
+      "name": "flower",
+      "position": [-56, 1080],
+      "scroll": [1, 1],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "flower",
+      "danceEvery": -1,
+      "zIndex": 60,
+      "animations": [
+        {
+          "name": "flower",
+          "prefix": "flower",
+          "frameRate": 24,
+          "looped": true
+        }
+      ]
+    },
+    {
+      "assetPath": "erectCity/storeLightAdd",
+      "name": "storeLight_add",
+      "position": [-1249, 161],
+      "scroll": [1, 1],
+      "scale": [1, 1],
+      "blend": "add",
+      "alpha": 0.7,
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 55,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/mainGround",
+      "name": "mainGround",
+      "position": [-992, -305],
+      "scroll": [1, 1],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 50,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/lampAndBuilding",
+      "name": "lampAndBuilding",
+      "position": [875, 125],
+      "scroll": [0.8, 0.8],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 35,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/storeInterior",
+      "name": "storeInterior",
+      "position": [-985, 437],
+      "scroll": [0.95, 0.95],
+      "scale": [0.6663, 0.6663],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 30,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/storeBg",
+      "name": "storeBg",
+      "position": [-989, 446],
+      "scroll": [1, 1],
+      "scale": [1.0057, 1.0057],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 25,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/signBetterCallSahur",
+      "name": "sign",
+      "position": [30, -425],
+      "scroll": [0.85, 0.85],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 20,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/bgBuilding",
+      "name": "building",
+      "position": [-1075, -835],
+      "scroll": [0.75, 0.75],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 15,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/bgBuildings2",
+      "name": "bgBuildings2",
+      "position": [-606, -671],
+      "scroll": [0.8, 0.8],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 10,
+      "animations": []
+    },
+    {
+      "assetPath": "erectCity/stars",
+      "name": "stars",
+      "position": [-685, -600],
+      "scroll": [0.7, 0.7],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "idle",
+      "danceEvery": 0,
+      "zIndex": 7,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "stars",
+          "looped": true
+        }
+      ]
+    },
+    {
+      "assetPath": "erectCity/sky",
+      "name": "sky",
+      "position": [-973, -1076],
+      "scroll": [1, 1],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "isPixel": false,
+      "startingAnimation": "static",
+      "danceEvery": 0,
+      "zIndex": 5,
+      "animations": []
+    }
+  ],
+  "characters": {
+    "dad": {
+      "cameraOffsets": [235, -88],
+      "position": [305, 1289],
+      "zIndex": 300
+    },
+    "bf": {
+      "cameraOffsets": [-290, -150],
+      "position": [1330, 1285],
+      "zIndex": 200
+    },
+    "gf": {
+      "cameraOffsets": [12, 30],
+      "position": [820, 1164],
+      "zIndex": 100
+    }
+  },
+  "cameraZoom": 0.585
+}

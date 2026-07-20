@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "qtstickerspico",
+  "artist": "JoaDash",
+  "stickers": [
+    "stickers/qtstickerspico/qtSticker1",
+    "stickers/qtstickerspico/qtSticker2",
+    "stickers/qtstickerspico/qtSticker3",
+    "stickers/qtstickerspico/skullSticker1",
+    "stickers/qtstickerspico/posterSticker",
+    "stickers/qtstickerspico/lollipopSticker",
+    "stickers/qtstickerspico/drinkSticker",
+    "stickers/qtstickerspico/appleSticker"
+  ]
+}

@@ -1,0 +1,30 @@
+import funkin.graphics.FunkinSprite;
+import funkin.play.notes.notestyle.ScriptedNoteStyle;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+
+class FunkinNoteStyleScriptedExample extends ScriptedNoteStyle
+{
+  public function new(id:String)
+  {
+    super("funkin");
+  }
+
+  var defaultRatings = ["sick", "good", "bad", "shit"];
+
+  public override function buildJudgementSprite(rating:String):Null<FunkinSprite>
+  {
+    // rating = "dodged";
+    if (defaultRatings.contains(rating)) return super.buildJudgementSprite(rating);
+
+    var result = new FunkinSprite();
+    result.loadTexture("ui/popup/funkin/" + rating.toLowerCase());
+    // result.scale.set(.65, .65);
+    result.scale.set(0.75, 0.75);
+    // result.angle = 15;
+    FlxTween.tween(result.scale, {x: 0.65, y: 0.65}, 0.5, {ease: FlxEase.expoOut});
+    result.scrollFactor.set(0.2, 0.2);
+    result.updateHitbox();
+    return result;
+  }
+}

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="poster.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="poster instancia 10000" x="10" y="10" width="177" height="171" frameX="-12" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10001" x="10" y="10" width="177" height="171" frameX="-12" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10002" x="10" y="10" width="177" height="171" frameX="-12" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10003" x="10" y="10" width="177" height="171" frameX="-12" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10004" x="197" y="10" width="188" height="166" frameX="-2" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10005" x="197" y="10" width="188" height="166" frameX="-2" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10006" x="197" y="10" width="188" height="166" frameX="-2" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10007" x="197" y="10" width="188" height="166" frameX="-2" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10008" x="395" y="10" width="189" height="161" frameX="0" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10009" x="395" y="10" width="189" height="161" frameX="0" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10010" x="395" y="10" width="189" height="161" frameX="0" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10011" x="395" y="10" width="189" height="161" frameX="0" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10012" x="594" y="10" width="188" height="165" frameX="-4" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10013" x="594" y="10" width="188" height="165" frameX="-4" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10014" x="594" y="10" width="188" height="165" frameX="-4" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10015" x="594" y="10" width="188" height="165" frameX="-4" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10016" x="792" y="10" width="176" height="168" frameX="-16" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10017" x="792" y="10" width="176" height="168" frameX="-16" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10018" x="792" y="10" width="176" height="168" frameX="-16" frameY="0" frameWidth="191" frameHeight="171"/>
+	<SubTexture name="poster instancia 10019" x="792" y="10" width="176" height="168" frameX="-16" frameY="0" frameWidth="191" frameHeight="171"/>
+</TextureAtlas>

@@ -1,0 +1,50 @@
+{
+  "version": "2.2.4",
+  "songName": "Blissful",
+  "artist": "Biddle3",
+  "charter": "FatzFries",
+  "divisions": 96,
+  "looped": false,
+  "offsets": {
+    "instrumental": 0,
+    "altInstrumentals": {},
+    "vocals": {},
+    "altVocals": {}
+  },
+  "playData": {
+    "songVariations": ["pico", "erect"],
+    "stickerPack": "qtStickers",
+    "difficulties": ["easy", "normal", "hard"],
+    "characters": {
+      "player": "bf-qt",
+      "girlfriend": "gf-qt",
+      "opponent": "qt",
+      "instrumental": "",
+      "altInstrumentals": [],
+      "opponentVocals": ["qt"],
+      "playerVocals": ["bf-qt"]
+    },
+    "stage": "qtStage",
+    "noteStyle": "funkin",
+    "ratings": {
+      "easy": 2,
+      "normal": 5,
+      "hard": 6
+    },
+    "album": "qt",
+    "previewStart": 0,
+    "previewEnd": 0
+  },
+  "generatedBy": "Friday Night Funkin' - v0.6.2",
+  "timeFormat": "ms",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 138,
+      "n": 4,
+      "d": 4,
+      "bt": [4, 4, 4, 4]
+    }
+  ]
+}

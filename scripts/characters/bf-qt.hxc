@@ -1,0 +1,252 @@
+import flixel.FlxG;
+import funkin.audio.FunkinSound;
+import funkin.play.character.MultiAnimateAtlasCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.Preferences;
+import funkin.util.Constants;
+import funkin.util.HapticUtil;
+import funkin.FunkinMemory;
+
+using StringTools;
+
+import flixel.util.FlxTimer;
+import funkin.play.character.CharacterType;
+import funkin.util.TouchUtil;
+import funkin.save.Save;
+
+class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
+{
+  public var gameoverSound;
+  public var randomInt:Int;
+
+  function new()
+  {
+    super('bf-qt');
+    ignoreExclusionPref = [
+      "danceLeft-alt",
+      "danceRight-alt",
+      "preDance",
+      "hey",
+      "intro"
+    ];
+  }
+
+  public var suffix = "";
+
+
+  override function onNoteMiss(event)
+  {
+    super.onNoteMiss(event);
+    if(event.note.kind != 'caramella') return;
+    var animName;
+    switch(event.note.direction)
+    {
+      case 0:
+        animName = "LEFT";
+      case 1:
+        animName = "DOWN";
+      case 2:
+        animName = "UP";
+      case 3:
+        animName = "RIGHT";
+    }
+    playAnimation('sing${animName}miss-caramella', true, false);
+  }
+
+  override public function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
+  {
+    trace('[$name]');
+    if(name.startsWith('dodge-'))
+    {
+      trace('this is a dodge anim');
+      this.superClass.canPlayOtherAnims = true;
+      super.playAnimation(name, restart, true);
+      return;
+    }
+    super.playAnimation(name + suffix, restart, ignoreOther);
+
+    switch (name + suffix)
+    {
+      case 'fakeoutDeath':
+        doFakeoutDeath();
+      case "firstDeath-saw":
+        GameOverSubState.instance.cameraFollowPoint.x += 71;
+        GameOverSubState.instance.cameraFollowPoint.y += -50;
+    }
+  }
+
+  function setSuffix(s:String) // The FUCK
+  {
+    suffix = s;
+  }
+
+  public override function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    if (GameOverSubState.instance == null) return;
+
+    // Prevenir el comportamiento por defecto cuando es sawblade
+    if (GameOverSubState.blueBallSuffix == '-sawblade' && GameOverSubState.blueballed)
+    {
+      GameOverSubState.instance.mustNotExit = true;
+    }
+
+    if (GameOverSubState.instance.controls.BACK && !GameOverSubState.instance.isEnding)
+    {
+      GameOverSubState.instance.mustNotExit = false;
+      GameOverSubState.blueballed = true;
+      GameOverSubState.instance.goBack();
+    }
+
+    var inputCondition = (GameOverSubState.instance.controls.ACCEPT
+      || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton)))
+      && GameOverSubState.instance.canInput;
+
+    if (GameOverSubState.blueBallSuffix == '-sawblade'
+      && inputCondition
+      && GameOverSubState.blueballed
+      && !GameOverSubState.instance.isEnding)
+    {
+      GameOverSubState.blueballed = false;
+      GameOverSubState.instance.isEnding = true;
+      GameOverSubState.instance.mustNotExit = false;
+
+      GameOverSubState.instance.hasPlayedDeathQuote = true;
+      if (GameOverSubState.instance.deathQuoteSound != null)
+      {
+        GameOverSubState.instance.deathQuoteSound.stop();
+        GameOverSubState.instance.deathQuoteSound = null;
+      }
+
+      GameOverSubState.instance.startDeathMusic(1.0, true);
+      GameOverSubState.instance.boyfriend.playAnimation('deathConfirm' + suffix, true);
+      new FlxTimer().start(3, function(tmr:FlxTimer)
+      {
+        FlxG.camera.fade(0xFF000000, 2, false, function()
+        {
+          FlxG.camera.fade(0xFF000000, 1, true, null, true);
+
+          if (GameOverSubState.instance.parentPlayState != null)
+          {
+            GameOverSubState.instance.parentPlayState.needsReset = true;
+
+            if (!(GameOverSubState.instance.parentPlayState.isMinimalMode ?? true))
+            {
+              GameOverSubState.instance.boyfriend.isDead = false;
+              GameOverSubState.instance.remove(GameOverSubState.instance.boyfriend);
+              GameOverSubState.instance.parentPlayState.currentStage.addCharacter(GameOverSubState.instance.boyfriend, CharacterType.BF);
+            }
+          }
+
+          GameOverSubState.instance.resetCameraZoom();
+          GameOverSubState.instance.close();
+        });
+      });
+    }
+  }
+
+  function onCreate(event:ScriptEvent)
+  {
+    super.onCreate(event);
+
+    FunkinMemory.cacheSound(Paths.sound("gameplay/gameover/fakeout_death"));
+    setSuffix('');
+  }
+
+  function onAnimationFrame(name:String, frameNumber:Int, frameIndex:Int)
+  {
+    super.onAnimationFrame(name, frameNumber, frameIndex);
+
+    if (!HapticUtil.hapticsAvailable) return;
+
+    // BF's mic drops.
+    if (name.contains('firstDeath') && frameNumber == 27)
+    {
+      HapticUtil.vibrate(0, 0.1, 0.1, 1);
+    }
+
+    // BF's balls pulsating.
+    if (name.contains('deathLoop') && (frameNumber == 0 || frameNumber == 18))
+    {
+      HapticUtil.vibrate(0, 0.1, 0.1, 1);
+    }
+  }
+
+  override function onAnimationFinished(name:String)
+  {
+    switch (name)
+    {
+      case "preDance":
+        shouldAlternate = true;
+        idleSuffix = '-alt';
+      case "hey":
+        danceEvery = 1;
+        shouldAlternate = null;
+        idleSuffix = '';
+    }
+    super.onAnimationFinished(name);
+  }
+
+  override function resetCharacter(resetCamera:Bool):Void
+  {
+    super.resetCharacter(resetCamera);
+    shouldAlternate = null;
+    idleSuffix = '';
+    danceEvery = 1;
+    // if (resetCamera) setSuffix('');
+  }
+
+  function doFakeoutDeath():Void
+  {
+    FunkinSound.playOnce(Paths.sound("gameplay/gameover/fakeout_death"), 1.0);
+
+    GameOverSubState.instance.mustNotExit = true;
+    this.animation.onFinish.addOnce(() ->
+    {
+      GameOverSubState.instance.mustNotExit = false;
+      this.playAnimation('firstDeath', true);
+      GameOverSubState.playBlueBalledSFX();
+    });
+  }
+
+  override function getDeathQuote():Null<String>
+  {
+    switch (PlayState.instance?.currentStage?.getDad()?.characterId)
+    {
+      case "qt":
+        randomInt = FlxG.random.int(1, 7);
+        gameoverSound = Paths.sound('qtgameover/' + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT) + '/bf/qtGameover-' + randomInt);
+        return gameoverSound;
+      case "tankman":
+        var randomCensor:Array<Int> = [];
+
+        if (!Preferences.naughtyness)
+        {
+          // 1 - cock
+          // 3 - shitty
+          // 8 - shit
+          // 13 - fuck
+          // 17 - shit, asshole
+          // 21 - fucking
+          randomCensor = [
+            1,
+            3,
+            8,
+            13,
+            17,
+            21
+          ];
+        }
+        else if (Constants.CENSOR_EXPLETIVES)
+        {
+          randomCensor = [13, 21];
+        }
+
+        return Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, randomCensor));
+      default:
+        return null;
+    }
+  }
+}

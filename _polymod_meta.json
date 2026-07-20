@@ -1,0 +1,150 @@
+{
+  "title": "QT: Rewired",
+  "description": "You hear music coming from the alleyway and you go to investigate. You see the cute girl you saw some years ago listening to music. She asks if you want to sing with her and you agree...",
+  "author": "JoaDash",
+  "contributors": [
+    {
+      "name": "JoaDash",
+      "role": "Director & Artist",
+      "url": "https://x.com/joadash_"
+    },
+    {
+      "name": "FatzFries",
+      "role": "Co-Director & Gameplay Designer",
+      "url": "https://x.com/FatzFries"
+    },
+    {
+      "name": "Official_NO",
+      "role": "Pixel Artist",
+      "url": "https://x.com/official_no6"
+    },
+    {
+      "name": "Yoisabo",
+      "role": "Artist",
+      "url": "https://x.com/ayoisabo"
+    },
+    {
+      "name": "Gigigifish",
+      "role": "Artist",
+      "url": "https://x.com/gigigifish"
+    },
+    {
+      "name": "KerSive",
+      "role": "Artist",
+      "url": "https://x.com/KerSive0_0"
+    },
+    {
+      "name": "Mr. DJ",
+      "role": "Artist",
+      "url": "https://x.com/Mstr_DJ"
+    },
+    {
+      "name": "Funni342",
+      "role": "Artist",
+      "url": "https://x.com/3rdFunni342"
+    },
+    {
+      "name": "PaintVG",
+      "role": "Artist",
+      "url": "https://x.com/JustPaintBucket"
+    },
+    {
+      "name": "KaiyenaArtist",
+      "role": "Artist",
+      "url": "https://x.com/KaiyenaArtist"
+    },
+    {
+      "name": "Biddle3",
+      "role": "Composer",
+      "url": "https://x.com/thedawg3_"
+    },
+    {
+      "name": "CharaWhy",
+      "role": "Composer",
+      "url": "https://x.com/CharaWhyy"
+    },
+    {
+      "name": "Rareblin",
+      "role": "Composer",
+      "url": "https://x.com/uncommonblin"
+    },
+    {
+      "name": "CheeseWithCake",
+      "role": "Composer",
+      "url": "https://www.youtube.com/@CheeseWithCake"
+    },
+    {
+      "name": "Mochoco",
+      "role": "Composer",
+      "url": "https://x.com/mochocofrappe"
+    },
+    {
+      "name": "Simnstar",
+      "role": "Composer",
+      "url": "https://x.com/simnstar"
+    },
+    {
+      "name": "Pohsan",
+      "role": "Composer & Sound Designer",
+      "url": "https://x.com/pohhsann"
+    },
+    {
+      "name": "SicOn",
+      "role": "Composer + Sound Designer & Chromatic Scales",
+      "url": "https://x.com/_SicOn_"
+    },
+    {
+      "name": "Requazar",
+      "role": "Programmer",
+      "url": "https://x.com/requazar_"
+    },
+    {
+      "name": "PurSnake",
+      "role": "Programmer",
+      "url": "https://x.com/PurSnake"
+    },
+    {
+      "name": "NNovasaur",
+      "role": "Voice Actor",
+      "url": "https://x.com/NNovasaur"
+    },
+    {
+      "name": "Mokkitah",
+      "role": "Voice Actor",
+      "url": "https://mokkitah.carrd.co/"
+    },
+    {
+      "name": "ContentLeaf",
+      "role": "Voice Actor",
+      "url": "https://x.com/ContentLeaf_"
+    },
+    {
+      "name": "fnfcosmos",
+      "role": "Video Editor + VFX & Additional Help",
+      "url": "https://x.com/FnfCosmos"
+    },
+    {
+      "name": "Markedadam",
+      "role": "VFX Artist",
+      "url": "https://x.com/markedaman"
+    },
+    {
+      "name": "Ben Llamert",
+      "role": "Rough Artist",
+      "url": "https://x.com/benllammert"
+    },
+    {
+      "name": "M4chine",
+      "role": "Album Cover Artist",
+      "url": "https://x.com/m4chineg1"
+    },
+    {
+      "name": "Arcad3k",
+      "role": "Social Media Artist",
+      "url": "https://x.com/Arcad3zz"
+    }
+  ],
+  "api_version": "0.8.4",
+  "mod_version": "2.0.0",
+  "license": "CC BY 4.0,MIT"
+}

@@ -1,0 +1,164 @@
+import funkin.modding.module.Module;
+import flixel.FlxG;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.util.DateUtil;
+import flixel.text.FlxText;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import flixel.group.FlxSpriteGroup;
+
+class FreeplayTextTweaksModule extends Module
+{
+  public function new()
+  {
+    super('FreeplayTextTweaksModule', {state: MainMenuState});
+  }
+
+  var starSprites:FunkinSprite;
+
+  override public function onSubStateOpenEnd(event)
+  {
+    super.onSubStateOpenEnd(event);
+    if (!(event.targetState is FreeplayState)) return;
+    var sprite = new FunkinSprite();
+    sprite.visible = false;
+    sprite.kill();
+    event.targetState.grpCapsules.members[0].add(sprite);
+    starSprites = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/question-marks-stars'));
+    starSprites.x = event.targetState.albumRoll.difficultyStars.x + 83;
+    starSprites.y = event.targetState.albumRoll.difficultyStars.y + 12;
+    event.targetState.albumRoll.add(starSprites);
+    event.targetState.refresh();
+  }
+
+  override public function onDifficultySwitch(event)
+  {
+    super.onDifficultySwitch(event);
+    trace('chud');
+    var capsule = FlxG.state.subState.grpCapsules.members[FlxG.state.subState.curSelected];
+    var data = capsule.freeplayData;
+    var id = (data != null) ? data.levelId : null;
+
+    // thanks mighty and comedy for helping me figure this out
+    for (cap in FlxG.state.subState?.grpCapsules?.members)
+    {
+      if (cap.freeplayData == null || cap.freeplayData.data == null) continue;
+      @:privateAccess
+      if (cap.freeplayData.data.id == "obliterated" && cap.freeplayData.curVariation == "erect")
+      {
+        trace('[found it]');
+        var grp = new FlxSpriteGroup();
+        var spr = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/difficultyQuestionMark'));
+        grp.add(spr);
+        var spr2 = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/difficultyQuestionMark'));
+        grp.add(spr2);
+
+        cap.add(grp);
+        spr.x += 467;
+        spr.y += 41;
+        spr.scale.set(0.9, 0.9);
+
+        spr2.x += 499;
+        spr2.y += 41;
+        spr2.scale.set(0.9, 0.9);
+
+        for (i in 0...cap.difficultyNumbers?.length)
+        {
+          cap.difficultyNumbers[i].visible = false;
+        }
+        break;
+      }
+    }
+  }
+
+  override function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    var sub = FlxG.state.subState;
+    if (!(sub is FreeplayState))
+    {
+      return;
+    }
+
+    @:privateAccess
+    var capsule = FlxG.state.subState.currentCapsule;
+    var data = capsule.freeplayData;
+    var id = (data != null) ? data.levelId : null;
+
+    if (capsule?.freeplayData?.data?.id == "obliterated" && capsule?.freeplayData?.curVariation == "erect")
+    {
+      sub.albumRoll.difficultyStars.stars.visible = false;
+      for (member in sub.albumRoll.difficultyStars.flames.members)
+      {
+        member.visible = false;
+      }
+      starSprites?.visible = true;
+    }
+    else
+    {
+      sub.albumRoll.difficultyStars.stars.visible = true;
+      sub.albumRoll.difficultyStars.flameCheck();
+      starSprites?.visible = false;
+    }
+
+    if (sub.instSelectMenu != null)
+    {
+      var label = sub.instSelectMenu.members[3];
+      if (data != null && data.data != null && data.data.id == "obliterated" && label.text == "INSTRUMENTAL")
+      {
+        label.text = "VOICE TRACK";
+        sub.instSelectMenu.instrumentalIds = ["", "Revox"]; // Revox is current, "" is Legacy, its old! - Gerson Deltarune
+        sub.instSelectMenu.currentInstrumentalIndex = 1;
+        sub.instSelectMenu.currentInstrumental.text = sub.instSelectMenu.instrumentalIds[
+          sub.instSelectMenu.currentInstrumentalIndex
+        ];
+        sub.instSelectMenu.onConfirm = (targetInstId:String) -> sub.capsuleOnConfirmDefault(sub.currentCapsule, targetInstId == "Revox" ? "" : "legacy");
+      }
+    }
+  }
+
+  function areWeFunny()
+  {
+    var stamp = DateUtil.generateTimestamp();
+    var month = Std.int(stamp.substring(0, 10).substring(6, 7));
+    var day = Std.int(stamp.substring(0, 10).substring(8, 10));
+    // uhh... yeah
+    return (month == 4 && (day == 1 || day == 2));
+  }
+
+  public function onCapsuleSelected(event:CapsuleScriptEvent):Void
+  {
+    if (event.capsule.freeplayData == null) return;
+    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
+    if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
+    {
+      var cap = event.capsule;
+      cap.freeplayData.data.id = "blissful";
+
+      cap.pixelIcon.setCharacter("qt");
+      cap.songText.text = "Blissful";
+    }
+
+    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
+  }
+
+  var expirationDate = "2026-04-02";
+
+  public function onSongSelected(event:CapsuleScriptEvent):Void
+  {
+    if (event.capsule.freeplayData == null) return;
+    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
+    if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
+    {
+      var cap = event.capsule;
+      cap.freeplayData.data.id = "blissful-2021"; // i got lazy so this is not a variation
+
+      cap.pixelIcon.setCharacter("qt-legacy");
+      cap.songText.text = "Blissful Legacy";
+    }
+
+    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
+  }
+}

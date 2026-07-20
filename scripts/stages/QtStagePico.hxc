@@ -1,0 +1,228 @@
+import flixel.FlxG;
+import funkin.play.character.CharacterType;
+import funkin.play.PlayState;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import funkin.play.stage.Stage;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.play.character.BaseCharacter;
+import flixel.addons.display.FlxBackdrop;
+import openfl.geom.ColorTransform;
+import flixel.FlxSprite;
+import funkin.graphics.shaders.GaussianBlurShader;
+import funkin.audio.FunkinSound;
+
+class QtStagePico extends Stage
+{
+  private var colorShader:AdjustColorShader = new AdjustColorShader();
+  var carInterruptable:Bool = true;
+  var carGoingRight:Bool = true;
+  var busIsPassing:Bool = false;
+
+  function new()
+  {
+    super('qtStagePico');
+  }
+
+  var clouds:FlxTiledSprite;
+  var colorShaderBfGf:AdjustColorShader;
+  var colorShaderDad:AdjustColorShader;
+  var colorShaderGf:AdjustColorShader;
+  var busSprite:BusSprite;
+  var blurShader:GaussianBlurShader;
+  var cars;
+
+  override function buildStage()
+  {
+    super.buildStage();
+    if (Math.random() < 0.05) getNamedProp("lucky").loadGraphic(Paths.image('outskirts/qtPlush'));
+
+    clouds = new FlxBackdrop(Paths.image('outskirts/clouds'), 0x01);
+    clouds.scrollFactor.set(0.25, 0.25);
+    clouds.setPosition(-340.5, -237.5);
+    clouds.zIndex = 11;
+    clouds.velocity.x = 17;
+    add(clouds);
+    busSprite = new BusSprite(-656, -30);
+    busSprite.zIndex = 12;
+    add(busSprite);
+    cars = getNamedProp('randomCars');
+    blurShader = new GaussianBlurShader();
+    cars.shader = blurShader;
+
+    refresh();
+
+    colorShaderBfGf = new AdjustColorShader();
+    colorShaderBfGf.brightness = 5;
+    colorShaderBfGf.hue = 12;
+    colorShaderBfGf.contrast = 5;
+    colorShaderBfGf.saturation = -10;
+  }
+
+  override function onPause(event:PauseScriptEvent)
+  {
+    super.onPause(event);
+    FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = false);
+  }
+
+  override function onResume(e)
+  {
+    super.onResume(e);
+    FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = true);
+  }
+
+  override function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+    resetCar();
+  }
+
+  override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
+  {
+    super.addCharacter(character, charType);
+    switch (charType)
+    {
+      case CharacterType.BF:
+        character.shader = colorShaderBfGf;
+      case CharacterType.DAD:
+        colorShaderDad = new AdjustColorShader();
+        colorShaderDad.brightness = -40;
+        colorShaderDad.hue = -35;
+        colorShaderDad.contrast = -25;
+        colorShaderDad.saturation = -30;
+        character.shader = colorShaderDad;
+        character.colorTransform = new ColorTransform(0.9, 1, 1, 1, 0, 0, 0);
+      case CharacterType.GF:
+        character.shader = colorShaderBfGf;
+    }
+  }
+
+  private function updateColorShader(hue:Int, saturation:Int, contrast:Int, brightness:Int):Void
+  {
+    colorShader.hue = hue;
+    colorShader.saturation = saturation;
+    colorShader.contrast = contrast;
+    colorShader.brightness = brightness;
+  }
+
+  function resetCar():Void
+  {
+    carInterruptable = true;
+    carGoingRight = true;
+    busIsPassing = false;
+
+    var cars = getNamedProp('randomCars');
+    if (cars != null)
+    {
+      FlxTween.cancelTweensOf(cars);
+      FlxTween.cancelTweensOf(cars.offset);
+      cars.x = -300;
+      cars.flipX = false;
+    }
+
+    if (busSprite != null)
+    {
+      busSprite.animation.finishCallback = null;
+      busSprite.animation.stop();
+      busSprite.animation.frameIndex = 0;
+    }
+  }
+
+  function driveCar():Void
+  {
+    if (!carInterruptable) return;
+
+    carInterruptable = false;
+    cars = getNamedProp('randomCars');
+    if (cars == null || cars.animation == null) return;
+
+    FlxTween.cancelTweensOf(cars);
+
+    var variant:Int = FlxG.random.int(0, 3);
+    cars.animation.play('car-' + variant);
+
+    var duration:Float;
+
+    switch (variant)
+    {
+      case 3: // moto
+        duration = FlxG.random.float(1.85, 1.9);
+        blurAmount = 9.0;
+        FunkinSound.playOnce(Paths.sound("gameplay/motorcycle"), 0.8);
+
+      case 2: // pickup
+        duration = FlxG.random.float(2.4, 2.8);
+        blurAmount = 2.0;
+      case 0: // car
+        duration = FlxG.random.float(3, 3.5);
+        blurAmount = 1.0;
+      case 1: // van
+        duration = FlxG.random.float(3.8, 4.0);
+        blurAmount = 0.3;
+    }
+
+    blurShader.setAmount(blurAmount);
+
+    var startX:Float;
+    var endX:Float;
+
+    if (carGoingRight)
+    {
+      startX = -600;
+      endX = 2400;
+      cars.flipX = false;
+    }
+    else
+    {
+      startX = 2400;
+      endX = -600;
+      cars.flipX = true;
+    }
+
+    cars.x = startX;
+    cars.offset.y = 0;
+
+    FlxTween.tween(cars, {x: endX}, duration, {
+      ease: FlxEase.sineInOut,
+      onComplete: function(_)
+      {
+        carInterruptable = true;
+        carGoingRight = !carGoingRight;
+        cars.offset.y = 0;
+      }
+    });
+
+    FlxTween.tween(cars.offset, {y: 3}, 0.1, {
+      ease: FlxEase.sineInOut,
+      type: 4,
+      loopDelay: 0
+    });
+  }
+
+  function driveBus():Void
+  {
+    if (busIsPassing) return;
+    busIsPassing = true;
+    busSprite.animation.play("BusGuillen");
+
+    busSprite.animation.finishCallback = function(name:String)
+    {
+      busIsPassing = false;
+      busSprite.animation.finishCallback = null;
+    };
+  }
+
+  override function onBeatHit(event:SongTimeScriptEvent):Void
+  {
+    super.onBeatHit(event);
+    if (event.beat == 242 && !busIsPassing) if (FlxG.random.bool(5)) driveBus();
+    if (!busIsPassing && FlxG.random.bool(10) && carInterruptable) driveCar();
+  }
+
+  override function onSongRetry(event:ScriptEvent):Void
+  {
+    super.onSongRetry(event);
+    resetCar();
+    busIsPassing = false;
+  }
+}

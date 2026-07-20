@@ -1,0 +1,131 @@
+{
+  "version": "1.0.0",
+  "renderType": "sparrow",
+  "offsets": [-50, 10],
+  "danceEvery": 1,
+  "applyStageMatrix": false,
+  "scale": 1,
+  "name": "QT + KillerByte (Legacy)",
+  "flipX": false,
+  "cameraOffsets": [80, 50],
+  "startingAnimation": "danceLeft",
+  "singTime": 8,
+  "isPixel": false,
+  "assetPath": "2021/qt-kb",
+  "healthIcon": {
+    "isPixel": false,
+    "offsets": [0, 0],
+    "scale": 1,
+    "id": "qt-legacy",
+    "flipX": false
+  },
+  "atlasSettings": {
+    "swfMode": true,
+    "applyStageMatrix": false,
+    "useRenderTexture": false,
+    "filterQuality": 1,
+    "cacheOnLoad": false
+  },
+  "animations": [
+    {
+      "offsets": [0, 0],
+      "flipY": false,
+      "frameRate": 26,
+      "prefix": "danceLeftNormal",
+      "name": "danceLeft",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-41, 9],
+      "flipY": false,
+      "frameRate": 26,
+      "prefix": "danceRightNormal",
+      "name": "danceRight",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-26, 31],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singLeftQT",
+      "name": "singLEFT",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-67, -67],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singDownQT",
+      "name": "singDOWN",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [6, 43],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singUpQT",
+      "name": "singUP",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-147, -24],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singRightQT",
+      "name": "singRIGHT",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [47, 129],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singLeftKB",
+      "name": "singLEFT-alt",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-20, -86],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singDownKB",
+      "name": "singDOWN-alt",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-38, 142],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singUpKB",
+      "name": "singUP-alt",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    },
+    {
+      "offsets": [-317, -71],
+      "flipY": false,
+      "frameRate": 24,
+      "prefix": "singRightKB",
+      "name": "singRIGHT-alt",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel"
+    }
+  ]
+}

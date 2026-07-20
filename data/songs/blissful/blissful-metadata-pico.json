@@ -1,0 +1,50 @@
+{
+  "version": "2.2.4",
+  "songName": "Blissful (Pico Mix)",
+  "artist": "Rareblin + Pohsan (feat. Biddle3)",
+  "charter": "FatzFries",
+  "divisions": 96,
+  "looped": false,
+  "offsets": {
+    "instrumental": 0,
+    "altInstrumentals": {},
+    "vocals": {},
+    "altVocals": {}
+  },
+  "playData": {
+    "songVariations": [],
+    "stickerPack": "qtstickerspico",
+    "difficulties": ["easy", "normal", "hard"],
+    "characters": {
+      "player": "pico-qt",
+      "girlfriend": "nene-qt",
+      "opponent": "qt",
+      "instrumental": "pico",
+      "altInstrumentals": [],
+      "opponentVocals": ["qt"],
+      "playerVocals": ["pico-qt"]
+    },
+    "stage": "qtStagePico",
+    "noteStyle": "funkin",
+    "ratings": {
+      "easy": 4,
+      "hard": 7,
+      "normal": 6
+    },
+    "album": "qt-expansion",
+    "previewStart": 0,
+    "previewEnd": 0
+  },
+  "generatedBy": "Friday Night Funkin' - v0.8.1",
+  "timeFormat": "ms",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 138,
+      "n": 4,
+      "d": 4,
+      "bt": [4, 4, 4, 4]
+    }
+  ]
+}

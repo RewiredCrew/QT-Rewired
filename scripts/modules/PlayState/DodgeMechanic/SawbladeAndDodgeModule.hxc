@@ -1,0 +1,581 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.math.FlxRect;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
+import funkin.Conductor;
+import funkin.Paths;
+import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.module.Module;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.play.event.SongEvent;
+import funkin.play.scoring.Scoring;
+import funkin.util.Constants;
+import funkin.util.HapticUtil;
+import funkin.util.TouchUtil;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import funkin.ui.FullScreenScaleMode;
+import StringTools;
+import funkin.save.Save;
+import funkin.Preferences;
+import funkin.util.InputUtil;
+
+class SawbladeAndDodgeModule extends Module
+{
+  var bfDodging:Bool = false;
+  var animSuffix:Int = 0;
+  var bfCanDodge:Bool = true;
+  var songIsAllowed:Bool = false;
+  var dodgeBeatsCooldown:Int;
+  var dodgeToggleAnim:Int = 0;
+  var beatsSinceDodge:Int = 0;
+  var beatListener:Dynamic;
+  var activeEvent:SongEvent;
+  var stage:Dynamic;
+  var dodged:Bool = false;
+  var touchArea:FlxRect;
+  var touchX:Float;
+  var touchY:Float;
+  var touchWidth:Float = 280;
+  var touchHeight:Float = 280;
+  var touchAreaSprite:FlxSprite;
+  var warningVfx:FunkinSprite;
+  var sawSprite:FlxAtlasSprite;
+  var warnSound:FunkinSound;
+  var attackSound:FunkinSound;
+  var playState;
+  var dodgeText:FlxText;
+  var dodgeText2:FlxText;
+  var dodgeFormat:String;
+  var dimOverlay:FlxSprite;
+  var dodgeTextSwapTimer:FlxTimer;
+  var _interval:Float;
+  var hitWindow:Float;
+  var hitTime:Float;
+  var eventReady:Bool;
+  var canDie:Bool = true;
+  var spinVibrationPreset:VibrationPreset = {
+    period: 0.05,
+    duration: 0.2,
+    amplitude: 0.6,
+    sharpness: 0.7
+  };
+  var attackVibrationPreset:VibrationPreset = {
+    period: 0,
+    duration: 0.3,
+    amplitude: 1.0,
+    sharpness: 0.9
+  };
+
+  static inline var BASE_BEAT_COOLDOWN:Int = 1;
+  static inline var MIN_COOLDOWN_MS:Float = 300;
+  static inline var DODGE_TEXT_SWAP_DELAY:Float = 5;
+  static inline var DODGE_TEXT_FADE_DURATION:Float = 2;
+
+  public function new()
+  {
+    super('SawbladeAndDodgeModule', 1, {state: PlayState});
+  }
+
+  function destroyAssets():Void
+  {
+    if (warningVfx != null)
+    {
+      warningVfx.destroy();
+      warningVfx = null;
+    }
+    if (sawSprite != null)
+    {
+      sawSprite.destroy();
+      sawSprite = null;
+    }
+    if (dodgeText != null)
+    {
+      dodgeText.destroy();
+      dodgeText = null;
+    }
+    if (dodgeText2 != null)
+    {
+      dodgeText2.destroy();
+      dodgeText2 = null;
+    }
+    if (dodgeTextSwapTimer != null)
+    {
+      dodgeTextSwapTimer.cancel();
+      dodgeTextSwapTimer = null;
+    }
+    if (warnSound != null)
+    {
+      warnSound.destroy();
+      warnSound = null;
+    }
+    if (attackSound != null)
+    {
+      attackSound.destroy();
+      attackSound = null;
+    }
+    if (touchAreaSprite != null)
+    {
+      touchAreaSprite.destroy();
+      touchAreaSprite = null;
+    }
+    if (dimOverlay != null)
+    {
+      dimOverlay.destroy();
+      dimOverlay = null;
+    }
+    isAllowed = false;
+  }
+
+  function initializeAssets():Void
+  {
+    var stage = playState.currentStage;
+
+    warnSound = FunkinSound.load(Paths.sound('sawblades/alerts/alert'), 1.0, false, false, false);
+    attackSound = FunkinSound.load(Paths.sound('sawblades/attacks/attack'), 1.0, false, false, false);
+    dimOverlay = new FlxSprite();
+    dimOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+    dimOverlay.scrollFactor.set();
+    dimOverlay.camera = playState.camHUD;
+    dimOverlay.alpha = 0;
+    dimOverlay.zIndex = 632;
+    playState.add(dimOverlay);
+
+    warningVfx = new FunkinSprite();
+    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared", {cacheOnLoad: true});
+    warningVfx.animation.addByFrameLabel('1-alert-1', "alert 1 beat 1", 24, false);
+    warningVfx.animation.addByFrameLabel('2-alert-1', "alert 1 beat 2", 24, false);
+    warningVfx.animation.addByFrameLabel('attack-1', "alert 1 attack", 24, false);
+
+    warningVfx.animation.addByFrameLabel('1-alert-2', "alert 2 beat 1", 24, false);
+    warningVfx.animation.addByFrameLabel('2-alert-2', "alert 2 beat 2", 24, false);
+    warningVfx.animation.addByFrameLabel('attack-2-1', "alert 2 attack 1", 24, false);
+    warningVfx.animation.addByFrameLabel('attack-2-2', "alert 2 attack 2", 24, false);
+    warningVfx.camera = playState.camHUD;
+    warningVfx.visible = false;
+    trace("ASDASD");
+    warningVfx.zIndex = 633;
+    playState.add(warningVfx);
+
+    var dadMidpoint = stage.getDad().getGraphicMidpoint();
+    sawSprite = new SawBladeSprite(dadMidpoint.x - 50, dadMidpoint.y - 275);
+    sawSprite.visible = false;
+    sawSprite.shader = stage.getDad().shader;
+    stage.add(sawSprite);
+
+    playState.refresh();
+  }
+
+  public function executeWarning(interval, saws):Void
+  {
+    trace(saws);
+    var postfx = switch (saws)
+    {
+      case 2:
+        "-2";
+      default:
+        "-1";
+    }
+
+    darkenScreen();
+
+    playWarningStep('1-alert' + postfx, 0, 0);
+
+    new FlxTimer().start(interval, (_) ->
+    {
+      if (activeEvent.amntSaws > 1)
+      {
+        trace(activeEvent.amntSaws);
+        playWarningStep('2-alert' + postfx, 0, 0, true, 2);
+      }
+      else
+      {
+        trace('this is a certified single saw bruh');
+        playWarningStep('2-alert' + postfx, 0, 0);
+      }
+    });
+  }
+
+  /**
+   * Oscurece la pantalla al mostrar las alertas. Usa el prop "blackScreen" del stage
+   * si este lo define (como en Obliterated normal) para respetar el efecto artistico
+   * original, y si no existe recurre al overlay propio del modulo para que el efecto
+   * siempre este disponible sin importar el stage/variacion.
+   */
+  function darkenScreen():Void
+  {
+    var blackScreen = playState.currentStage.getNamedProp("blackScreen");
+    if (blackScreen != null) FlxTween.tween(blackScreen, {alpha: 0.3}, 0.35, {ease: FlxEase.linear});
+    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {alpha: 0.3}, 0.35, {ease: FlxEase.linear});
+  }
+
+  function undarkenScreen():Void
+  {
+    var blackScreen = playState.currentStage.getNamedProp("blackScreen");
+    if (blackScreen != null) FlxTween.tween(blackScreen, {alpha: 0}, 0.35, {ease: FlxEase.quadInOut});
+    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {alpha: 0}, 0.35, {ease: FlxEase.quadInOut});
+  }
+
+  public function playWarningStep(animName:String, offsetX:Float, offsetY:Float, showVfx:Bool = true, suffix:Int = 1):Void
+  {
+    if (animName.indexOf("attack") == -1) FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
+    else if (animName.indexOf("attack") != -1 && showVfx && suffix == 3)
+    {
+      trace('yeah man');
+      FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
+    }
+    else
+    {
+      FunkinSound.playOnce(Paths.sound('sawblades/attacks/attack-$suffix'));
+    }
+    if (warningVfx != null && warningVfx.animation != null && showVfx)
+    {
+      warningVfx.visible = true;
+      warningVfx.animation.play(animName);
+      warningVfx.offset.set(offsetX, offsetY);
+      warningVfx.screenCenter();
+    }
+  }
+
+  function doSawAnimation():Void
+  {
+    if (playState.health <= 0) return;
+
+    sawSprite?.zIndex = dodgeToggleAnim == 0 ? 299 : 199;
+    sawSprite?.animation?.play('saw anim alert', true, false, 0);
+    sawSprite?.offset?.y = 0;
+    HapticUtil.vibrateByPreset(spinVibrationPreset);
+
+    sawSprite?.animation?.onFinish?.addOnce((_) ->
+    {
+      if (_ == "saw anim attack")
+      {
+        hideAllVisuals();
+      }
+    });
+
+    warningVfx?.visible = true;
+    sawSprite?.visible = true;
+    playState.currentStage.refresh();
+  }
+
+  public function hideAllVisuals():Void
+  {
+    if (playState.health <= 0) return;
+    sawSprite?.visible = false;
+    warningVfx?.visible = false;
+    undarkenScreen();
+  }
+
+  public function executeAttack(interval):Void
+  {
+    if (playState.health <= 0) return;
+    eventReady = true;
+    bfDodging = false;
+    bfCanDodge = true;
+    doSawAnimation();
+
+    new FlxTimer().start(interval, (_) ->
+    {
+      sawSprite?.animation?.play("saw anim attack", true, false, 0);
+      sawSprite?.offset?.y = -300;
+      playState.camGame.shake(0.007, 0.25);
+      if (HapticUtil.hapticsAvailable) HapticUtil.vibrateByPreset(attackVibrationPreset);
+
+      playState.currentStage.getGirlfriend().playAnimation("dodge", true, true);
+
+      new FlxTimer().start(hitWindow / 1000, (_) ->
+      {
+        trace('[EXECUTE ATTACK] can you pause the game? ${playState.mayPauseGame}');
+        if (!playState.mayPauseGame) onBadHit();
+        playState.mayPauseGame = true;
+        eventReady = false;
+      });
+    });
+  }
+
+  function onGoodHit():Void
+  {
+    playState.health += 0.20;
+    playState.popUpScore("dodged");
+    playState.mayPauseGame = true;
+
+    bfDodging = false;
+    bfCanDodge = true;
+
+    if (dodgeText == null) return;
+    FlxTween.tween(dodgeText, {alpha: 0}, 1, {ease: FlxEase.smoothStepInOut}, {
+      onComplete: function(_)
+      {
+        dodgeText.kill();
+        playState.remove(dodgeText, true);
+        dodgeText = null;
+      }
+    });
+    if (dodgeText2 != null)
+    {
+      FlxTween.tween(dodgeText2, {alpha: 0}, 1, {ease: FlxEase.smoothStepInOut}, {
+        onComplete: function(_)
+        {
+          dodgeText2.kill();
+          playState.remove(dodgeText2, true);
+          dodgeText2 = null;
+        }
+      });
+    }
+  }
+
+  function onBadHit():Void
+  {
+    if (playState.isBotPlayMode || playState.isPracticeMode)
+    {
+      onGoodHit();
+      return;
+    }
+
+    if (!canDie)
+    {
+      trace('player cant die rn');
+      canDie = true;
+      playState.mayPauseGame = true;
+      return;
+    }
+
+    switch (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT))
+    {
+      case "instakill":
+        executeInstantKill();
+      case "disabled":
+        return;
+      default:
+        executeDamage();
+    }
+
+    HapticUtil.vibrateByPreset(attackVibrationPreset);
+
+    playState.mayPauseGame = true;
+  }
+
+  function executeDamage():Void
+  {
+    var damage = Constants.HEALTH_MAX * 0.5;
+    var newHealth = Math.max(playState.health - damage, Constants.HEALTH_MIN);
+
+    playState.health = newHealth;
+
+    if (newHealth <= Constants.HEALTH_MIN) executeInstantKill();
+    else
+    {
+      FlxG.camera.flash(0xFFff0000, 0.3);
+      playState.camGame.shake(0.008, 0.3);
+      playState.currentStage.getBoyfriend().playAnimation("sawHit-" + animSuffix, true, true);
+      playState.currentStage.refresh();
+    }
+  }
+
+  function executeInstantKill():Void
+  {
+    hideAllVisuals();
+    if (PlayState?.instance?.currentStage?.getBoyfriend()?.characterId == 'bf-qt') PlayState.instance.currentStage.getBoyfriend().setSuffix('-saw');
+    FlxG.camera.flash(0xFFff0000, 1.0);
+    GameOverSubState.musicSuffix = '-sawblade';
+    GameOverSubState.blueBallSuffix = '-sawblade';
+    playState.health = -1;
+    destroyAssets();
+  }
+
+  override public function onSongStart(event)
+  {
+    super.onSongStart(event);
+    eventReady = false;
+    canDie = true;
+  }
+
+  override function onSongLoaded(event):Void
+  {
+    super.onSongLoaded(event);
+    destroyAssets();
+    resetState();
+    if (beatListener != null)
+    {
+      Conductor.beatHit.remove(beatListener);
+      beatListener = null;
+    }
+
+    playState = PlayState.instance;
+    var beatMs = Conductor.instance.beatLengthMs;
+    var beatsForMin = Std.int(Math.ceil(MIN_COOLDOWN_MS / beatMs));
+    songIsAllowed = StringTools.startsWith(playState.currentSong.id, "obliterated");
+    if (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
+
+    if (songIsAllowed)
+    {
+      dodgeText = new FlxText().setFormat(Paths.font('vcr.ttf'), 28, 0xFF0000, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+      dodgeText.scrollFactor.set();
+      dodgeFormat = FlxG.onMobile ? "TAP the sign" : "Press " + InputUtil.getKeyName(Save.instance.modOptions[
+        QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND
+      ][0]).toUpperCase();
+      var isErectVariation = playState.currentVariation == "erect";
+      dodgeText.text = dodgeFormat + ' on third beat to dodge' + (isErectVariation ? '...' : '!');
+      dodgeText.screenCenter();
+      dodgeText.y = (FlxG.onMobile || Preferences.downscroll) ? FlxG.height - dodgeText.height - 15 - FullScreenScaleMode.cutoutSize.y : PlayState.instance.healthBarBG.y
+        - 90;
+      dodgeText.zIndex = 999;
+      dodgeText.alpha = 1;
+      playState.add(dodgeText);
+      dodgeText.cameras = [PlayState.instance.camHUD];
+
+      if (isErectVariation)
+      {
+        dodgeText2 = new FlxText().setFormat(Paths.font('vcr.ttf'), 28, 0xFF0000, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+        dodgeText2.scrollFactor.set();
+        dodgeText2.text = 'But watch out, some attacks strike twice!';
+        dodgeText2.screenCenter();
+        dodgeText2.y = dodgeText.y;
+        dodgeText2.zIndex = 998;
+        dodgeText2.alpha = 0;
+        playState.add(dodgeText2);
+        dodgeText2.cameras = [playState.camHUD];
+
+        dodgeTextSwapTimer = new FlxTimer().start(DODGE_TEXT_SWAP_DELAY, (_) ->
+        {
+          if (dodgeText != null) FlxTween.tween(dodgeText, {alpha: 0}, DODGE_TEXT_FADE_DURATION, {ease: FlxEase.smoothStepInOut});
+          if (dodgeText2 != null) FlxTween.tween(dodgeText2, {alpha: 1}, DODGE_TEXT_FADE_DURATION, {ease: FlxEase.smoothStepInOut});
+          dodgeTextSwapTimer = null;
+        });
+      }
+    }
+
+    initializeAssets();
+
+    touchX = (FlxG.width - touchWidth) / 2;
+    touchY = (FlxG.height - touchHeight) / 2 - 40;
+
+    touchAreaSprite = new FlxSprite(touchX, touchY);
+    touchAreaSprite.makeGraphic(Std.int(touchWidth), Std.int(touchHeight), 0x00000000); // TODO: Change this <-------- i dont think it got changed guys
+    touchAreaSprite.scrollFactor.set(0, 0);
+    touchAreaSprite.cameras = [playState.camHUD];
+    if (FlxG.onMobile) playState.add(touchAreaSprite);
+
+    dodgeBeatsCooldown = Math.max(BASE_BEAT_COOLDOWN, beatsForMin);
+    stage = playState.currentStage;
+
+    setupBeatListener();
+  }
+
+  function setupBeatListener():Void
+  {
+    beatListener = () ->
+    {
+      var beatMs = Conductor.instance.beatLengthMs;
+      var beatsForMin = Std.int(Math.ceil(MIN_COOLDOWN_MS / beatMs));
+      dodgeBeatsCooldown = Math.max(BASE_BEAT_COOLDOWN, beatsForMin);
+
+      if (!bfCanDodge && beatsSinceDodge > 0)
+      {
+        beatsSinceDodge++;
+        if (beatsSinceDodge >= dodgeBeatsCooldown)
+        {
+          bfCanDodge = true;
+          beatsSinceDodge = 0;
+        }
+      }
+    };
+    Conductor.beatHit.add(beatListener);
+  }
+
+  override function onDestroy(event):Void
+  {
+    super.onDestroy(event);
+    if (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
+
+    resetState();
+    destroyAssets();
+    Conductor.beatHit.remove(beatListener);
+  }
+
+  function resetState():Void
+  {
+    bfDodging = false;
+    bfCanDodge = true;
+    dodged = false;
+    beatsSinceDodge = 0;
+    canDie = true;
+    eventReady = false;
+  }
+
+  function bfDodge():Void
+  {
+    if (!canDodge() || Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
+
+    trace('are you trying to dodge?');
+
+    performDodge();
+    checkHitTiming();
+  }
+
+  function canDodge():Bool
+  {
+    return bfCanDodge && !bfDodging;
+  }
+
+  function performDodge():Void
+  {
+    if (stage?.getBoyfriend() != null)
+    {
+      if (eventReady) stage.getBoyfriend().playAnimation('dodge-' + animSuffix, true, true);
+    }
+  }
+
+  function checkHitTiming():Void
+  {
+    var hitTime = activeEvent?.hitTime;
+    var hitWindow = activeEvent?.hitWindow;
+    var timeDiff = Conductor.instance.songPosition - hitTime;
+
+    if (Math.abs(timeDiff) <= hitWindow)
+    {
+      trace('yay you did it');
+      canDie = false;
+      onGoodHit();
+    }
+    else
+    {
+      trace('die');
+      trace(hitWindow);
+      trace(Math.abs(timeDiff));
+    }
+  }
+
+  override function onUpdate(elapsed:Float):Void
+  {
+    /*if (FlxG.keys.justPressed.B)
+      {
+        warningVfx.visible = true;
+        warningVfx.animation.play("attack-2-1", true);
+    }*/
+
+    super.onUpdate(elapsed);
+    if (PlayState.instance == null || Conductor.instance == null) return;
+
+    if (!PlayState.instance.isGamePaused
+      && ((FlxG.onMobile && TouchUtil.overlapsComplex(touchAreaSprite) && TouchUtil.justPressed) || dodgeBindJustPressed()))
+    {
+      bfDodge();
+    }
+  }
+
+  function dodgeBindJustPressed():Bool
+  {
+    if (activeEvent == null) return false;
+    return FlxG.keys.anyJustPressed(Save.instance.modOptions[
+      QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND
+    ]);
+  }
+}

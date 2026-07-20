@@ -1,0 +1,112 @@
+import flixel.FlxG;
+import flixel.tweens.FlxEase;
+import animate.internal.elements.FlxSpriteElement;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.module.ModuleHandler;
+import funkin.play.character.PicoPlayerBaseCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PauseSubState;
+import funkin.play.PlayState;
+import funkin.save.Save;
+
+class PicoQtCharacter extends PicoPlayerBaseCharacter
+{
+  public function new()
+  {
+    super('pico-qt');
+
+    ignoreExclusionPref = [
+      "cough",
+      "burp-long",
+      "preDance",
+      "hey",
+      "danceLeft-alt",
+      "danceRight-alt"
+    ];
+  }
+
+  var ps;
+
+  public var randomInt;
+
+  public override function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+
+    ps = PlayState.instance;
+  }
+
+  public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
+  {
+    super.playAnimation(name, restart, ignoreOther, reversed);
+
+    switch (name)
+    {
+      case "preDance":
+        shouldAlternate = true;
+        danceEvery = 2;
+        idleSuffix = '-alt';
+      case "hey":
+        danceEvery = 1;
+        shouldAlternate = null;
+        idleSuffix = '';
+
+      case "cough" | "burp-long":
+        super.playAnimation(name, restart, true, reversed);
+    }
+  }
+
+  override function onAnimationFinished(name:String):Void
+  {
+    super.onAnimationFinished(name);
+
+    if (PlayState.instance != null)
+    {
+      switch (name)
+      {
+        case "preDance":
+          hasDanced = false;
+          shouldAlternate = true;
+          danceEvery = 2;
+          idleSuffix = '-alt';
+        case "intro":
+          if (ps == null) return;
+          ps.tweenCameraZoom(ps.stageZoom, 4, true, FlxEase.smoothStepInOut);
+          ps.tweenCameraToPosition(ps.currentStage.getDad().cameraFocusPoint.x, ps.currentStage.getDad().cameraFocusPoint.y, 3, true);
+      }
+    }
+  }
+
+  public override function onUpdate(event:UpdateScriptEvent):Void
+  {
+    super.onUpdate(event);
+
+    if (["cough", "burp-long"].contains(getCurrentAnimation())) PlayState.instance.vocals.playerVolume = 1;
+  }
+
+  override function resetCharacter(resetCamera:Bool):Void
+  {
+    super.resetCharacter(resetCamera);
+
+    GameOverSubState.musicSuffix = '-pico';
+    GameOverSubState.blueBallSuffix = '-pico';
+    PauseSubState.musicSuffix = '-pico';
+    this.visible = true;
+    shouldAlternate = null;
+    idleSuffix = '';
+    danceEvery = 1;
+  }
+
+  public override function getDeathQuote():Null<String>
+  {
+    switch (PlayState.instance?.currentStage?.getDad()?.characterId)
+    {
+      case "qt":
+        randomInt = FlxG.random.int(1, 6);
+        var gameoverSound = Paths.sound('qtgameover/' + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT) + '/pico/qtGameover-' + randomInt);
+        return gameoverSound;
+      default:
+        super.getDeathQuote();
+    }
+  }
+}

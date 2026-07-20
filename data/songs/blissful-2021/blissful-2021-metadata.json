@@ -1,0 +1,41 @@
+{
+  "version": "2.2.4",
+  "songName": "Blissful (Classic Version)",
+  "artist": "CheeseWithCake",
+  "charter": "FatzFries",
+  "offsets": {},
+  "playData": {
+    "difficulties": ["easy", "normal", "hard"],
+    "characters": {
+      "player": "bf-qt",
+      "girlfriend": "gf-qt",
+      "opponent": "qt-legacy",
+      "opponentVocals": ["qt-legacy"],
+      "playerVocals": ["bf-qt"]
+    },
+    "stage": "qtStage2021",
+    "noteStyle": "funkin",
+    "ratings": {
+      "easy": 2,
+      "normal": 5,
+      "hard": 6
+    },
+    "album": "qt",
+    "previewEnd": 0
+  },
+  "generatedBy": "Friday Night Funkin' - v0.8.4",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 138,
+      "bt": [4, 4, 4, 4]
+    },
+    {
+      "t": 134494,
+      "b": 309.3362,
+      "bpm": 138,
+      "bt": [4, 4, 4, 4]
+    }
+  ]
+}

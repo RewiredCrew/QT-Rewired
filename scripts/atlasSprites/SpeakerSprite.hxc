@@ -1,0 +1,21 @@
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.util.FlxTimer;
+import flixel.FlxG;
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import funkin.Preferences;
+
+class SpeakerSprite extends FunkinSprite
+{
+  public function new(x:Float, y:Float)
+  {
+    super(x, y);
+    loadTextureAtlas("characters/gf-qt/speakers", "shared");
+    animation.addBySymbol("bump", this.getDefaultSymbol(), 24, false);
+    this.applyStageMatrix = false;
+    this.useRenderTexture = true;
+  }
+}

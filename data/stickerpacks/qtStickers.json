@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "qtStickers",
+  "artist": "JoaDash",
+  "stickers": [
+    "stickers/qtStickers/qtSticker2",
+    "stickers/qtStickers/qtSticker3",
+    "stickers/qtStickers/flowerSticker1",
+    "stickers/qtStickers/flowerSticker2",
+    "stickers/qtStickers/starSticker",
+    "stickers/qtStickers/crayonSticker",
+    "stickers/qtStickers/cloudSticker",
+    "stickers/qtStickers/skullSticker"
+  ]
+}

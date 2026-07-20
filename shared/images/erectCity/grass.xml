@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="grass.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="grass wind instancia 10000" x="10" y="10" width="79" height="86" frameX="-1" frameY="-4" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10001" x="10" y="10" width="79" height="86" frameX="-1" frameY="-4" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10002" x="10" y="10" width="79" height="86" frameX="-1" frameY="-4" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10003" x="10" y="10" width="79" height="86" frameX="-1" frameY="-4" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10004" x="10" y="10" width="79" height="86" frameX="-1" frameY="-4" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10005" x="99" y="10" width="77" height="88" frameX="0" frameY="-2" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10006" x="99" y="10" width="77" height="88" frameX="0" frameY="-2" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10007" x="99" y="10" width="77" height="88" frameX="0" frameY="-2" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10008" x="99" y="10" width="77" height="88" frameX="0" frameY="-2" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10009" x="99" y="10" width="77" height="88" frameX="0" frameY="-2" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10010" x="186" y="10" width="69" height="89" frameX="-1" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10011" x="186" y="10" width="69" height="89" frameX="-1" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10012" x="186" y="10" width="69" height="89" frameX="-1" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10013" x="186" y="10" width="69" height="89" frameX="-1" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10014" x="186" y="10" width="69" height="89" frameX="-1" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10015" x="265" y="10" width="72" height="89" frameX="-3" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10016" x="265" y="10" width="72" height="89" frameX="-3" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10017" x="265" y="10" width="72" height="89" frameX="-3" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10018" x="265" y="10" width="72" height="89" frameX="-3" frameY="0" frameWidth="80" frameHeight="90"/>
+	<SubTexture name="grass wind instancia 10019" x="265" y="10" width="72" height="89" frameX="-3" frameY="0" frameWidth="80" frameHeight="90"/>
+</TextureAtlas>

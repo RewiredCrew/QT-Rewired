@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "name": "YOUR FAVORITE ROBOT",
+  "capsule": {
+    "name": "QT WEEK"
+  },
+  "titleAsset": "storymenu/titles/weekqt",
+  "props": [
+    {
+      "assetPath": "storymenu/props/QT",
+      "scale": 0.59,
+      "offsets": [50, 0],
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "qt_idle0",
+          "frameRate": 24
+        },
+        {
+          "name": "confirm",
+          "prefix": "qt_hey0",
+          "frameRate": 24,
+          "frameIndices": [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 13, 13, 13, 13,
+            13, 13, 13, 13, 13, 13
+          ],
+          "offsets": [122, -81]
+        }
+      ]
+    },
+    {
+      "assetPath": "storymenu/props/bf",
+      "scale": 1.0,
+      "offsets": [150, 80],
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "idle0",
+          "frameRate": 24
+        },
+        {
+          "name": "confirm",
+          "prefix": "confirm0",
+          "frameRate": 24
+        }
+      ]
+    },
+    {
+      "assetPath": "storymenu/props/gf",
+      "scale": 1.0,
+      "offsets": [200, 80],
+      "animations": [
+        {
+          "name": "danceLeft",
+          "prefix": "idle0",
+          "frameIndices": [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        },
+        {
+          "name": "danceRight",
+          "prefix": "idle0",
+          "frameIndices": [
+            15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+          ]
+        }
+      ]
+    }
+  ],
+  "background": "#ff7ec8",
+  "songs": ["blissful", "obliterated"]
+}

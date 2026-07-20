@@ -1,0 +1,245 @@
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.play.character.CharacterType;
+import funkin.audio.FunkinSound;
+import funkin.util.HapticUtil;
+import funkin.util.Sequence;
+import funkin.FunkinMemory;
+import flixel.addons.display.FlxBackdrop;
+import flixel.FlxG;
+
+class QtStageCityErect extends Stage
+{
+  var colorShader = new AdjustColorShader();
+  var isPico:Bool;
+  var clouds:FlxBackdrop;
+  var fastCars:Array<FunkinSprite> = [];
+  var fastCarCanDrive:Bool = false;
+  var lastCarID:Int = -1;
+  var consecutiveCarCount:Int = 0;
+  var carSequence:Sequence;
+  var carSequenceData:Array<SequenceData>;
+  var doCarHaptics:Bool = false;
+  var carYOffset:Float = -120;
+  // Car spawn chance variables
+  var carBaseChance:Float = 2;
+  var carCurrentChance:Float = 4;
+  var carChanceIncrement:Float = 6;
+
+  function new()
+  {
+    super("qtStageCityErect");
+  }
+
+  override function onCreate(event:ScriptEvent)
+  {
+    super.onCreate(event);
+
+    for (snd in ['carPass0', 'carPass1']) FunkinMemory.cacheSound(Paths.sound(snd, "week4"));
+  }
+
+  override function buildStage()
+  {
+    isPico = PlayState.instance.currentVariation == 'pico';
+    var prefix = "erectCity" + (isPico ? "-pico" : "");
+
+    if (_data?.props != null) for (p in _data.props) p.assetPath = prefix + "/" + p.assetPath.split("/").pop();
+
+    if (_data?.characters != null && isPico)
+    {
+      _data.characters.bf.position = [1360, 1285];
+      _data.characters.gf.position = [780, 1205];
+    }
+
+    super.buildStage();
+
+    colorShader.hue = -25;
+    colorShader.saturation = -20;
+    colorShader.contrast = 0;
+    colorShader.brightness = -40;
+
+    clouds = new FlxBackdrop(Paths.image(prefix + "/clouds"), 0x01);
+    clouds.setPosition(-829, -716);
+    clouds.scrollFactor.set(0.4, 0.4);
+    clouds.zIndex = 2;
+    clouds.velocity.x = 50;
+    add(clouds);
+
+    fastCars = [];
+    for (i in 1...3)
+    {
+      var car = new FunkinSprite(-12600, 1200);
+      car.loadTexture(prefix + "/car" + i);
+      car.zIndex = 1000;
+
+      // Keep this shit inactive so it doesn't fuck performance that much
+      car.active = false;
+      car.visible = false;
+
+      add(car);
+      fastCars.push(car);
+    }
+
+    carSequenceData = [
+      {time: 1.0, callback: () -> doCarHaptics = true},
+      {time: 1.4, callback: () -> doCarHaptics = false},
+      {time: 2.0, callback: () -> resetFastCar()}
+    ];
+
+    resetFastCar();
+    refresh();
+  }
+
+  override function onUpdate(event:UpdateScriptEvent)
+  {
+    super.onUpdate(event);
+
+    if (doCarHaptics) HapticUtil.vibrate(0, 0.05, 0.25, 0);
+  }
+
+  override function onStepHit(event:SongTimeScriptEvent)
+  {
+    super.onStepHit(event);
+
+    if (event.step % 16 == 0 && fastCarCanDrive)
+    {
+      if (FlxG.random.bool(carCurrentChance))
+      {
+        fastCarDrive();
+        carCurrentChance = carBaseChance;
+      }
+      else
+      {
+        carCurrentChance += carChanceIncrement;
+      }
+    }
+  }
+
+  function resetFastCar():Void
+  {
+    for (car in fastCars)
+    {
+      car.x = -12600;
+      car.velocity.x = 0;
+      car.active = false;
+      car.visible = false;
+    }
+    fastCarCanDrive = true;
+  }
+
+  function fastCarDrive():Void
+  {
+    var randomSound = 'carPass' + FlxG.random.int(0, 1);
+    FunkinSound.playOnce(Paths.sound(randomSound, 'week4'), 0.7);
+
+    var nextCarID = FlxG.random.int(1, 2);
+
+    if (nextCarID == lastCarID)
+    {
+      consecutiveCarCount++;
+      if (consecutiveCarCount >= 2)
+      {
+        nextCarID = (nextCarID == 1) ? 2 : 1;
+        consecutiveCarCount = 0;
+      }
+    }
+    else
+    {
+      consecutiveCarCount = 0;
+    }
+
+    lastCarID = nextCarID;
+
+    var chosenCar = fastCars[nextCarID - 1];
+    chosenCar.active = true;
+    chosenCar.visible = true;
+    chosenCar.y = FlxG.random.int(1150, 1300) + carYOffset;
+    chosenCar.velocity.x = FlxG.random.int(170, 220) * 180;
+
+    fastCarCanDrive = false;
+    carSequence = new Sequence(carSequenceData);
+  }
+
+  function onGameOver(event:ScriptEvent)
+  {
+    super.onGameOver(event);
+
+    if (getBoyfriend() != null) getBoyfriend().shader = null;
+  }
+
+  override function addCharacter(c:BaseCharacter, t:CharacterType)
+  {
+    super.addCharacter(c, t);
+
+    switch (t)
+    {
+      case CharacterType.BF:
+        var rim = new DropShadowShader();
+        rim.setAdjustColor(colorShader.brightness, colorShader.hue, colorShader.contrast, colorShader.saturation);
+        rim.color = 0xFFE19D97;
+        c.shader = rim;
+        rim.attachedSprite = c;
+        rim.angle = 45;
+        rim.distance = 13;
+
+        var bfPersist:BaseCharacter = c;
+        c.animation.onFrameChange.add(function()
+        {
+          if (bfPersist != null && bfPersist.frame != null) rim.updateFrameInfo(bfPersist.frame);
+        });
+
+      case CharacterType.DAD:
+        var rim2 = new DropShadowShader();
+        rim2.setAdjustColor(colorShader.brightness, colorShader.hue, colorShader.contrast, colorShader.saturation);
+        rim2.color = 0xFFC863B9;
+        c.shader = rim2;
+        rim2.attachedSprite = c;
+        rim2.angle = 180;
+        rim2.distance = 13;
+
+        var dadPersist:BaseCharacter = c;
+        c.animation.onFrameChange.add(function()
+        {
+          if (dadPersist != null && dadPersist.frame != null) rim2.updateFrameInfo(dadPersist.frame);
+        });
+
+      default:
+        c.shader = colorShader;
+    }
+  }
+
+  function fetchAssetPaths():Array<String>
+  {
+    var results:Array<String> = super.fetchAssetPaths();
+    var prefix = "erectCity" + (PlayState.instance.currentVariation == 'pico' ? "-pico" : "");
+
+    results.push(Paths.image(prefix + "/clouds"));
+    results.push(Paths.image(prefix + "/car1"));
+    results.push(Paths.image(prefix + "/car2"));
+    results.push(Paths.sound('carPass0', 'week4'));
+    results.push(Paths.sound('carPass1', 'week4'));
+
+    return results;
+  }
+
+  override function onSongRetry(event:ScriptEvent)
+  {
+    super.onSongRetry(event);
+    resetFastCar();
+  }
+
+  override function onPause(event:PauseScriptEvent)
+  {
+    super.onPause(event);
+    if (carSequence != null) carSequence.running = false;
+  }
+
+  override function onResume(event:ScriptEvent)
+  {
+    super.onResume(event);
+    if (carSequence != null) carSequence.running = true;
+  }
+}

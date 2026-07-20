@@ -1,0 +1,9 @@
+.vscode
+astc-textures
+extras
+.prettierrc.json
+astc-compression-data.json
+hxformat.json
+.git
+.github
+.idea

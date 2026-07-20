@@ -1,0 +1,69 @@
+import funkin.play.PlayState;
+import funkin.play.character.MultiAnimateAtlasCharacter;
+import flixel.FlxG;
+import animate.internal.elements.FlxSpriteElement;
+import funkin.graphics.shaders.AdjustColorShader;
+
+class GirlfriendCharacterQtAnims extends MultiAnimateAtlasCharacter
+{
+  function new()
+  {
+    super('gf-qt');
+  }
+
+  public var boomBoxSpeakers:SpeakerSprite;
+
+  private var speakerShader:AdjustColorShader;
+
+  function onCreate(event:ScriptEvent)
+  {
+    super.onCreate(event);
+
+    boomBoxSpeakers = new SpeakerSprite(0, 0);
+
+    var element:FlxSpriteElement = new FlxSpriteElement(boomBoxSpeakers);
+    for (frame in this.getFramesWithKeyword("placeholder")) frame.add(element);
+    speakerShader = new AdjustColorShader();
+  }
+
+  override function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    if (this.shader == null) return;
+
+    speakerShader.brightness = this.shader.brightness;
+    speakerShader.hue = this.shader.hue;
+    speakerShader.contrast = this.shader.contrast - 20;
+    speakerShader.saturation = this.shader.saturation + 20;
+
+    boomBoxSpeakers.shader = speakerShader;
+  }
+
+  override function dance(forceRestart:Bool)
+  {
+    super.dance(forceRestart);
+
+    if (boomBoxSpeakers != null && boomBoxSpeakers.animation != null) boomBoxSpeakers.animation.play("bump", true);
+  }
+
+  override function resetCharacter(resetCamera:Bool):Void
+  {
+    super.resetCharacter(resetCamera);
+    shouldAlternate = null;
+    idleSuffix = '';
+  }
+
+  override function onAnimationFinished(name:String)
+  {
+    if (PlayState.instance != null) switch (name)
+    {
+      case "preDance":
+        hasDanced = PlayState.instance.currentStage.getBoyfriend().hasDanced;
+        idleSuffix = '-alt';
+      case "cheer":
+        idleSuffix = '';
+    }
+    super.onAnimationFinished(name);
+  }
+}

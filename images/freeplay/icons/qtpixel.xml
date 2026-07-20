@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="qt-pixel.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="confirm0000" x="10" y="10" width="40" height="38"/>
+	<SubTexture name="confirm0001" x="60" y="10" width="40" height="38"/>
+	<SubTexture name="confirm0002" x="10" y="58" width="40" height="38"/>
+	<SubTexture name="confirm-hold0000" x="10" y="58" width="40" height="38"/>
+	<SubTexture name="idle0000" x="60" y="58" width="40" height="38"/>
+</TextureAtlas>

@@ -1,0 +1,756 @@
+import funkin.play.song.Song;
+import funkin.util.Sequence;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import funkin.play.PlayState;
+import funkin.audio.FunkinSound;
+import flixel.util.FlxTimer;
+import funkin.ui.FullScreenScaleMode as FSSM;
+import funkin.save.Save;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import flixel.FlxSprite;
+import flixel.FlxG;
+import openfl.display.BlendMode;
+import funkin.graphics.FunkinSprite;
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.Conductor;
+#if mobile
+import funkin.util.TouchUtil;
+#end
+
+class BlissfulErectSong extends Song
+{
+  var skipText:FlxText;
+  var qtSnd1:FunkinSound;
+  var qtSnd2:FunkinSound;
+  var qtSnd3:FunkinSound;
+  var bfSnd1:FunkinSound;
+  var bfSnd2:FunkinSound;
+  var introMusic:FunkinSound;
+  var outroMusic:FunkinSound;
+  var cutsceneSkipped = false;
+  var canSkipCutscene = false;
+  var hasPlayedCutscene = false;
+  var hasPlayedOutro = false;
+  var PS(get, never):PlayState;
+  var cutsceneSeq:Sequence;
+  var hudTween:FlxTween;
+  var isMobilePauseButtonPressed:Bool = false;
+  var pinkFlash:FlxSprite;
+  var flashColor:Int = 0xFFFF9BF6;
+  var flashStartAlpha:Float = 0.3;
+  var flashFadeTime:Float = 1.4;
+  var danceQT:QTErectDanceSprite = null;
+  var lang;
+  var gameplayFlashTimes:Array<Float> = [116840, 202490, 226380];
+  var currentFlashIndex:Int = 0;
+
+  function get_PS()
+  {
+    return PlayState.instance;
+  }
+
+  public function new()
+  {
+    super('blissful', {variation: "erect"});
+  }
+
+  override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    return Save.instance.hasBeatenSong('blissful', null, 'erect');
+  }
+
+  override public function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+    danceQT = null;
+    hasPlayedCutscene = false;
+    hasPlayedOutro = false;
+    cutsceneSkipped = false;
+    canSkipCutscene = false;
+    currentFlashIndex = 0;
+    lang = Save.instance.modOptions.get("qt-rewiredLang");
+
+    var qt = PS.currentStage.getDad();
+    if (qt != null && qt.characterId.indexOf('qt') != -1) setupQTDanceSprite(qt);
+  }
+
+  function setupQTDanceSprite(qt)
+  {
+    trace("DO QT DANCEY");
+    danceQT = new QTErectDanceSprite(qt.x - 10, qt.y - 30);
+    PS.currentStage.add(danceQT);
+    danceQT.zIndex = 301;
+
+    var qtRim = new DropShadowShader();
+    qtRim.setAdjustColor(-40, -25, 0, -20);
+    qtRim.color = 0xFFC863B9;
+    danceQT.shader = qtRim;
+    qtRim.attachedSprite = danceQT;
+    qtRim.angle = 180;
+    qtRim.distance = 13;
+
+    danceQT.visible = false;
+
+    var dadPersist = danceQT;
+    danceQT.animation.onFrameChange.add(function()
+    {
+      if (dadPersist != null && dadPersist.frame != null) qtRim.updateFrameInfo(dadPersist.frame);
+    });
+
+    danceQT.animation.onFinish.add(name ->
+    {
+      if (name == "end")
+      {
+        danceQT.visible = false;
+        PS.currentStage.getDad().visible = true;
+        PS.currentStage.getDad().playAnimation("cheer", true, true);
+      }
+    });
+
+    PS.currentStage.refresh();
+  }
+
+  function triggerPinkFlash(targetCam:flixel.FlxCamera):Void
+  {
+    if (pinkFlash != null)
+    {
+      FlxTween.cancelTweensOf(pinkFlash);
+      PS.remove(pinkFlash, true);
+      pinkFlash.destroy();
+      pinkFlash = null;
+    }
+
+    pinkFlash = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, flashColor);
+    pinkFlash.blend = BlendMode.OVERLAY;
+    pinkFlash.alpha = flashStartAlpha;
+    pinkFlash.scrollFactor.set(0, 0);
+    pinkFlash.screenCenter();
+    pinkFlash.cameras = [targetCam];
+    PS.add(pinkFlash);
+
+    FlxTween.tween(pinkFlash, {alpha: 0}, flashFadeTime, {
+      ease: FlxEase.linear,
+      onComplete: _ ->
+      {
+        if (pinkFlash != null)
+        {
+          PS.remove(pinkFlash, true);
+          pinkFlash.destroy();
+          pinkFlash = null;
+        }
+      }
+    });
+  }
+
+  override function onBeatHit(ev):Void
+  {
+    if (ev.beat == 222) PS.currentStage.getDad().visible = false;
+
+    if (ev.beat == 221) FlxTween.tween(PS.opponentStrumline, {alpha: 0.3}, 1.5, {ease: FlxEase.quadInOut});
+
+    if (ev.beat == 348) FlxTween.tween(PS.opponentStrumline, {alpha: 1}, 1.5, {ease: FlxEase.quadInOut});
+
+    if (ev.beat == 478) FlxTween.tween(PS.opponentStrumline, {alpha: 0.3}, 1.5, {ease: FlxEase.quadInOut});
+
+    if (ev.beat == 544) FlxTween.tween(PS.opponentStrumline, {alpha: 1}, 1.5, {ease: FlxEase.quadInOut});
+
+    if (danceQT != null) danceQT.onBeatHit(ev.beat);
+  }
+
+  override public function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    #if mobile
+    isMobilePauseButtonPressed = TouchUtil.overlapsComplex(PS.pauseButton) && TouchUtil.justPressed;
+    #end
+
+    if (!PS.isInCutscene && currentFlashIndex < gameplayFlashTimes.length)
+    {
+      if (Conductor.instance.songPosition >= gameplayFlashTimes[currentFlashIndex])
+      {
+        triggerPinkFlash(PS.camHUD);
+        currentFlashIndex++;
+      }
+    }
+
+    if (PS.isInCutscene && PS.currentStage != null)
+    {
+      var gf = PS.currentStage.getGirlfriend();
+      if (gf != null && gf.isAnimationFinished())
+      {
+        gf.dance(true);
+      }
+    }
+
+    if ((PS.controls.CUTSCENE_ADVANCE || isMobilePauseButtonPressed) && !cutsceneSkipped)
+    {
+      if (!canSkipCutscene)
+      {
+        if (skipText != null && skipText.alpha == 0)
+        {
+          FlxTween.tween(skipText, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+          new FlxTimer().start(0.5, _ ->
+          {
+            canSkipCutscene = true;
+          });
+        }
+      }
+      else
+      {
+        skipCutscene();
+      }
+    }
+  }
+
+  override public function onCountdownStart(event)
+  {
+    super.onCountdownStart(event);
+
+    if (hasPlayedCutscene)
+    {
+      trace('already played cutscene, moving to song');
+      return;
+    }
+
+    if (PS.isChartingMode) return;
+
+    PS.isInCutscene = true;
+    PS.camHUD.visible = false;
+    PS.camHUD.alpha = 0;
+
+    event.cancel();
+
+    skipText = new FlxText(936 * FSSM.wideScale.x, 618 * FSSM.wideScale.y, 0, null, 20);
+    skipText.text = 'Skip [${PS.controls.getDialogueNameFromToken("CUTSCENE_ADVANCE", true)}]';
+    #if mobile
+    skipText.text = 'Skip [Pause Button]';
+    skipText.x -= 136;
+    #end
+    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+    skipText.scrollFactor.set();
+    skipText.borderSize = 2;
+    skipText.alpha = 0;
+    PS.add(skipText);
+    skipText.cameras = [PS.camCutscene];
+    qtSnd1 = FunkinSound.load(Paths.sound('gameplay/cutsceneSfx/$lang/bf/qt_erect_intro_1', 'shared'), true);
+    if (qtSnd1 != null)
+    {
+      trace('succesfully loaded qtSnd1');
+      qtSnd1.onComplete = () ->
+      {
+        if (Preferences.subtitles && PS.subtitles.assignedSound == qtSnd1)
+        {
+          PS.subtitles.assignedSound = null;
+          PS.subtitles.setText([], true);
+        }
+      };
+    }
+
+    qtSnd2 = FunkinSound.load(Paths.sound('gameplay/cutsceneSfx/$lang/bf/qt_erect_intro_2', 'shared'), true);
+    if (qtSnd2 != null)
+    {
+      trace('succesfully loaded qtSnd2');
+      qtSnd2.onComplete = () ->
+      {
+        if (Preferences.subtitles && PS.subtitles.assignedSound == qtSnd2)
+        {
+          PS.subtitles.assignedSound = null;
+          PS.subtitles.setText([], true);
+        }
+      };
+    }
+
+    bfSnd1 = FunkinSound.load(Paths.sound('gameplay/cutsceneSfx/english/bf/bf_erect_yeah', 'shared'), true);
+
+    introMusic = FunkinSound.load(Paths.music('gameplay/introSong/introSong-erect', 'shared'), true);
+    if (introMusic != null)
+    {
+      introMusic.play();
+      introMusic.volume = 0.2;
+    }
+
+    var opp = PS.currentStage.getDad();
+    var player = PS.currentStage.getBoyfriend();
+
+    PS.tweenCameraToPosition(538, 500, 0);
+    PS.tweenCameraZoom(PS.stageZoom * 1.08, 0, true);
+    PS.camCutscene.fade(0xFF000000, 2.75, true, null, true);
+
+    hasPlayedCutscene = true;
+
+    var cutsceneSequenceData = [
+      {
+        time: 0,
+        callback: () ->
+        {
+          opp.playAnimation("erectIntro1", true, false);
+          opp.animation.pause();
+          PS.tweenCameraToPosition(538, 923, 3.4, FlxEase.expoOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.08, 3.4, true, FlxEase.expoOut);
+        }
+      },
+      {
+        time: 0.90,
+        callback: () ->
+        {
+          opp.playAnimation("erectIntro1", true, false);
+          if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/cutsceneErect/alright-cutie', qtSnd1);
+          if (qtSnd1 != null) qtSnd1.play();
+        }
+      },
+      {
+        time: 2.59,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(510, 923, 3, FlxEase.expoOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.16, 3, true, FlxEase.expoOut);
+        }
+      },
+      {
+        time: 3.483,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(1090, 931, 2.6, FlxEase.quartInOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.30, 2.6, true, FlxEase.quartInOut);
+        }
+      },
+      {
+        time: 4.341,
+        callback: () ->
+        {
+          player.playAnimation("superHey", true, false);
+          if (bfSnd1 != null) bfSnd1.play();
+        }
+      },
+      {
+        time: 5.7,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(1040, 931, 0.8, FlxEase.elasticOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.16, 0.8, true, FlxEase.elasticOut);
+        }
+      },
+      {
+        time: 5.74,
+        callback: () ->
+        {
+          triggerPinkFlash(PS.camCutscene);
+        }
+      },
+      {
+        time: 6.25,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(510, 923, 2.5, FlxEase.quartInOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.16, 2.5, true, FlxEase.quartInOut);
+        }
+      },
+      {
+        time: 6,
+        callback: () ->
+        {
+          opp.playAnimation("erectIntro2", true, false);
+        }
+      },
+      {
+        time: 7.1,
+        callback: () ->
+        {
+          if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/cutsceneErect/well-see', qtSnd2);
+          if (qtSnd2 != null) qtSnd2.play();
+        }
+      },
+      {
+        time: 8.4,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(opp.cameraFocusPoint.x, opp.cameraFocusPoint.y, 4.5, FlxEase.quartInOut);
+          PS.tweenCameraZoom(PS.stageZoom, 4.5, true, FlxEase.quartInOut);
+        }
+      },
+      {
+        time: 9.8,
+        callback: () ->
+        {
+          canSkipCutscene = false;
+          cutsceneSkipped = true;
+          PS.isInCutscene = false;
+
+          PS.startCountdown();
+          showHUD();
+          clearSkipText();
+        }
+      }
+    ];
+
+    cutsceneSeq = new Sequence(cutsceneSequenceData);
+  }
+
+  override public function onSongRetry(event)
+  {
+    super.onSongRetry(event);
+    PS.currentStage.getDad().visible = true;
+    trace('chud');
+    if (danceQT != null)
+    {
+      danceQT.visible = false;
+      danceQT.curDanceState = -1;
+      danceQT.animation.play("part1", true);
+    }
+    PS.opponentStrumline.alpha = 1;
+  }
+
+  override public function onSongEnd(event)
+  {
+    super.onSongEnd(event);
+
+    if (PS.isMinimalMode) hasPlayedOutro = true;
+    if (hasPlayedOutro) return;
+
+    hasPlayedOutro = true;
+    qtSnd3 = FunkinSound.load(Paths.sound('gameplay/cutsceneSfx/$lang/bf/qt_erect_ending', 'shared'), true);
+    if (qtSnd3 != null)
+    {
+      qtSnd3.onComplete = () ->
+      {
+        if (Preferences.subtitles && PS.subtitles.assignedSound == qtSnd3)
+        {
+          PS.subtitles.assignedSound = null;
+          PS.subtitles.setText([], true);
+        }
+      };
+    }
+    bfSnd2 = FunkinSound.load(Paths.sound('gameplay/cutsceneSfx/english/bf/bf_erect_shoulder_swish', 'shared'), true);
+
+    outroMusic = FunkinSound.load(Paths.music('gameplay/introSong/outroSong-erect', 'shared'), true);
+    if (outroMusic != null)
+    {
+      outroMusic.play();
+      outroMusic.volume = 0.2;
+    }
+
+    event.cancel();
+    PS.isInCutscene = true;
+
+    if (hudTween != null) hudTween.cancel();
+    hudTween = FlxTween.tween(PS.camHUD, {alpha: 0}, 1.2, {
+      ease: FlxEase.quadOut,
+      onComplete: _ ->
+      {
+        PS.camHUD.visible = false;
+      }
+    });
+
+    var cutsceneSequenceData = [
+      {
+        time: 0,
+        callback: () ->
+        {
+          if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/cutsceneErect/showoff', qtSnd3);
+          if (qtSnd3 != null) qtSnd3.play();
+          PS.tweenCameraToPosition(510, 923, 2.7, FlxEase.quartInOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.20, 2.7, true, FlxEase.quartInOut);
+        }
+      },
+      {
+        time: 0.458,
+        callback: () ->
+        {
+          PS.currentStage.getDad().playAnimation('erectEnding', true, false);
+        }
+      },
+      {
+        time: 2.35,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(538, 923, 2, FlxEase.expoOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.08, 2, true, FlxEase.expoOut);
+        }
+      },
+      {
+        time: 4.65,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(538, 923, 0.8, FlxEase.quartIn);
+          PS.tweenCameraZoom(PS.stageZoom * 1.16, 0.8, true, FlxEase.quartIn);
+        }
+      },
+      {
+        time: 4.95,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(538, 923, 2.2, FlxEase.expoOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.12, 2.2, true, FlxEase.expoOut);
+        }
+      },
+      {
+        time: 5.75,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(538, 923, 1.4, FlxEase.expoOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.0, 1.4, true, FlxEase.expoOut);
+        }
+      },
+      {
+        time: 6.4,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(1040, 931, 2.1, FlxEase.quartInOut);
+          PS.tweenCameraZoom(PS.stageZoom * 1.0, 2.1, true, FlxEase.quartInOut);
+        }
+      },
+      {
+        time: 7.942,
+        callback: () ->
+        {
+          if (bfSnd2 != null) bfSnd2.play();
+        }
+      },
+      {
+        time: 7.958,
+        callback: () ->
+        {
+          PS.currentStage.getBoyfriend().playAnimation('shoulderSwish', true, false);
+        }
+      },
+      {
+        time: 8.4,
+        callback: () ->
+        {
+          PS.tweenCameraToPosition(1040, 320, 2.9, FlxEase.quartIn);
+        }
+      },
+      {
+        time: 9.3,
+        callback: () ->
+        {
+          PS.camGame.fade(0xFF000000, 2.0, false, null, true);
+        }
+      },
+      {
+        time: 14,
+        callback: () ->
+        {
+          PS.isInCutscene = false;
+          PS.endSong();
+        }
+      }
+    ];
+
+    cutsceneSeq = new Sequence(cutsceneSequenceData);
+  }
+
+  public function skipCutscene():Void
+  {
+    cutsceneSkipped = true;
+    canSkipCutscene = false;
+
+    if (cutsceneSeq != null)
+    {
+      cutsceneSeq.running = false;
+      cutsceneSeq = null;
+    }
+
+    if (skipText != null) skipText.visible = false;
+    if (pinkFlash != null)
+    {
+      FlxTween.cancelTweensOf(pinkFlash);
+      PS.remove(pinkFlash, true);
+      pinkFlash.destroy();
+      pinkFlash = null;
+    }
+
+    PS.camCutscene.fade(0xFF000000, 0.5, false, null, true);
+
+    new FlxTimer().start(0.5, _ ->
+    {
+      PS.justUnpaused = true;
+      PS.camCutscene.fade(0xFF000000, 0.5, true, null, true);
+
+      if (qtSnd1 != null) qtSnd1.stop();
+      if (qtSnd2 != null) qtSnd2.stop();
+      if (bfSnd1 != null) bfSnd1.stop();
+      if (introMusic != null) introMusic.stop();
+
+      var opp = PS.currentStage.getDad();
+      opp.dance(true);
+      PS.currentStage.getBoyfriend().dance(true);
+      var gf = PS.currentStage.getGirlfriend();
+      if (gf != null) gf.dance(true);
+
+      PS.tweenCameraToPosition(opp.cameraFocusPoint.x, opp.cameraFocusPoint.y, 0.001, FlxEase.expoOut);
+      PS.tweenCameraZoom(PS.stageZoom, 0.001, true, FlxEase.expoOut);
+
+      PS.isInCutscene = false;
+      showHUD();
+      PS.startCountdown();
+
+      clearSkipText();
+    });
+  }
+
+  public function showHUD(duration:Float = 1):Void
+  {
+    if (hudTween != null) hudTween.cancel();
+
+    if (qtSnd2 != null)
+    {
+      qtSnd2.destroy();
+    }
+
+    if (Preferences.subtitles)
+    {
+      PS.subtitles.assignedSound = null;
+      PS.subtitles.setText([], true);
+    }
+
+    PS.camHUD.visible = true;
+    PS.camHUD.alpha = 0;
+    hudTween = FlxTween.tween(PS.camHUD, {alpha: 1}, duration, {ease: FlxEase.smoothStepInOut});
+  }
+
+  function clearSkipText():Void
+  {
+    if (skipText != null)
+    {
+      PS.remove(skipText, true);
+      skipText.destroy();
+      skipText = null;
+    }
+  }
+
+  override public function onDestroy(event:ScriptEvent):Void
+  {
+    if (hudTween != null)
+    {
+      hudTween.cancel();
+      hudTween = null;
+    }
+
+    super.onDestroy(event);
+
+    if (introMusic != null) introMusic.stop();
+    if (outroMusic != null) outroMusic.stop();
+
+    if (qtSnd1 != null) qtSnd1.stop();
+    if (qtSnd2 != null) qtSnd2.stop();
+    if (qtSnd3 != null) qtSnd3.stop();
+    if (bfSnd1 != null) bfSnd1.stop();
+    if (bfSnd2 != null) bfSnd2.stop();
+
+    if (pinkFlash != null)
+    {
+      FlxTween.cancelTweensOf(pinkFlash);
+      pinkFlash.destroy();
+      pinkFlash = null;
+    }
+
+    if (cutsceneSeq != null)
+    {
+      cutsceneSeq.running = false;
+      cutsceneSeq = null;
+    }
+  }
+}
+
+class QTErectDanceSprite extends FunkinSprite
+{
+  public var curDanceState:Int = -1;
+
+  public function new(x:Float, y:Float)
+  {
+    super(x, y);
+    loadTextureAtlas("characters/QT_assets/qt-dance", "shared");
+
+    function inci(from, to)
+    {
+      return[for (i in from...to) i];
+    }
+
+    function aAnim(name, from, to, ff)
+    {
+      animation.addBySymbolIndices(name, this.getDefaultSymbol(), inci(from, to), ff, false);
+    }
+
+    aAnim("bupm", 27, 46, 24);
+
+    visible = false;
+    aAnim("part1", 1, 160, 24);
+    aAnim("part2", 161, 317, 24);
+    aAnim("jumpey", 318, 462, 24);
+
+    aAnim("part3", 463, 474, 24);
+
+    aAnim("part3-l", 475, 484, 24);
+    aAnim("part3-r", 485, 494, 24);
+
+    aAnim("part4", 551, 624, 24);
+
+    aAnim("part5", 625, 700, 24);
+
+    aAnim("part6", 701, 1185, 24);
+
+    aAnim("end", 1186, 1222, 24);
+    animation.play("part1", true);
+    this.applyStageMatrix = false;
+    this.useRenderTexture = true;
+  }
+
+  function pa(name)
+  {
+    animation.play(name, true);
+  }
+
+  public function onBeatHit(beat):Void
+  {
+    switch (beat)
+    {
+      case 222:
+        curDanceState = -1;
+        visible = true;
+        pa("part1");
+
+      case 239:
+        visible = true;
+        curDanceState = -1;
+        pa("part2");
+
+      case 256:
+        visible = true;
+        curDanceState = -1;
+        pa("jumpey");
+
+      case 271:
+        visible = true;
+        curDanceState = -1;
+        pa("part3");
+
+      case 272:
+        curDanceState = 0;
+
+      case 280:
+        curDanceState = -1;
+        pa("part4");
+
+      case 288:
+        curDanceState = -1;
+        pa("part5");
+      case 296:
+        curDanceState = -1;
+        pa("part6");
+
+      case 347:
+        curDanceState = -1;
+        pa("end");
+    }
+
+    switch (curDanceState)
+    {
+      case 0:
+        pa(beat % 2 == 0 ? "part3-l" : "part3-r");
+    }
+  }
+}

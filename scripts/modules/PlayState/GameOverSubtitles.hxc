@@ -1,0 +1,69 @@
+import funkin.play.components.Subtitles;
+import funkin.play.GameOverSubState;
+import funkin.modding.module.Module;
+import funkin.Preferences;
+import flixel.FlxG;
+import funkin.play.PlayState;
+import funkin.save.Save;
+import funkin.util.ReflectUtil;
+
+class GameOverSubtitles extends Module
+{
+  private var subtitles:Subtitles = null;
+  private var pending:Bool = false;
+  private var randomIntValue:Int = 0;
+
+  public function new()
+  {
+    super('GameOverSubtitles', 999, {state: GameOverSubState});
+  }
+
+  override function onSubStateOpenEnd(event:ScriptEvent)
+  {
+    super.onSubStateOpenEnd(event);
+    pending = true;
+  }
+
+  override function onUpdate(event:UpdateScriptEvent)
+  {
+    super.onUpdate(event);
+    if (GameOverSubState.instance.isEnding) GameOverSubState.instance.remove(subtitles);
+
+    if (!pending) return;
+    if (!Preferences.subtitles) return;
+    if (GameOverSubState.instance == null) return;
+    if (GameOverSubState.instance.deathQuoteSound == null) return;
+
+    pending = false;
+
+    randomIntValue = GameOverSubState.instance.boyfriend.randomInt;
+
+    subtitles = PlayState.instance.subtitles;
+
+    trace(randomIntValue);
+
+    var subtitlesPath = 'subtitles/'
+      + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT)
+      + '/gameover/'
+      + GameOverSubState.instance.boyfriend.characterId
+      + '/gameover-line-'
+      + randomIntValue;
+
+    subtitles.assignSubtitles(subtitlesPath, GameOverSubState.instance.deathQuoteSound);
+    GameOverSubState.instance.deathQuoteSound.onComplete = function()
+    {
+      GameOverSubState.instance.remove(subtitles);
+    }
+
+    GameOverSubState.instance.add(subtitles);
+  }
+
+  function onSubStateCloseBegin(event):Void
+  {
+    super.onSubStateCloseBegin(event);
+    if (GameOverSubState.instance == null || subtitles == null) return;
+
+    GameOverSubState.instance.remove(subtitles);
+    pending = true;
+  }
+}

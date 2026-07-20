@@ -1,0 +1,72 @@
+{
+  "assetPath": "shared:characters/kb_export",
+  "version": "1.0.0",
+  "name": "KillerByte (Rewired)",
+  "renderType": "multianimateatlas",
+  "singTime": 8.0,
+  "healthIcon": {
+    "offsets": [-7, -1.5],
+    "id": "KB"
+  },
+  "cameraOffsets": [-110, 100],
+  "offsets": [-35, 13],
+  "isPixel": false,
+  "scale": 1,
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "idle",
+      "looped": true
+    },
+    {
+      "name": "singUP",
+      "prefix": "up"
+    },
+    {
+      "name": "singUP-hold",
+      "prefix": "up loop",
+      "looped": true
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "down"
+    },
+    {
+      "name": "singDOWN-hold",
+      "prefix": "down loop",
+      "looped": true
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "right"
+    },
+    {
+      "name": "singRIGHT-hold",
+      "prefix": "right loop",
+      "looped": true
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "left"
+    },
+    {
+      "name": "singLEFT-hold",
+      "prefix": "left loop",
+      "looped": true
+    },
+    {
+      "name": "intro-erect",
+      "prefix": "kb aa",
+      "animType": "symbol",
+      "offsets": [-175, 25],
+      "assetPath": "shared:characters/kb_export/kb_erect_intro"
+    },
+    {
+      "name": "tsundere",
+      "prefix": "exportanim",
+      "animType": "symbol",
+      "offsets": [-124, -182],
+      "assetPath": "shared:characters/kb_export/kb-erect-end"
+    }
+  ]
+}

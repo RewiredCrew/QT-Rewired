@@ -1,0 +1,227 @@
+import flixel.FlxG;
+import funkin.Paths;
+import funkin.Conductor;
+import funkin.play.PlayState;
+import funkin.play.event.SongEvent;
+import funkin.play.scoring.Scoring;
+import funkin.save.Save;
+import funkin.modding.module.ModuleHandler;
+import funkin.util.Sequence;
+import funkin.Conductor;
+
+class SawbladeEvent extends SongEvent
+{
+  public function new()
+  {
+    super('sawKB');
+  }
+
+  var interval:Float;
+  var hitWindow:Float = Scoring.PBOT1_SHIT_THRESHOLD;
+  var hitTime:Float;
+  var amntSaws:Int;
+  var seq:Sequence;
+  var dodgeModule(get, never);
+
+  function get_dodgeModule()
+  {
+    return ModuleHandler.getModule('SawbladeAndDodgeModule');
+  }
+
+  public override function handleEvent(data:SongEventData):Void
+  {
+    if (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
+
+    Conductor.instance.update();
+    var playState = PlayState.instance;
+    playState.mayPauseGame = false;
+
+    interval = Conductor.instance.beatLengthMs / 1000;
+    trace('interval is $interval');
+
+    amntSaws = data?.value?.num_sawblades ?? 1;
+    if (amntSaws == "Single") amntSaws = 1;
+    if (amntSaws == "Double") amntSaws = 2;
+    if (amntSaws == "Triple") amntSaws = 3;
+    trace('[SAWBLADE] $amntSaws');
+
+    var isTriple = (amntSaws == 3);
+
+    hitTime = data.time + interval * 2;
+    if (isTriple) hitTime += interval;
+
+    dodgeModule.activeEvent = this.superClass;
+
+    var singleSequenceData = [
+      {
+        time: 0,
+        callback: () ->
+        {
+          dodgeModule.executeWarning(interval, amntSaws);
+          trace('[SAWBLADE] single hit time $hitTime');
+        }
+      },
+      {
+        time: interval,
+        callback: () ->
+        {
+          // dodgeModule.executeWarning(interval, amntSaws);
+          dodgeModule.executeAttack(interval);
+          dodgeModule.animSuffix = 0;
+          hitTime = Conductor.instance.songPosition + interval * 1000;
+          trace('[SAWBLADE] $hitTime');
+          trace('[SAWBLADE] ${Conductor.instance.songPosition}');
+        }
+      },
+      {
+        time: interval * 2,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          dodgeModule.playWarningStep('attack-1', 0, 0);
+          trace('single attack!');
+          trace(Conductor.instance.songPosition);
+          dodgeModule.eventReady = false;
+        }
+      }
+    ];
+
+    var tripleSequenceData = [
+      {
+        time: 0,
+        callback: () ->
+        {
+          dodgeModule.executeWarning(interval, amntSaws);
+        }
+      },
+      {
+        time: interval * 2,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          // dodgeModule.executeWarning(interval, 1);
+          dodgeModule.playWarningStep('attack-2-1', 0, 0, true, 1);
+        }
+      },
+      {
+        time: interval * 3,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          dodgeModule.playWarningStep('attack-2-1', 0, 0, true, 1);
+          hitTime = Conductor.instance.songPosition + interval * 1000;
+          dodgeModule.animSuffix = 0;
+          dodgeModule.executeAttack(interval);
+        }
+      },
+      {
+        time: interval * 4,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
+          hitTime = Conductor.instance.songPosition + interval * 1000;
+          dodgeModule.animSuffix = 1;
+          dodgeModule.executeAttack(interval);
+        }
+      },
+      {
+        time: interval * 5,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          hitTime = Conductor.instance.songPosition + interval * 1000;
+          dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 3);
+          dodgeModule.eventReady = false;
+        }
+      }
+    ];
+
+    var doubleSequenceData = [
+      {
+        time: 0,
+        callback: () ->
+        {
+          dodgeModule.executeWarning(interval, amntSaws);
+        }
+      },
+      {
+        time: interval,
+        callback: () ->
+        {
+          hitTime = Conductor.instance.songPosition + interval * 1000;
+          dodgeModule.executeAttack(interval);
+          dodgeModule.animSuffix = 0;
+        }
+      },
+      {
+        time: interval * 2,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          dodgeModule.playWarningStep('attack-2-1', 0, 0);
+          dodgeModule.executeAttack(interval);
+          hitTime = Conductor.instance.songPosition + interval * 1000;
+          dodgeModule.animSuffix = 1;
+        }
+      },
+      {
+        time: interval * 3,
+        callback: () ->
+        {
+          PlayState.instance.mayPauseGame = false;
+          trace("asdadsas");
+          dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
+          // dodgeModule.executeAttack(interval);
+          // hitTime = Conductor.instance.songPosition + interval * 1000;
+          dodgeModule.eventReady = false;
+        }
+      }
+    ];
+
+    switch (amntSaws)
+    {
+      case 1:
+        seq = new Sequence(singleSequenceData);
+      case 2:
+        seq = new Sequence(doubleSequenceData);
+      case 3:
+        seq = new Sequence(tripleSequenceData);
+      default:
+        throw new haxe.Exception('what the fuck');
+    }
+  }
+
+  override public function onUpdate(event)
+  {
+    super.onUpdate(event);
+    if (seq == null || seq.completed) dodgeModule.activeEvent == null;
+  }
+
+  public override function getTitle():String
+  {
+    return "Sawblade Event (Rewired)";
+  }
+
+  public override function getIconPath():String
+  {
+    return 'ui/chart-editor/events/sawKB';
+  }
+
+  override public function getEventSchema()
+  {
+    var sawblade_schema = {
+      name: "num_sawblades",
+      title: "Attack Sequence",
+      type: "enum",
+      keys: [
+        "Single" => 1,
+        "Double" => 2, // Haxe maps how i hate you
+        "Triple" => 3
+      ],
+      defaultValue: 1
+    };
+
+    return [sawblade_schema];
+  }
+}

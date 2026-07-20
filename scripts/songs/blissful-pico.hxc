@@ -1,0 +1,341 @@
+import funkin.play.song.Song;
+import funkin.util.Sequence;
+import flixel.tweens.FlxEase;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.play.PlayState;
+import funkin.save.Save;
+import funkin.audio.FunkinSound;
+import flixel.text.FlxText;
+import funkin.ui.FullScreenScaleMode as FSSM;
+import flixel.text.FlxTextBorderStyle;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
+import funkin.Conductor;
+import funkin.data.song.SongRegistry;
+#if mobile
+import funkin.util.TouchUtil;
+#end
+
+class BlissfulPicoSong extends Song
+{
+  var hasPlayedCutscene:Bool = false;
+  var canSkipCutscene:Bool = false;
+  var cutsceneSkipped:Bool = false;
+  var skipText:FlxText;
+  var cutieSfx:FunkinSound;
+  var cutsceneMusic:FunkinSound;
+  var stoneMovingSound:FunkinSound;
+  var picoSfx:FunkinSound;
+  var conduct;
+  var cutsceneSeq;
+
+  public function new()
+  {
+    super('blissful', {variation: 'pico'});
+  }
+
+  override public function onSongStart(event)
+  {
+    super.onSongStart(event);
+    conduct = null;
+  }
+
+  public override function onCreate(event)
+  {
+    super.onCreate(event);
+    lang = Save.instance.modOptions.get("qt-rewiredLang");
+    hasPlayedCutscene = false;
+  }
+
+  override public function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    if (conduct != null)
+    {
+      conduct.update(cutsceneMusic.time);
+    }
+
+    #if mobile
+    var mobilePausePressed = TouchUtil.overlapsComplex(PlayState.instance.pauseButton) && TouchUtil.justPressed;
+    #end
+
+    if ((PlayState.instance.controls.CUTSCENE_ADVANCE #if mobile || mobilePausePressed #end) && !cutsceneSkipped)
+    {
+      if (!canSkipCutscene)
+      {
+        if (skipText != null)
+        {
+          FlxTween.tween(skipText, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+          new FlxTimer().start(0.5, _ ->
+          {
+            canSkipCutscene = true;
+          });
+        }
+      }
+    }
+
+    if ((PlayState.instance.controls.CUTSCENE_ADVANCE #if mobile || mobilePausePressed #end)
+      && !cutsceneSkipped
+      && canSkipCutscene)
+    {
+      skipCutscene();
+    }
+  }
+
+  override public function onCountdownStart(event)
+  {
+    super.onCountdownStart(event);
+
+    if (hasPlayedCutscene)
+    {
+      Conductor.instance.mapTimeChanges(PlayState.instance.currentChart.timeChanges);
+      conduct = null;
+      return;
+    }
+
+    PlayState.instance.isInCutscene = true;
+    PlayState.instance.camHUD.visible = false;
+    PlayState.instance.camHUD.alpha = 0;
+
+    event.cancel();
+
+    PlayState.instance.camHUD.visible = false;
+    PlayState.instance.camHUD.alpha = 0;
+
+    skipText = new FlxText(936 * FSSM.wideScale.x, 618 * FSSM.wideScale.y, 0, null, 20);
+    skipText.text = 'Skip [${PlayState.instance.controls.getDialogueNameFromToken("CUTSCENE_ADVANCE", true)}]';
+    #if mobile
+    skipText.text = 'Skip [Pause Button]';
+    skipText.x -= 136;
+    #end
+    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+    skipText.scrollFactor.set();
+    skipText.borderSize = 2;
+    skipText.alpha = 0;
+    PlayState.instance.add(skipText);
+    skipText.cameras = [PlayState.instance.camCutscene];
+
+    var opp = PlayState.instance.currentStage.getDad();
+    var player = PlayState.instance.currentStage.getBoyfriend();
+    cutieSfx = FunkinSound.load('sounds/gameplay/countdown/$lang/hi_cutie.ogg');
+    var easterEgg = Math.random() < 0.01;
+    var cutsceneSequenceData;
+
+    PlayState.instance.tweenCameraToPosition(opp.cameraFocusPoint.x, opp.cameraFocusPoint.y - 235, 0);
+
+    if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/hi-cutie', cutieSfx);
+
+    cutsceneMusic = FunkinSound.load(Paths.music('gameplay/introSong/introSong-pico', 'shared'), true);
+    cutsceneMusic.play();
+    cutsceneMusic.volume = 0.1;
+
+    conduct = new Conductor();
+    var songData = SongRegistry.instance.parseMusicDataRaw('{
+  "timeFormat": "ms",
+  "artist": "Pohsan",
+  "songName": "Intro Countdown (Pico Mix)",
+  "timeChanges": [
+    {
+      "d": 4,
+      "n": 4,
+      "t": 0,
+      "bt": [4, 4, 4, 4],
+      "bpm": 103
+    }
+  ],
+  "generatedBy": "Manual (by Requazar)",
+  "looped": false,
+  "version": "2.0.0"
+}
+');
+    if (songData != null)
+    {
+      conduct.mapTimeChanges(songData.timeChanges);
+      conduct.onBeatHit.add(bopGf);
+    }
+
+    PlayState.instance.camCutscene.fade(0xFF000000, 2.75, true, null, true);
+
+    PlayState.instance.currentStage.getDad().playAnimation('still', true, true);
+
+    PlayState.instance.tweenCameraToPosition(opp.cameraFocusPoint.x, opp.cameraFocusPoint.y, 2.75, FlxEase.expoOut);
+    PlayState.instance.tweenCameraZoom(PlayState.instance.stageZoom * 1.1875, 2.75, true, FlxEase.expoOut);
+
+    hasPlayedCutscene = true;
+    if (easterEgg)
+    {
+      canSkipCutscene = false;
+      skipText.visible = false;
+      cutsceneMusic.volume = 0;
+      PlayState.instance.tweenCameraToPosition(opp.cameraFocusPoint.x - 250, opp.cameraFocusPoint.y, 0);
+      PlayState.instance.tweenCameraZoom(PlayState.instance.stageZoom * 1.5, 0, true, FlxEase.quadInOut);
+      player.playAnimation('introbl-easter', false, false, false);
+      cutsceneSequenceData = [
+        {
+          time: 0.5,
+          callback: () ->
+          {
+            PlayState.instance.currentStage.getDad().playAnimation("intro", true, false);
+          }
+        },
+        {
+          time: 1.09,
+          callback: () ->
+          {
+            cutieSfx.play();
+            cutieSfx.volume = 1;
+          }
+        },
+        {
+          time: 3.5,
+          callback: () ->
+          {
+            stoneMovingSound = FunkinSound.load(Paths.sound("gameplay/stoneMoving"), true);
+            stoneMovingSound.volume = 0.6;
+            stoneMovingSound.play();
+            PlayState.instance.tweenCameraToPosition(player.cameraFocusPoint.x + 100, player.cameraFocusPoint.y, 5, FlxEase.smoothStepInOut);
+            PlayState.instance.tweenCameraZoom(PlayState.instance.stageZoom, 5, true, FlxEase.smoothStepInOut);
+          }
+        },
+        {
+          time: 4,
+          callback: () ->
+          {
+            opp.playAnimation("disgust", true, true);
+          }
+        },
+        {
+          time: 7,
+          callback: () ->
+          {
+            FlxG.openURL("https://youtu.be/SpEf-YtSwwc");
+            FlxG.switchState(new MainMenuState());
+          }
+        }
+      ];
+    }
+    else
+    {
+      cutsceneSequenceData = [
+        {
+          time: 0.5,
+          callback: () ->
+          {
+            PlayState.instance.currentStage.getDad().playAnimation("intro", true, false);
+          }
+        },
+        {
+          time: 0.98,
+          callback: () ->
+          {
+            cutieSfx.play();
+            cutieSfx.volume = 1;
+          }
+        },
+        {
+          time: 3.5,
+          callback: () ->
+          {
+            PlayState.instance.tweenCameraToPosition(player.cameraFocusPoint.x + 100, player.cameraFocusPoint.y, 3, FlxEase.quadInOut);
+            player.playAnimation('introbl', false, false, false);
+            canSkipCutscene = false;
+          }
+        },
+        {
+          time: 4.15,
+          callback: () ->
+          {
+            picoSfx = FunkinSound.load(Paths.sound("gameplay/cutsceneSfx/pico/introCutscene/picoWave"), true);
+            picoSfx.play();
+          }
+        },
+        {
+          time: 6.35,
+          callback: () ->
+          {
+            PlayState.instance.tweenCameraZoom(PlayState.instance.stageZoom * 1.25, 1.5, true, FlxEase.quadInOut);
+          }
+        },
+        {
+          time: 11,
+          callback: () ->
+          {
+            PlayState.instance.startCountdown();
+            showHUD();
+            skipText.kill();
+            skipText.destroy();
+            skipText = null;
+          }
+        }
+      ];
+    }
+
+    cutsceneSeq = new Sequence(cutsceneSequenceData);
+  }
+
+  public function disableSkip():Void
+  {
+    cutsceneSkipped = true; // Mark as skipped to prevent skip logic
+    canSkipCutscene = false;
+
+    if (skipText != null)
+    {
+      FlxTween.tween(skipText, {alpha: 0}, 0.5, {
+        ease: FlxEase.quadIn,
+        onComplete: _ ->
+        {
+          skipText.visible = false;
+        }
+      });
+    }
+  }
+
+  public function skipCutscene():Void
+  {
+    cutsceneSkipped = true;
+    canSkipCutscene = false;
+
+    if (cutsceneSeq != null)
+    {
+      cutsceneSeq.running = false;
+      cutsceneSeq = null;
+    }
+
+    PlayState.instance.camCutscene.fade(0xFF000000, 0.5, false, null, true);
+    new FlxTimer().start(0.5, _ ->
+    {
+      PlayState.instance.justUnpaused = true;
+      PlayState.instance.camCutscene.fade(0xFF000000, 0.5, true, null, true);
+
+      if (cutsceneMusic != null) cutsceneMusic.stop();
+      if (cutieSfx != null) cutieSfx.stop();
+      if (picoSfx != null) picoSfx.stop();
+
+      if (skipText != null) skipText.visible = false;
+      var opp = PlayState.instance.currentStage?.getDad();
+      opp.dance(true);
+      PlayState.instance.currentStage.getBoyfriend().dance(true);
+      PlayState.instance.tweenCameraToPosition(opp.cameraFocusPoint.x, opp.cameraFocusPoint.y, 0, FlxEase.expoOut);
+      PlayState.instance.tweenCameraZoom(PlayState.instance.stageZoom, 0, true, FlxEase.expoOut);
+      showHUD();
+      PlayState.instance.startCountdown();
+    });
+
+    skipText.kill();
+    skipText.destroy();
+    skipText = null;
+  }
+
+  public function showHUD(duration:Float = 1):Void
+  {
+    PlayState.instance.camHUD.visible = true;
+    PlayState.instance.camHUD.alpha = 0;
+    FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, duration, {ease: FlxEase.smoothStepInOut});
+  }
+
+  function bopGf()
+  {
+    PlayState?.instance?.currentStage?.getGirlfriend()?.dance(true);
+  }
+}

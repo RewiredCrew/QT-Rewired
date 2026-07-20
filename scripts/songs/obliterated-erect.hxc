@@ -1,0 +1,431 @@
+import funkin.play.song.Song;
+import funkin.play.PlayState;
+import funkin.graphics.video.FunkinVideoSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.AdjustColorShader;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import funkin.mobile.input.ControlsHandler;
+import lime.app.Application;
+import funkin.ui.FullScreenScaleMode as FSSM;
+import funkin.Conductor;
+import funkin.play.Countdown;
+
+class ObliteratedErectSong extends Song
+{
+  var huzzVideo:FunkinVideoSprite;
+  var editVideo:FunkinVideoSprite;
+  var inGhost:Bool = true;
+  var shouldPlayEdit:Bool = false;
+  var shouldHuzz:Bool = false;
+  var colorShader:AdjustColorShader;
+  var timeVideo1:Float = 149673;
+  var timeVideo2:Float = 153500;
+  var timeFadeOut1Start:Float = 148300;
+  var durFadeOut1:Float = 1.8;
+  var timeLayoutChange:Float = 152220;
+  var timeFadeInStart:Float = 152300;
+  var durFadeIn:Float = 2.9;
+  var timeFadeOut2Start:Float = 179200;
+  var durFadeOut2:Float = 5.0;
+  var timeCamFade2Start:Float = 147900;
+  var durCamFade2:Float = 1.773;
+  var timeCamFade3Start:Float = 178545;
+  var durCamFade3:Float = 9.5;
+  var timeCamFade4Start:Float = 189600;
+  var durCamFade4:Float = 4.65;
+  var video1Triggered:Bool = false;
+  var video2Triggered:Bool = false;
+  var fadeOut1Triggered:Bool = false;
+  var layoutTriggered:Bool = false;
+  var fadeInTriggered:Bool = false;
+  var fadeOut2Triggered:Bool = false;
+  var camFade2Triggered:Bool = false;
+  var camFade3Triggered:Bool = false;
+  var camFade4Triggered:Bool = false;
+
+  public function new()
+  {
+    super('obliterated', {variation: 'erect'});
+  }
+
+  override public function onCreate(event)
+  {
+    super.onCreate(event);
+    inGhost = true;
+
+    huzzVideo = new FunkinVideoSprite(0, 0);
+    huzzVideo.load(Paths.videos('obliteratedErectMid'));
+
+    huzzVideo.bitmap.onFormatSetup.add(() ->
+    {
+      if (huzzVideo.bitmap != null && huzzVideo.bitmap.bitmapData != null)
+      {
+        huzzVideo.setGraphicSize(FlxG.width);
+        huzzVideo.updateHitbox();
+        huzzVideo.screenCenter();
+      }
+    });
+
+    huzzVideo.visible = false;
+    PlayState.instance.currentStage.add(huzzVideo);
+    huzzVideo.cameras = [PlayState.instance.camHUD];
+    huzzVideo.zIndex = 9999;
+
+    editVideo = new FunkinVideoSprite(0, 0);
+    editVideo.load(Paths.videos('obliteratedErectEdit'));
+
+    editVideo.bitmap.onEndReached.add(() ->
+    {
+      editVideo.stop();
+      editVideo.visible = false;
+      shouldPlayEdit = false;
+      PlayState.instance.currentStage.getDad().playAnimation('tsundere', true, true);
+      PlayState.instance.mayPauseGame = true;
+      inGhost = true;
+    });
+
+    editVideo.bitmap.onFormatSetup.add(() ->
+    {
+      if (editVideo.bitmap != null && editVideo.bitmap.bitmapData != null)
+      {
+        editVideo.setGraphicSize(FlxG.width);
+        editVideo.updateHitbox();
+        editVideo.screenCenter();
+      }
+    });
+
+    editVideo.visible = false;
+    PlayState.instance.currentStage.add(editVideo);
+    editVideo.cameras = [PlayState.instance.camHUD];
+    editVideo.zIndex = 10000;
+
+    huzzVideo.play();
+    huzzVideo.pause();
+    editVideo.play();
+    editVideo.pause();
+
+    PlayState.instance.currentStage.refresh();
+    // setupFocusHandling();
+  }
+
+  override public function onSongLoaded(event)
+  {
+    super.onSongLoaded(event);
+    doHudFade(0, 0, true);
+
+    var rimDad = new DropShadowShader();
+    colorShader = new AdjustColorShader();
+    updateColorShader(-30, -65, 10, -60);
+
+    rimDad.setAdjustColor(colorShader.brightness, colorShader.hue, colorShader.contrast, colorShader.saturation);
+    rimDad.color = 0xFFFFFFFF;
+    rimDad.threshold = 0.25;
+
+    var dad = PlayState.instance.currentStage.getDad();
+    if (dad != null && dad.eyes != null)
+    {
+      dad.eyes.shader = colorShader;
+    }
+
+    
+    video1Triggered = false;
+    video2Triggered = false;
+    fadeOut1Triggered = false;
+    layoutTriggered = false;
+    fadeInTriggered = false;
+    fadeOut2Triggered = false;
+    camFade2Triggered = false;
+    camFade3Triggered = false;
+    camFade4Triggered = false;
+  }
+
+  override public function onSongRetry(event)
+  {
+    super.onSongRetry(event);
+    huzzVideo.pause();
+    huzzVideo.visible = false;
+    editVideo.pause();
+    editVideo.visible = false;
+
+    shouldHuzz = false;
+    shouldPlayEdit = false;
+    inGhost = true;
+
+    video1Triggered = false;
+    video2Triggered = false;
+    fadeOut1Triggered = false;
+    layoutTriggered = false;
+    fadeInTriggered = false;
+    fadeOut2Triggered = false;
+    camFade2Triggered = false;
+    camFade3Triggered = false;
+    camFade4Triggered = false;
+
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
+    PlayState.instance.playerStrumline.x = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + ((FSSM.gameCutoutSize / 2.5) / 2.0);
+  }
+
+  override public function onCountdownStart(event)
+  {
+    super.onCountdownStart(event);
+
+    event.cancel();
+
+    Countdown.stopCountdown();
+    PlayState.instance.isInCountdown = true;
+
+    Conductor.instance.update(PlayState.instance.startTimestamp);
+    trace('skipped countdown');
+  }
+
+  override function onSongStart(event)
+  {
+    super.onSongStart(event);
+    doHudFade(0, 0, true);
+    PlayState.instance.mayPauseGame = true;
+
+    var dad = PlayState.instance.currentStage.getDad();
+    if (dad != null)
+    {
+      dad.canPlayOtherAnims = true;
+      dad.playAnimation('intro-erect', true, true);
+      if (dad.animation.curAnim != null)
+      {
+        dad.animation.curAnim.pause();
+      }
+    }
+
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 12.5, true, null, true);
+  }
+
+  override public function onStepHit(ev)
+  {
+    super.onStepHit(ev);
+
+    switch (ev.step)
+    {
+      case 0:
+        inGhost = true;
+      case 34:
+        var dad = PlayState.instance.currentStage.getDad();
+        if (dad != null && dad.animation.curAnim != null && dad.animation.curAnim.name == 'intro-erect')
+        {
+          dad.animation.curAnim.resume();
+        }
+
+      case 112:
+        doHudFade(1, 2.5, true);
+        inGhost = false;
+    }
+  }
+
+  override public function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    var currentTime:Float = 0;
+    if (Conductor.instance != null)
+    {
+      currentTime = Conductor.instance.songPosition;
+    }
+
+    if (!camFade2Triggered && currentTime >= timeCamFade2Start)
+    {
+      camFade2Triggered = true;
+      PlayState.instance.camGame.fade(FlxColor.BLACK, durCamFade2, false, null, true);
+    }
+
+    if (!camFade3Triggered && currentTime >= timeCamFade3Start)
+    {
+      camFade3Triggered = true;
+      PlayState.instance.camGame.fade(FlxColor.BLACK, durCamFade3, true, null, true);
+    }
+
+    if (!camFade4Triggered && currentTime >= timeCamFade4Start)
+    {
+      camFade4Triggered = true;
+      PlayState.instance.camGame.fade(FlxColor.BLACK, durCamFade4, false, null, true);
+    }
+
+    if (!fadeOut1Triggered && currentTime >= timeFadeOut1Start)
+    {
+      fadeOut1Triggered = true;
+      doHudFade(0, durFadeOut1, true);
+    }
+
+    if (!layoutTriggered && currentTime >= timeLayoutChange)
+    {
+      layoutTriggered = true;
+      centerPlayerStrumline();
+      hideOpponentStrumline();
+    }
+
+    if (!fadeInTriggered && currentTime >= timeFadeInStart)
+    {
+      fadeInTriggered = true;
+      doHudFade(1, durFadeIn, false);
+    }
+
+    if (!fadeOut2Triggered && currentTime >= timeFadeOut2Start)
+    {
+      fadeOut2Triggered = true;
+      doHudFade(0, durFadeOut2, false);
+    }
+
+    if (!video1Triggered && currentTime >= timeVideo1 && currentTime < timeVideo2)
+    {
+      video1Triggered = true;
+      huzzVideo.visible = true;
+      huzzVideo.bitmap.time = 0;
+      huzzVideo.resume();
+      shouldHuzz = true;
+      PlayState.instance.mayPauseGame = false;
+    }
+
+    if (!video2Triggered && currentTime >= timeVideo2)
+    {
+      video2Triggered = true;
+
+      huzzVideo.pause();
+      huzzVideo.visible = false;
+      shouldHuzz = false;
+
+      editVideo.visible = true;
+      editVideo.bitmap.time = 0;
+      editVideo.resume();
+      shouldPlayEdit = true;
+    }
+
+    #if mobile
+    PlayState.instance.opponentStrumline.background.visible = false;
+    PlayState.instance.opponentStrumline.notes.visible = false;
+    #end
+  }
+
+  private function doHudFade(targetAlpha:Float, duration:Float, includeOpponent:Bool)
+  {
+    var objectsToTween:Array<Dynamic> = [
+      PlayState.instance.healthBar,
+      PlayState.instance.healthBarBG,
+      PlayState.instance.scoreText,
+      PlayState.instance.iconP1,
+      PlayState.instance.iconP2,
+      PlayState.instance.playerStrumline,
+      (PlayState.instance.playerStrumline != null ? PlayState.instance.playerStrumline.notes : null)
+    ];
+
+    if (includeOpponent)
+    {
+      objectsToTween.push(PlayState.instance.opponentStrumline);
+      #if !mobile
+      objectsToTween.push(PlayState.instance.opponentStrumline != null ? PlayState.instance.opponentStrumline.notes : null);
+      #end
+    }
+
+    for (obj in objectsToTween)
+    {
+      if (obj == null) continue;
+      FlxTween.cancelTweensOf(obj);
+
+      if (duration <= 0)
+      {
+        obj.alpha = targetAlpha;
+        obj.visible = (targetAlpha > 0);
+      }
+      else
+      {
+        if (targetAlpha > 0) obj.visible = true;
+        FlxTween.tween(obj, {alpha: targetAlpha}, duration, {
+          ease: FlxEase.quadInOut,
+          onComplete: _ ->
+          {
+            if (targetAlpha == 0) obj.visible = false;
+          }
+        });
+      }
+    }
+  }
+
+  private function updateColorShader(h:Int, s:Int, co:Int, b:Int)
+  {
+    if (colorShader != null)
+    {
+      colorShader.hue = h;
+      colorShader.saturation = s;
+      colorShader.contrast = co;
+      colorShader.brightness = b;
+    }
+  }
+
+  override public function onNoteGhostMiss(event)
+  {
+    if (inGhost)
+    {
+      trace('nah lets ghost tap yo');
+      event.cancel();
+      event.stopPropagation();
+      return;
+    }
+    super.onNoteGhostMiss(event);
+  }
+
+  function centerPlayerStrumline()
+  {
+    if (Preferences.controlsScheme == "Arrows" && !ControlsHandler.usingExternalInputDevice) return;
+
+    var playerStrumline = PlayState.instance.playerStrumline;
+    if (playerStrumline != null)
+    {
+      playerStrumline.x = FlxG.width / 2 - playerStrumline.width / 2;
+    }
+  }
+
+  function hideOpponentStrumline()
+  {
+    var opponentStrumline = PlayState.instance.opponentStrumline;
+    if (opponentStrumline != null)
+    {
+      opponentStrumline.visible = false;
+      opponentStrumline.alpha = 0;
+
+      if (opponentStrumline.members != null)
+      {
+        for (arrow in opponentStrumline.members)
+        {
+          if (arrow != null)
+          {
+            arrow.visible = false;
+            arrow.alpha = 0;
+          }
+        }
+      }
+    }
+  }
+
+  function focusLostCallback(?_)
+  {
+    if (!Preferences.autoPause) return;
+    if (shouldHuzz && huzzVideo != null) huzzVideo.pause();
+    if (shouldPlayEdit && editVideo != null) editVideo.pause();
+  }
+
+  function focusGainedCallback(?_)
+  {
+    if (!Preferences.autoPause) return;
+    if (shouldHuzz && huzzVideo != null) huzzVideo.resume();
+    if (shouldPlayEdit && editVideo != null) editVideo.resume();
+  }
+
+  // If you tab out, that's on YOU.
+  // private function setupFocusHandling()
+  // {
+  //   if (Application.current != null && Application.current.window != null)
+  //   {
+  //     Application.current.window.onFocusOut.add(focusLostCallback);
+  //     Application.current.window.onFocusIn.add(focusGainedCallback);
+  //   }
+  // }
+}

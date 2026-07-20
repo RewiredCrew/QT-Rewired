@@ -1,0 +1,485 @@
+import flixel.FlxG;
+import funkin.Paths;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.title.TitleState;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.util.ReflectUtil;
+import funkin.modding.module.Module;
+import funkin.audio.FunkinSound;
+import funkin.util.HapticUtil;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import funkin.util.TouchUtil;
+import funkin.PlayerSettings;
+import funkin.Preferences;
+import flixel.effects.FlxFlicker;
+import funkin.util.WindowUtil;
+import flixel.FlxSprite;
+import funkin.util.DateUtil;
+import funkin.save.Save;
+import flixel.util.FlxTimer;
+
+class QtPlushMenuButton extends Module
+{
+  var idleScale:Float = 0.5;
+  var idleOffsetX:Float = 40;
+  var idleOffsetY:Float = 50;
+  var selectScale:Float = 0.75;
+  var selectOffsetX:Float = 40;
+  var selectOffsetY:Float = 70;
+  var plushButton:FunkinSprite;
+  var gradient:FunkinSprite;
+  var isHovering:Bool = false;
+  var plushFocused:Bool = false;
+  var scaleTween:FlxTween;
+  var gradientTween:FlxTween;
+  var offsetTween:FlxTween;
+  var busy:Bool = false;
+  var lastSelectedIndex:Int = 0;
+  var currentTimestamp = DateUtil.generateTimestamp();
+  var expirationDate = "2026-08-04";
+  var initialized:Bool = false;
+  var currentOffsetX:Float = 0;
+  var currentOffsetY:Float = 0;
+
+  public function new()
+  {
+    super('QtPlushMenuButton', 1, {state: MainMenuState});
+  }
+
+  override public function onCreate(event)
+  {
+    super.onCreate(event);
+    if (FlxG.state == MainMenuState)
+    {
+      if (plushButton != null && plushButton.exists) plushButton.kill();
+      else
+        return;
+      trace('main menu oncreate create plush');
+      plushButton = null;
+      initialized = false;
+      initButton();
+    }
+  }
+
+  function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    if (!Save.instance.modOptions.get("com.rewired.plush-show-plush-advert")) return;
+    if (currentTimestamp.substring(0, 10) > expirationDate) return;
+    if (plushButton == null) return;
+
+    var currentState = ReflectUtil.getClassNameOf(FlxG.state).split(".");
+    var stateName = currentState[currentState.length - 1];
+    var stateDyn:Dynamic = FlxG.state;
+
+    if (stateName != "MainMenuState")
+    {
+      if (busy)
+      {
+        busy = false;
+        var menuItems = stateDyn.menuItems;
+        if (menuItems != null)
+        {
+          menuItems.enabled = true;
+          menuItems.busy = false;
+        }
+      }
+      return;
+    }
+
+    if (!plushButton.alive || !plushButton.exists)
+    {
+      plushButton.kill();
+      plushButton.destroy();
+      plushButton = null;
+      initialized = false;
+      initButton();
+    }
+
+    var subState = FlxG.state.subState;
+    if (subState != null && ReflectUtil.getClassNameOf(subState) == "funkin.ui.freeplay.FreeplayState")
+    {
+      return;
+    }
+
+    var controls = PlayerSettings.player1.controls;
+    var menuItems = stateDyn.menuItems;
+
+    if (FlxG.onMobile)
+    {
+      var backBtn = stateDyn.backButton;
+      var optionsBtn = stateDyn.optionsButton;
+
+      if (backBtn != null)
+      {
+        backBtn.enabled = !busy;
+        backBtn.active = !busy;
+      }
+      if (optionsBtn != null)
+      {
+        var shouldDisable = plushFocused || isHovering || busy;
+        optionsBtn.enabled = !shouldDisable;
+        optionsBtn.active = !shouldDisable;
+      }
+    }
+
+    if (busy)
+    {
+      if (menuItems != null)
+      {
+        menuItems.enabled = false;
+        menuItems.busy = true;
+      }
+      return;
+    }
+
+    if (controls.UI_LEFT_P && plushFocused)
+    {
+      plushFocused = false;
+      isHovering = false;
+      if (menuItems != null)
+      {
+        menuItems.enabled = true;
+        menuItems.selectItem(lastSelectedIndex);
+      }
+      setPlushIdle();
+      FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+    }
+    else if (controls.UI_RIGHT_P && !plushFocused)
+    {
+      plushFocused = true;
+      isHovering = false;
+      if (menuItems != null)
+      {
+        lastSelectedIndex = menuItems.selectedIndex;
+        var selectedItem = menuItems.selectedItem;
+        if (selectedItem != null) selectedItem.idle();
+        menuItems.enabled = false;
+      }
+      setPlushSelect();
+      FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+    }
+
+    if (plushFocused && controls.ACCEPT_P)
+    {
+      onPlushClick();
+    }
+
+    var isOverlapping = false;
+    if (FlxG.onMobile)
+    {
+      if (TouchUtil.pressed)
+      {
+        isOverlapping = TouchUtil.overlaps(plushButton);
+        if (isOverlapping && TouchUtil.justPressed)
+        {
+          onPlushClick();
+        }
+      }
+    }
+    else
+    {
+      if (plushButton.exists) isOverlapping = FlxG.mouse.overlaps(plushButton);
+      else
+        initButton();
+
+      if (isOverlapping && FlxG.mouse.justPressed)
+      {
+        onPlushClick();
+      }
+    }
+
+    if (isOverlapping && !isHovering)
+    {
+      isHovering = true;
+      var wasKeyboardFocused = plushFocused;
+      if (plushFocused) plushFocused = false;
+
+      if (menuItems != null)
+      {
+        lastSelectedIndex = menuItems.selectedIndex;
+        var selectedItem = menuItems.selectedItem;
+        if (selectedItem != null) selectedItem.idle();
+        menuItems.enabled = false;
+      }
+
+      if (!wasKeyboardFocused) FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+      setPlushSelect();
+    }
+    else if (!isOverlapping && isHovering && !plushFocused)
+    {
+      isHovering = false;
+      if (menuItems != null)
+      {
+        menuItems.enabled = true;
+        menuItems.selectItem(lastSelectedIndex);
+      }
+      FunkinSound.playOnce(Paths.sound('scrollMenu-reversed'), 0.4);
+      setPlushIdle();
+    }
+  }
+
+  override public function onStateChangeBegin(event)
+  {
+    super.onStateChangeBegin(event);
+    if (event.targetState == MainMenuState)
+    {
+      initialized = false;
+      if (plushButton != null) plushButton.kill();
+      initButton();
+      return;
+    }
+    initialized = false;
+    if (plushButton != null) plushButton.kill();
+  }
+
+  public function onStateChangeEnd(event)
+  {
+    super.onStateChangeEnd(event);
+    if (plushButton == null)
+    {
+      initialized = false;
+      initButton();
+    }
+    if (!initialized) initButton();
+
+    busy = false;
+    plushFocused = false;
+    isHovering = false;
+    lastSelectedIndex = 0;
+
+    if (scaleTween != null)
+    {
+      scaleTween.cancel();
+      scaleTween = null;
+    }
+    if (gradientTween != null)
+    {
+      gradientTween.cancel();
+      gradientTween = null;
+    }
+    if (offsetTween != null)
+    {
+      offsetTween.cancel();
+      offsetTween = null;
+    }
+
+    currentTimestamp = DateUtil.generateTimestamp();
+    if (currentTimestamp.substring(0, 10) > expirationDate) return;
+
+    if (FlxG.onMobile)
+    {
+      var stateDyn:Dynamic = FlxG.state;
+      var backBtn = stateDyn.backButton;
+      if (backBtn != null)
+      {
+        backBtn.x = FlxG.width - 230;
+        backBtn.y = 50;
+      }
+    }
+  }
+
+  function initButton()
+  {
+    var shouldPlush;
+    if(Save.instance.modOptions.exists("com.rewired.plush-show-plush-advert"))
+    {
+      shouldPlush = Save.instance.modOptions.get("com.rewired.plush-show-plush-advert");
+    }
+    else
+    {
+      shouldPlush = true;
+    }
+    if (!shouldPlush) return;
+    if (currentTimestamp.substring(0, 10) > expirationDate) return;
+
+    if (!initialized) initialized = true;
+    else
+      return;
+
+    gradient = new FunkinSprite();
+    gradient.loadGraphic(Paths.image('gradient'));
+    gradient.screenCenter();
+    gradient.updateHitbox();
+    gradient.scale.set(FlxG.width / 1280, FlxG.height / 720);
+    gradient.scrollFactor.set(0, 0);
+    gradient.alpha = 0;
+    FlxG.state.add(gradient);
+
+    plushButton = new FunkinSprite();
+    plushButton.frames = Paths.getSparrowAtlas('plushButton/qt_makeship');
+
+    plushButton.animation.addByPrefix("idle", "idle", 24, true);
+    plushButton.animation.addByPrefix("select", "select", 24, true);
+
+    plushButton.animation.play("idle", true);
+    plushButton.scale.set(idleScale, idleScale);
+
+    currentOffsetX = idleOffsetX;
+    currentOffsetY = idleOffsetY;
+
+    updatePlushPosition();
+    plushButton.scrollFactor.set(0, 0);
+
+    if (!FlxG.onMobile) FlxG.mouse.visible = true;
+
+    plushButton.revive();
+    FlxG.state.add(plushButton);
+  }
+
+  function updatePlushPosition()
+  {
+    plushButton.updateHitbox();
+    var baseMargin:Float = 20;
+
+    var baseX:Float = FlxG.width - plushButton.width - baseMargin;
+    var baseY:Float = FlxG.height - plushButton.height - baseMargin;
+
+    plushButton.x = baseX + currentOffsetX;
+    plushButton.y = baseY + currentOffsetY;
+  }
+
+  function setPlushSelect()
+  {
+    var syncFrame:Int = 0;
+    if (plushButton.animation.curAnim != null)
+    {
+      syncFrame = plushButton.animation.curAnim.curFrame;
+    }
+    plushButton.animation.play("select", true, false, syncFrame);
+
+    updatePlushPosition();
+
+    var startX = currentOffsetX;
+    var startY = currentOffsetY;
+
+    if (offsetTween != null) offsetTween.cancel();
+    offsetTween = FlxTween.num(0, 1, 0.3, {ease: FlxEase.cubeOut}, function(v:Float)
+    {
+      currentOffsetX = startX + (selectOffsetX - startX) * v;
+      currentOffsetY = startY + (selectOffsetY - startY) * v;
+    });
+
+    if (scaleTween != null) scaleTween.cancel();
+    scaleTween = FlxTween.tween(plushButton.scale, {x: selectScale, y: selectScale}, 0.3, {
+      ease: FlxEase.cubeOut,
+      onUpdate: function(tween)
+      {
+        updatePlushPosition();
+      }
+    });
+
+    if (gradientTween != null) gradientTween.cancel();
+    gradientTween = FlxTween.tween(gradient, {alpha: 1}, 0.45, {ease: FlxEase.cubeOut});
+
+    if (FlxG.onMobile) HapticUtil.vibrate(0, 0.01, 0.5);
+  }
+
+  function setPlushIdle()
+  {
+    var syncFrame:Int = 0;
+    if (plushButton.animation.curAnim != null)
+    {
+      syncFrame = plushButton.animation.curAnim.curFrame;
+    }
+    plushButton.animation.play("idle", true, false, syncFrame);
+
+    updatePlushPosition();
+
+    var startX = currentOffsetX;
+    var startY = currentOffsetY;
+
+    if (offsetTween != null) offsetTween.cancel();
+    offsetTween = FlxTween.num(0, 1, 0.3, {ease: FlxEase.cubeOut}, function(v:Float)
+    {
+      currentOffsetX = startX + (idleOffsetX - startX) * v;
+      currentOffsetY = startY + (idleOffsetY - startY) * v;
+    });
+
+    if (scaleTween != null) scaleTween.cancel();
+    scaleTween = FlxTween.tween(plushButton.scale, {x: idleScale, y: idleScale}, 0.3, {
+      ease: FlxEase.cubeOut,
+      onUpdate: function(tween)
+      {
+        updatePlushPosition();
+      }
+    });
+
+    if (gradientTween != null) gradientTween.cancel();
+    gradientTween = FlxTween.tween(gradient, {alpha: 0}, 0.45, {ease: FlxEase.cubeOut});
+  }
+
+  function onPlushClick()
+  {
+    if (busy) return;
+    busy = true;
+
+    var stateDyn:Dynamic = FlxG.state;
+    var menuItems = stateDyn.menuItems;
+    if (menuItems != null)
+    {
+      menuItems.enabled = false;
+      menuItems.busy = true;
+    }
+
+    FunkinSound.playOnce(Paths.sound('confirmMenu'));
+    if (FlxG.onMobile) HapticUtil.vibrate(0, 0.05, 1);
+
+    if (Preferences.flashingLights)
+    {
+      FlxFlicker.flicker(plushButton, 1, 0.06, true, false, function(_)
+      {
+        busy = false;
+        WindowUtil.openURL("https://www.makeship.com/products/qt-plushie");
+      });
+    }
+    else
+    {
+      busy = false;
+      WindowUtil.openURL("https://www.makeship.com/products/qt-plushie");
+    }
+  }
+
+  override function onDestroy(event)
+  {
+    super.onDestroy(event);
+    if (plushButton != null && plushButton.exists)
+    {
+      plushButton.kill();
+      plushButton.destroy();
+      plushButton = null;
+      new FlxTimer().start(0.1, function(_)
+      {
+        FlxG.switchState(new MainMenuState());
+      });
+    }
+    initialized = false;
+
+    var stateDyn:Dynamic = FlxG.state;
+    var menuItems = stateDyn.menuItems;
+    if (menuItems != null)
+    {
+      menuItems.enabled = true;
+      menuItems.busy = false;
+    }
+
+    if (scaleTween != null)
+    {
+      scaleTween.cancel();
+      scaleTween = null;
+    }
+    if (gradientTween != null)
+    {
+      gradientTween.cancel();
+      gradientTween = null;
+    }
+    if (offsetTween != null)
+    {
+      offsetTween.cancel();
+      offsetTween = null;
+    }
+  }
+}

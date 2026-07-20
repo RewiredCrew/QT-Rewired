@@ -1,0 +1,17 @@
+{
+  "timeFormat": "ms",
+  "artist": "Simnstar",
+  "songName": "Intro Countdown [Erect]",
+  "timeChanges": [
+    {
+      "d": 4,
+      "n": 4,
+      "t": 0,
+      "bt": [4, 4, 4, 4],
+      "bpm": 125
+    }
+  ],
+  "generatedBy": "Manual (by FatzFries)",
+  "looped": false,
+  "version": "2.0.0"
+}

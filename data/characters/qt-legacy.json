@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "renderType": "sparrow",
+  "offsets": [0, 0],
+  "danceEvery": 1,
+  "applyStageMatrix": false,
+  "scale": 1,
+  "name": "QT (Legacy)",
+  "flipX": false,
+  "cameraOffsets": [50, 50],
+  "startingAnimation": "idle",
+  "singTime": 8,
+  "isPixel": false,
+  "assetPath": "2021/qt",
+  "healthIcon": {
+    "offsets": [0, 0],
+    "id": "qt-legacy",
+    "flipX": false,
+    "isPixel": false,
+    "scale": 1
+  },
+  "atlasSettings": {
+    "applyStageMatrix": false,
+    "useRenderTexture": false,
+    "filterQuality": 1,
+    "cacheOnLoad": false,
+    "swfMode": true
+  },
+  "animations": [
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 18,
+      "prefix": "Final_Idle",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "idle"
+    },
+    {
+      "flipY": false,
+      "offsets": [-68, 19],
+      "frameRate": 14,
+      "prefix": "Final_Left",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFT"
+    },
+    {
+      "flipY": false,
+      "offsets": [22, 77],
+      "frameRate": 14,
+      "prefix": "Final_Down",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWN"
+    },
+    {
+      "flipY": false,
+      "offsets": [22, 35],
+      "frameRate": 14,
+      "prefix": "Final_Up",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUP"
+    },
+    {
+      "flipY": false,
+      "offsets": [-14, 39],
+      "frameRate": 14,
+      "prefix": "Final_Right",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHT"
+    }
+  ]
+}

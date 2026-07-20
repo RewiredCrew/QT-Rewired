@@ -1,0 +1,327 @@
+import funkin.modding.module.Module;
+import funkin.ui.options.OptionsState;
+import funkin.ui.options.ControlsMenu;
+import funkin.modding.events.ScriptEvent;
+import flixel.FlxG;
+import funkin.save.Save;
+import funkin.ui.AtlasText;
+import funkin.ui.ButtonStyle;
+import funkin.ui.Prompt;
+import funkin.ui.TextMenuItem;
+import funkin.util.InputUtil;
+import funkin.ui.options.PreferencesMenu;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+
+class QtOptionsCategory extends Module
+{
+  public function new()
+  {
+    super('QtOptionsCategory', 1, {state: OptionsState});
+
+    if (!Save.instance.modOptions.exists(QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND))
+    {
+      Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND, SAVE_KEY_QT_DODGE_DEFAULT_VALUE);
+    }
+
+    if (!Save.instance.modOptions.exists(QtOptionsCategory.SAVE_KEY_LANG_QT))
+    {
+      Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_LANG_QT, "english");
+    }
+
+    if (!Save.instance.modOptions.exists(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT))
+    {
+      Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT, "default");
+    }
+  }
+
+  public static var SAVE_KEY_QT_DODGE_KEYBIND:String = "qt-rewiredDodgeKey";
+  public static var SAVE_KEY_QT_DODGE_PRESSED:String = "qt-rewiredDodgePressed";
+
+  var SAVE_KEY_QT_DODGE_DEFAULT_VALUE:Array<Int> = [32, 0];
+  var UNBOUND_TEXT:String = "---";
+
+  public static var SAVE_KEY_LANG_QT:String = "qt-rewiredLang";
+  public static var SAVE_KEY_SAWBLADE_MODE_QT:String = "qt-rewiredSawbladeMode";
+
+  var rebindPrompt:Prompt;
+  var keyUsedToEnterPrompt:Null<Int> = null;
+  var storedIndex:Int = -1;
+
+  override function onStateChangeEnd(event:StateChangeScriptEvent)
+  {
+    if (!Std.isOfType(event.targetState, OptionsState)) return;
+
+    addCustomCategory(event.targetState);
+    addLangOption(event.targetState);
+    addDodgeControl(event.targetState);
+    addSawbladeOption(event.targetState);
+    addVersionWatermark(event.targetState);
+    addPlushOption(event.targetState);
+  }
+
+  function addVersionWatermark(optionsState:OptionsState)
+  {
+    var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
+    if (preferencesPage != null)
+    {
+      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT:Rewired v2.0.0', 16);
+      versionText.zIndex = 100000;
+      versionText.scrollFactor.set(0, 0);
+      versionText.setFormat("VCR OSD Mono", 16, 0xFFffffff, "left", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+      preferencesPage.add(versionText);
+    }
+  }
+
+  function addCustomCategory(state)
+  {
+    var prefs:PreferencesMenu = state.optionsCodex.addPage('qt-rewired', new PreferencesMenu());
+    prefs.onExit.add(() ->
+    {
+      FlxG.state.optionsCodex.switchPage('options');
+    });
+    prefs.preferenceDesc = [];
+    prefs.items.clear();
+    prefs.preferenceItems.clear();
+    var optionspage = FlxG.state.optionsCodex.pages.get('options');
+    var exit = optionspage.items.getItem("LAG ADJUSTMENT") ?? null;
+    var option = optionspage.createItem("Rewired Options", () -> FlxG.state.optionsCodex.switchPage('qt-rewired'));
+    if (exit != null)
+    {
+      optionspage.items.members.remove(option);
+      optionspage.items.members.insert(optionspage.items.members.indexOf(exit), option);
+    }
+    for (i in 0...optionspage.items.length)
+    {
+      var item = optionspage.items.members[i];
+      item.y = 100 + i * 100;
+    }
+  }
+
+  override public function onUpdate(event:UpdateScriptEvent)
+  {
+    super.onUpdate(event);
+
+    // If we're in the options state, update the keybind prompt stuff.
+    if (Std.isOfType(FlxG.state, OptionsState))
+    {
+      updateOptions();
+      return;
+    }
+  }
+
+  function addVersionDisplay(optionsState:OptionsState)
+  {
+    var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
+    if (preferencesPage != null)
+    {
+      preferencesPage.createPrefItemEnum('QT Rewired Version', "", ["1.3.0" => "1.3.0"], (value:String, oValue:String) -> {
+      }, "1.3.0");
+    }
+  }
+
+  function addDodgeControl(optionsState:OptionsState)
+  {
+    var cPage:Page = optionsState.optionsCodex.pages["controls"];
+    if (cPage == null) return;
+
+    var labels:FlxTypedGroup = cPage.labels;
+    var headers:FlxTypedGroup = cPage.members[1];
+    var lastItemY:Float = labels.members[labels.members.length - 1].y;
+
+    rebindPrompt = new Prompt("\nPress any key to rebind\n\n\nBackspace to unbind\n    Escape to cancel", ButtonStyle.None);
+    rebindPrompt.create();
+    rebindPrompt.createBgFromMargin(100, 0xFFfafd6d);
+    rebindPrompt.back.scrollFactor.set(0, 0);
+    rebindPrompt.exists = false;
+    cPage.add(rebindPrompt);
+
+    lastItemY += 70;
+    headers.add(new AtlasText(0, lastItemY, "QT:Rewired", "bold")).screenCenter(0x01);
+
+    lastItemY += 70;
+    var label = labels.add(new AtlasText(ControlsMenu.CONTROL_BASE_X, lastItemY, "DODGE", "bold"));
+    label.alpha = 0.6;
+
+    var currentKeys:Array<Int> = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND);
+    for (i in 0...currentKeys.length)
+    {
+      var keyName:String = InputUtil.getKeyName(currentKeys[i]);
+      var keyNameReal:String = (currentKeys[i] == 0 ? UNBOUND_TEXT : keyName);
+
+      var item:TextMenuItem = new TextMenuItem(label.x + ControlsMenu.CONTROL_MARGIN_X + i * ControlsMenu.CONTROL_SPACING_X, lastItemY, keyNameReal,
+        "default", () -> openPrompt(i));
+      item.fireInstantly = true;
+      cPage.controlGrid.addItem(item.name, item);
+    }
+    cPage.controlGrid.onChange.removeAll();
+    cPage.controlGrid.onChange.add((selected:TextMenuItem) ->
+    {
+      cPage.camFollow.y = selected.y;
+
+      labels.forEach((label:FlxSprite) -> label.alpha = 0.6);
+      labels.members[
+        Std.int(cPage.controlGrid.selectedIndex / 2)
+      ].alpha = 1.0;
+    });
+  }
+
+  function addSawbladeOption(optionsState:OptionsState)
+  {
+    var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
+    if (preferencesPage != null)
+    {
+      preferencesPage.createPrefItemEnum('Sawblade Mode', "Changes how the Sawblade Mechanic works.",
+        ["Default" => "default", "Instakill" => "instakill", "Disabled" => "disabled"], function(value:String, oValue:String):Void
+      {
+        Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT, oValue);
+        Save.instance.flush();
+      },
+        getSawbladeModeDisplay(Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT)));
+    }
+  }
+
+  function addPlushOption(options:OptionsState)
+  {
+    var preferencesPage = options.optionsCodex.pages.get("qt-rewired");
+    if (preferencesPage != null)
+    {
+      preferencesPage.createPrefItemCheckbox("Plush Advert", "Whether or not you want the plush advert to show in the main menu.", function(value:Bool):Void
+      {
+        Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
+        trace('do i want the plush to show? $value');
+        Save.instance.flush();
+      }, getQtPlush());
+    }
+  }
+
+  function addLangOption(optionsState:OptionsState)
+  {
+    var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
+    if (preferencesPage != null)
+    {
+      preferencesPage.createPrefItemEnum('Language', "Changes the language used in the mod.", ["English" => "english", "Spanish" => "spanish"],
+        (value:String, oValue:String) ->
+        {
+          trace(oValue);
+          Save.instance.modOptions.set("qt-rewiredLang", oValue);
+          Save.instance.flush();
+          trace(Save.instance.modOptions.get("qt-rewiredLang"));
+        }, getCoolQtLang(Save.instance.modOptions.get("qt-rewiredLang")));
+    }
+  }
+
+  function getCoolQtLang(value:String):String
+  {
+    return switch (value)
+    {
+      case "english":
+        "English";
+      case "spanish":
+        "Spanish";
+      default:
+        "English";
+    }
+  }
+
+  function getQtPlush():Bool
+  {
+    if (!Save.instance.modOptions.exists("com.rewired.plush-show-plush-advert")) return true;
+    return Save.instance.modOptions.get("com.rewired.plush-show-plush-advert");
+  }
+
+  function getSawbladeModeDisplay(value:String):String
+  {
+    return switch (value)
+    {
+      case "default":
+        "Default";
+      case "instakill":
+        "Instakill";
+      case "disabled":
+        "Disabled";
+      default:
+        "Default";
+    }
+  }
+
+  function updateOptions()
+  {
+    if (rebindPrompt?.exists)
+    {
+      var key = FlxG.keys.firstJustReleased();
+      if (key != -1 && key != keyUsedToEnterPrompt)
+      {
+        switch (key)
+        {
+          case 27:
+          case 8:
+            bindKey(0);
+          default:
+            bindKey(key);
+        }
+
+        closePrompt();
+      }
+    }
+  }
+
+  function bindKey(to:Int)
+  {
+    var bindTo:Int = to;
+    var cPage:Page = FlxG.state.optionsCodex.pages["controls"];
+    var controlGrid:FlxTypedGroup<AtlasText> = cPage.controlGrid;
+
+    var keyArray:Array<Int> = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND);
+    keyArray[storedIndex] = bindTo;
+
+    var item:AtlasText = cPage.controlGrid.selectedItem;
+    var keyName:String = (bindTo == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(bindTo));
+    item.label.text = keyName;
+
+    if ((bindTo != 0 && keyArray[0] == 0) || (bindTo == 0 && keyArray[1] != 0))
+    {
+      keyArray.reverse();
+      if (cPage.controlGrid.selectedIndex % 2 == 1)
+      {
+        var leftItem:AtlasText = cPage.controlGrid.members[
+          cPage.controlGrid.selectedIndex - 1
+        ];
+
+        leftItem.label.text = (keyArray[0] == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(keyArray[0]));
+        item.label.text = UNBOUND_TEXT;
+      }
+      else
+      {
+        var rightItem:AtlasText = cPage.controlGrid.members[
+          cPage.controlGrid.selectedIndex + 1
+        ];
+        item.label.text = (keyArray[0] == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(keyArray[0]));
+        rightItem.label.text = UNBOUND_TEXT;
+      }
+    }
+    Save.instance.flush();
+  }
+
+  function openPrompt(index:Int)
+  {
+    var cPage:Page = FlxG.state.optionsCodex.pages["controls"];
+    storedIndex = index;
+
+    cPage.controlGrid.enabled = false;
+    cPage.canExit = false;
+    rebindPrompt.exists = true;
+
+    keyUsedToEnterPrompt = FlxG.keys.firstJustPressed();
+  }
+
+  function closePrompt()
+  {
+    var cPage:Page = FlxG.state.optionsCodex.pages["controls"];
+    rebindPrompt.exists = false;
+    cPage.controlGrid.enabled = true;
+    cPage.canExit = true;
+
+    keyUsedToEnterPrompt = null;
+  }
+}

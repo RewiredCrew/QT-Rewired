@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "kbStickers",
+  "artist": "JoaDash",
+  "stickers": [
+    "stickers/kbstickers/kbSticker1",
+    "stickers/kbstickers/kbSticker2",
+    "stickers/kbstickers/kbSticker3",
+    "stickers/kbstickers/dangerSticker",
+    "stickers/kbstickers/nutSticker",
+    "stickers/kbstickers/tvSticker",
+    "stickers/kbstickers/sawSticker",
+    "stickers/kbstickers/qtKbSticker"
+  ]
+}

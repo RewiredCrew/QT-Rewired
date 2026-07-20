@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<TextureAtlas imagePath="tv_static_assets.png">
+	<!-- Created with Adobe Flash CS6 version 12.0.0.481 -->
+	<!-- http://www.adobe.com/products/flash.html -->
+	<SubTexture name="static anim0000" x="10" y="10" width="367" height="381" frameX="-1" frameY="0" frameWidth="368" frameHeight="381"/>
+	<SubTexture name="static anim0001" x="387" y="10" width="367" height="381" frameX="-1" frameY="0" frameWidth="368" frameHeight="381"/>
+	<SubTexture name="static anim0002" x="10" y="401" width="368" height="381"/>
+	<SubTexture name="static anim0003" x="388" y="401" width="368" height="381"/>
+</TextureAtlas>

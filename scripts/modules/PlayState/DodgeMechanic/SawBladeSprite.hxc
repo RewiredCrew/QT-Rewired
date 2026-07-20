@@ -1,0 +1,61 @@
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.util.FlxTimer;
+import flixel.FlxG;
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import funkin.Preferences;
+
+class SawBladeSprite extends FunkinSprite
+{
+  public function new(x:Float, y:Float)
+  {
+    super(x, y);
+    loadTextureAtlas("saw_mechanic/saw_assets", "shared");
+    animation.addBySymbolIndices("saw anim attack", [
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38
+    ], this.getDefaultSymbol(), 24, false);
+    animation.addBySymbolIndices("saw anim alert", [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ], this.getDefaultSymbol(), 24, false);
+  }
+}

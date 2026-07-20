@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "name": "Girlfriend (Rewired)",
+  "assetPath": "shared:characters/gf-qt",
+  "renderType": "multianimateatlas",
+  "startingAnimation": "danceRight",
+  "singTime": 4.0,
+  "animations": [
+    {
+      "name": "danceLeft",
+      "prefix": "dance left"
+    },
+    {
+      "name": "danceRight",
+      "prefix": "dance right"
+    },
+    {
+      "name": "danceRight-alt",
+      "frameIndices": [14, 15, 16, 17, 18, 19, 0, 1, 2, 3],
+      "prefix": "caramelldansen"
+    },
+    {
+      "name": "dodge",
+      "prefix": "dodge"
+    },
+    {
+      "name": "intro",
+      "prefix": "shocked",
+      "looped": true
+    },
+    {
+      "name": "danceLeft-alt",
+      "prefix": "caramelldansen",
+      "frameIndices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    },
+    {
+      "name": "preDance",
+      "prefix": "pre dance"
+    },
+    {
+      "name": "sad",
+      "prefix": "sad"
+    },
+    {
+      "name": "cheer",
+      "prefix": "gf cheer"
+    },
+    {
+      "name": "combo50",
+      "prefix": "cheer"
+    },
+    {
+      "name": "drop70",
+      "prefix": "sad"
+    }
+  ]
+}

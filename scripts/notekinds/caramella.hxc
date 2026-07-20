@@ -1,0 +1,9 @@
+import funkin.play.notes.notekind.NoteKind;
+
+class BfCaramellaNoteKind extends NoteKind
+{
+  public function new()
+  {
+    super('caramella', 'BF Caramelldansen (Blissful Erect)', 'rewired-caramella', [], false, 'caramella');
+  }
+}

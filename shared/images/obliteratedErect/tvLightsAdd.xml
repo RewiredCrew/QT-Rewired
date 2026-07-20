@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="tvLightsAdd.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="tvLights0000" x="15" y="15" width="1506" height="1215"/>
+	<SubTexture name="tvLights0001" x="1536" y="15" width="1506" height="1215"/>
+	<SubTexture name="tvLights0002" x="3057" y="15" width="1506" height="1215"/>
+	<SubTexture name="tvLights0003" x="4578" y="15" width="1506" height="1215"/>
+	<SubTexture name="tvLights0004" x="6099" y="15" width="1506" height="1215"/>
+	<SubTexture name="tvLights0005" x="15" y="1245" width="1506" height="1215"/>
+	<SubTexture name="tvLights0006" x="1536" y="1245" width="1506" height="1215"/>
+	<SubTexture name="tvLights0007" x="3057" y="1245" width="1506" height="1215"/>
+	<SubTexture name="tvLights0008" x="4578" y="1245" width="1506" height="1215"/>
+</TextureAtlas>

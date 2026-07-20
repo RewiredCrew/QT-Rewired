@@ -1,0 +1,102 @@
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import StringTools;
+import funkin.play.GameOverSubState;
+
+class MissesExceptionsModule extends Module
+{
+  var _ignoreExclusionPref = [];
+
+  public function new()
+  {
+    super('MissesExceptionsModule', 1, {state: PlayState});
+  }
+
+  /*
+    public function onNoteIncoming(ev):Void {
+      return;
+
+      super.onNoteIncoming(ev);
+      if (ev.note.noteData.getMustHitNote()){
+      switch (ev.note.direction) {
+        case 0: 
+          ev.note.setHue(0.83);
+        case 1: 
+          ev.note.setHue(1.2); 
+        case 2: 
+          ev.note.setHue(1.89);
+        case 3: 
+          ev.note.setHue(0.73);  
+        }
+          if (ev.note.holdNoteSprite != null) {
+            ev.note.holdNoteSprite.shader = ev.note.shader;
+          }
+      }
+    }
+
+     override public function onNoteHit(ev)
+      {
+      return;
+
+      super.onNoteHit(ev);
+      if (!ev.note.noteData.getMustHitNote()) return;
+
+        fixPlayerSplashes();
+    }
+
+    function fixPlayerSplashes(){
+      var playerStrum = PlayState.instance.playerStrumline;
+      if(playerStrum == null) return;
+      
+      for (splash in playerStrum.noteSplashes.members)
+        splash.shader = ev.note.shader;
+
+      for (cover in playerStrum.noteHoldCovers.members)	
+        setHoldCoverPos(playerStrum, cover, ev.note.shader);
+    }
+
+    function getCoverDirection(cover):Int{
+      var direction = cover.holdNote.noteDirection;
+          
+      var animName:String = cover.glow.animation.curAnim.name.toLowerCase();
+      if(StringTools.contains(animName, "blue"))
+        direction = 1;
+      else if(StringTools.contains(animName, "green"))
+        direction = 2;
+      else if(StringTools.contains(animName, "red"))
+        direction = 3;
+      else if(StringTools.contains(animName, "purple"))
+        direction = 0;
+      return direction;
+    }
+
+    function setHoldCoverPos(strum, cover, _shader){
+      
+      var direction = getCoverDirection(cover);
+      cover.shader = _shader;
+    }
+   */
+  override function onSongLoaded(event)
+  {
+    super.onSongLoaded(event);
+
+    _ignoreExclusionPref = getPlayer().ignoreExclusionPref;
+  }
+
+  override function onNoteGhostMiss(event)
+  {
+    super.onNoteGhostMiss(event);
+    if (_ignoreExclusionPref == null) return;
+    var player = getPlayer();
+    if (player != null && _ignoreExclusionPref.indexOf(player.getCurrentAnimation()) != -1)
+    {
+      event.cancel();
+      event.stopPropagation();
+    }
+  }
+
+  function getPlayer()
+  {
+    return PlayState.instance.currentStage != null ? PlayState.instance.currentStage.getBoyfriend() : null;
+  }
+}

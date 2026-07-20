@@ -1,0 +1,21 @@
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.util.FlxTimer;
+import flixel.FlxG;
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import funkin.Preferences;
+
+class RetrySprite extends FunkinSprite
+{
+  public function new(x:Float, y:Float)
+  {
+    super(x, y);
+    loadTextureAtlas("characters/PICO/death/retry", "shared", {cacheOnLoad: true});
+    this.applyStageMatrix = true;
+    this.animation.addByFrameLabel("retry", "retry", 24, true);
+    this.animation.addByFrameLabel("retry confirm", "retry confirm", 24, false);
+  }
+}

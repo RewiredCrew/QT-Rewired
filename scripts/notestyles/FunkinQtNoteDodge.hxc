@@ -1,0 +1,30 @@
+import funkin.graphics.FunkinSprite;
+import funkin.play.notes.notestyle.ScriptedNoteStyle;
+
+class FunkinQtNoteDodge extends ScriptedNoteStyle
+{
+  public function new(id:String)
+  {
+    super("funkin-qt-dodge");
+  }
+
+  var defaultRatings = [
+    "sick",
+    "good",
+    "bad",
+    "shit",
+    "dodged"
+  ];
+
+  public override function buildJudgementSprite(rating:String):Null<FunkinSprite>
+  {
+    if (defaultRatings.contains(rating)) return super.buildJudgementSprite(rating);
+
+    var result = new FunkinSprite();
+    result.loadTexture("ui/popup/funkin/" + rating.toLowerCase());
+    result.scale.set(.65, .65);
+    result.scrollFactor.set(0.2, 0.2);
+    result.updateHitbox();
+    return result;
+  }
+}

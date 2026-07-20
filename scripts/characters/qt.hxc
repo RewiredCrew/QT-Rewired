@@ -1,0 +1,61 @@
+import funkin.play.PlayState;
+import funkin.play.GameOverSubState;
+import funkin.graphics.FunkinSprite;
+import flixel.FlxSprite;
+import funkin.play.PauseSubState;
+import flixel.FlxG;
+import funkin.audio.FunkinSound;
+import funkin.play.character.MultiAnimateAtlasCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.Preferences;
+import funkin.util.Constants;
+import funkin.util.HapticUtil;
+import funkin.FunkinMemory;
+
+class QTCharacterAnims extends MultiAnimateAtlasCharacter
+{
+  function new()
+  {
+    super('qt');
+  }
+
+  override function onAnimationFinished(name:String)
+  {
+    if (PlayState.instance != null) switch (name)
+    {
+      case "preDance":
+        shouldAlternate = true;
+        idleSuffix = '-alt';
+
+      case "preDance-erect":
+        shouldAlternate = true;
+        idleSuffix = '-erect';
+        dance(true);
+      case "cheer":
+        shouldAlternate = null;
+        idleSuffix = '';
+    }
+    super.onAnimationFinished(name);
+  }
+
+  override function resetCharacter(resetCamera:Bool):Void
+  {
+    super.resetCharacter(resetCamera);
+    shouldAlternate = null;
+    idleSuffix = '';
+  }
+
+  function onNoteHit(event:HitNoteScriptEvent)
+  {
+    switch (event.note.kind)
+    {
+      case "altAnim":
+        holdTimer = 0;
+        this.playSingAnimation(event.note.noteData.getDirection(), false, 'alt');
+        return;
+      default:
+        super.onNoteHit(event);
+    }
+  }
+}

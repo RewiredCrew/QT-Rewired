@@ -1,0 +1,19 @@
+import funkin.graphics.FunkinSprite;
+import flixel.math.FlxPoint;
+import flixel.FlxG;
+
+class QtTransformSongOutro extends FunkinSprite
+{
+  public function new(x:Float = 0, y:Float = 0)
+  {
+    super(x, y);
+    loadTextureAtlas("characters/QT_assets/qtCutscene", "shared", {cacheOnLoad: true});
+    applyStageMatrix = false;
+    animation.addBySymbol("qt transform", this.getDefaultSymbol(), 24, false);
+  }
+
+  function doAnim()
+  {
+    this.animation.play("qt transform", true);
+  }
+}
