@@ -1,3 +1,5 @@
+package rewired.modules.playstate;
+
 import funkin.play.components.Subtitles;
 import funkin.play.GameOverSubState;
 import funkin.modding.module.Module;

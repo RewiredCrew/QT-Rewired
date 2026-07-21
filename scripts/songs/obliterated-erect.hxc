@@ -1,3 +1,5 @@
+package rewired.songs;
+
 import funkin.play.song.Song;
 import funkin.play.PlayState;
 import funkin.graphics.video.FunkinVideoSprite;

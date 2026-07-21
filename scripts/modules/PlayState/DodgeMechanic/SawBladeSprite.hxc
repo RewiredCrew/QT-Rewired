@@ -1,3 +1,5 @@
+package rewired.modules.playstate.dodgemechanic;
+
 import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import funkin.graphics.FunkinSprite;

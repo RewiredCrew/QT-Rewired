@@ -1,4 +1,4 @@
-package funkin.play.character;
+package rewired.characters;
 
 import funkin.play.character.MultiAnimateAtlasCharacter;
 import funkin.play.PlayState;

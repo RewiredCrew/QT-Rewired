@@ -1,3 +1,5 @@
+package rewired.songs;
+
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import funkin.play.PlayState;
@@ -66,12 +68,10 @@ class Blissful2021SongScript extends Song
     judgementCounter: false,
     disableKeWatermark: false
   };
-
   var ps;
   var msDisplayText:FlxText; // its one text object cuz spawning a billion objects is gay
   var scoreLerp:Int = 0;
   var accuracyLerp:Float = 0;
-
   var up = 0;
 
   function onUpdate(e)
@@ -87,11 +87,13 @@ class Blissful2021SongScript extends Song
     {
       if (scoreTxt != null)
       {
-        scoreTxt.applyMarkup(generateScoreString(),
-          [new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFFF00),
-            '/y/'), new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFFF66),
-              '/yw/'), new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFF00FF),
-              '/p/'), new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFAA00), '/o/'), new FlxTextFormatMarkerPair(new FlxTextFormat(0xFF0000FF), '/b/'),]);
+        scoreTxt.applyMarkup(generateScoreString(), [
+          new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFFF00), '/y/'),
+          new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFFF66), '/yw/'),
+          new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFF00FF), '/p/'),
+          new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFAA00), '/o/'),
+          new FlxTextFormatMarkerPair(new FlxTextFormat(0xFF0000FF), '/b/'),
+        ]);
         if (!settings.centerText)
         {
           var lengthInPx = scoreTxt.textField.length * scoreTxt.frameHeight; // bad way but does more or less a better job
@@ -222,7 +224,8 @@ class Blissful2021SongScript extends Song
     }
     else
     {
-      var wifeConditions:Array<Bool> = [grade >= 1, // Purple P
+      var wifeConditions:Array<Bool> = [
+        grade >= 1, // Purple P
         grade >= Constants.RANK_EXCELLENT_THRESHOLD, // E
         grade >= Constants.RANK_GREAT_THRESHOLD, // WHITE G
         grade >= Constants.RANK_GOOD_THRESHOLD, // ORANGE G
@@ -278,7 +281,8 @@ class Blissful2021SongScript extends Song
         ranking = "(Clear)";
       // WIFE TIME :)))) (based on Wife3)
       // kade what do you mean by wife only women can be lesbians
-      var wifeConditions:Array<Bool> = [accuracy >= 99.9935, // AAAAA
+      var wifeConditions:Array<Bool> = [
+        accuracy >= 99.9935, // AAAAA
         accuracy >= 99.980, // AAAA:
         accuracy >= 99.970, // AAAA.
         accuracy >= 99.955, // AAAA

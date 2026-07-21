@@ -1,3 +1,5 @@
+package rewired.notestyles;
+
 import funkin.graphics.FunkinSprite;
 import funkin.play.notes.notestyle.ScriptedNoteStyle;
 import flixel.tweens.FlxEase;

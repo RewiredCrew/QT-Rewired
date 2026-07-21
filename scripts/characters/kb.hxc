@@ -1,3 +1,5 @@
+package rewired.characters;
+
 import funkin.play.PlayState;
 import funkin.play.character.MultiAnimateAtlasCharacter;
 import flixel.FlxG;

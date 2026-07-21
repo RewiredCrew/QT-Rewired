@@ -1,3 +1,5 @@
+package rewired.stages;
+
 import flixel.FlxG;
 import funkin.play.character.CharacterType;
 import funkin.play.PlayState;

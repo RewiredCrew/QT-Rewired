@@ -1,3 +1,5 @@
+package rewired.notekinds;
+
 import funkin.play.notes.notekind.NoteKind;
 
 class BfCaramellaNoteKind extends NoteKind

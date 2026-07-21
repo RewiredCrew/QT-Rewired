@@ -1,3 +1,5 @@
+package rewired.modules.freeplay;
+
 import funkin.modding.module.Module;
 import flixel.FlxG;
 import funkin.ui.freeplay.FreeplayState;

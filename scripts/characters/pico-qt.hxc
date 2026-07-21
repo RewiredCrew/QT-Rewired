@@ -1,3 +1,5 @@
+package rewired.characters;
+
 import flixel.FlxG;
 import flixel.tweens.FlxEase;
 import animate.internal.elements.FlxSpriteElement;

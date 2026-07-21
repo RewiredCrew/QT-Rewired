@@ -1,3 +1,5 @@
+package rewired.modules.playstate;
+
 import funkin.play.PlayState;
 import funkin.modding.module.Module;
 import StringTools;

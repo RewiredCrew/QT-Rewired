@@ -1,3 +1,5 @@
+package rewired.stages;
+
 import funkin.graphics.FunkinSprite;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;

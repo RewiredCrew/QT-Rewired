@@ -1,3 +1,5 @@
+package rewired.modules.options;
+
 import funkin.modding.module.Module;
 import funkin.ui.options.OptionsState;
 import funkin.ui.options.ControlsMenu;

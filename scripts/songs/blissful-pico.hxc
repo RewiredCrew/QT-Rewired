@@ -1,3 +1,5 @@
+package rewired.songs;
+
 import funkin.play.song.Song;
 import funkin.util.Sequence;
 import flixel.tweens.FlxEase;

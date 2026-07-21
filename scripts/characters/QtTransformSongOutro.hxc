@@ -1,3 +1,5 @@
+package rewired.characters;
+
 import funkin.graphics.FunkinSprite;
 import flixel.math.FlxPoint;
 import flixel.FlxG;

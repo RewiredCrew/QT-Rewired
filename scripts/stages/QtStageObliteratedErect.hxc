@@ -1,3 +1,5 @@
+package rewired.stages;
+
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
 import funkin.graphics.shaders.AdjustColorShader;

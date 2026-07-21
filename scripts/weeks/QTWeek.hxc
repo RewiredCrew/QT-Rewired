@@ -1,3 +1,5 @@
+package rewired.weeks;
+
 import funkin.ui.story.Level;
 import funkin.save.Save;
 

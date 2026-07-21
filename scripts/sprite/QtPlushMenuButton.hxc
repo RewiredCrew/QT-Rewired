@@ -1,3 +1,5 @@
+package rewired.sprite;
+
 import flixel.FlxG;
 import funkin.Paths;
 import funkin.ui.mainmenu.MainMenuState;
