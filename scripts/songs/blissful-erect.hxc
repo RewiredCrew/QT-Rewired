@@ -42,7 +42,7 @@ class BlissfulErectSong extends Song
   var flashStartAlpha:Float = 0.3;
   var flashFadeTime:Float = 1.4;
   var danceQT:QTErectDanceSprite = null;
-  var lang;
+  var lang:String;
   var gameplayFlashTimes:Array<Float> = [116840, 202490, 226380];
   var currentFlashIndex:Int = 0;
 
@@ -74,6 +74,16 @@ class BlissfulErectSong extends Song
 
     var qt = PS.currentStage.getDad();
     if (qt != null && qt.characterId.indexOf('qt') != -1) setupQTDanceSprite(qt);
+
+    pinkFlash = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFFFFFFFF);
+    pinkFlash.scale.set(FlxG.width * 2, FlxG.height * 2);
+    pinkFlash.updateHitbox();
+    pinkFlash.color = flashColor;
+    pinkFlash.blend = BlendMode.OVERLAY;
+    pinkFlash.scrollFactor.set(0, 0);
+    pinkFlash.screenCenter();
+    pinkFlash.alpha = 0;
+    PS.add(pinkFlash);
   }
 
   function setupQTDanceSprite(qt)
@@ -114,34 +124,12 @@ class BlissfulErectSong extends Song
 
   function triggerPinkFlash(targetCam:flixel.FlxCamera):Void
   {
-    if (pinkFlash != null)
-    {
-      FlxTween.cancelTweensOf(pinkFlash);
-      PS.remove(pinkFlash, true);
-      pinkFlash.destroy();
-      pinkFlash = null;
-    }
-
-    pinkFlash = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, flashColor);
-    pinkFlash.blend = BlendMode.OVERLAY;
-    pinkFlash.alpha = flashStartAlpha;
-    pinkFlash.scrollFactor.set(0, 0);
-    pinkFlash.screenCenter();
+    if (pinkFlash == null) return;
+    FlxTween.cancelTweensOf(pinkFlash);
     pinkFlash.cameras = [targetCam];
-    PS.add(pinkFlash);
+    pinkFlash.alpha = flashStartAlpha;
 
-    FlxTween.tween(pinkFlash, {alpha: 0}, flashFadeTime, {
-      ease: FlxEase.linear,
-      onComplete: _ ->
-      {
-        if (pinkFlash != null)
-        {
-          PS.remove(pinkFlash, true);
-          pinkFlash.destroy();
-          pinkFlash = null;
-        }
-      }
-    });
+    FlxTween.tween(pinkFlash, {alpha: 0}, flashFadeTime, {ease: FlxEase.linear});
   }
 
   override function onBeatHit(ev):Void
@@ -392,6 +380,14 @@ class BlissfulErectSong extends Song
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
+    
+    currentFlashIndex = 0; 
+    if (pinkFlash != null)
+    {
+      FlxTween.cancelTweensOf(pinkFlash);
+      pinkFlash.alpha = 0;
+    }
+
     PS.currentStage.getDad().visible = true;
     trace('chud');
     if (danceQT != null)
@@ -558,9 +554,7 @@ class BlissfulErectSong extends Song
     if (pinkFlash != null)
     {
       FlxTween.cancelTweensOf(pinkFlash);
-      PS.remove(pinkFlash, true);
-      pinkFlash.destroy();
-      pinkFlash = null;
+      pinkFlash.alpha = 0;
     }
 
     PS.camCutscene.fade(0xFF000000, 0.5, false, null, true);
@@ -640,10 +634,10 @@ class BlissfulErectSong extends Song
     if (qtSnd3 != null) qtSnd3.stop();
     if (bfSnd1 != null) bfSnd1.stop();
     if (bfSnd2 != null) bfSnd2.stop();
-
     if (pinkFlash != null)
     {
       FlxTween.cancelTweensOf(pinkFlash);
+      PS.remove(pinkFlash, true);
       pinkFlash.destroy();
       pinkFlash = null;
     }

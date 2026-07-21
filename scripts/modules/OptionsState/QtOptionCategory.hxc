@@ -65,7 +65,7 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT:Rewired v2.0.0', 16);
+      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT: Rewired v2.0.0', 16);
       versionText.zIndex = 100000;
       versionText.scrollFactor.set(0, 0);
       versionText.setFormat("VCR OSD Mono", 16, 0xFFffffff, "left", FlxTextBorderStyle.OUTLINE, 0xFF000000);
@@ -137,7 +137,7 @@ class QtOptionsCategory extends Module
     cPage.add(rebindPrompt);
 
     lastItemY += 70;
-    headers.add(new AtlasText(0, lastItemY, "QT:Rewired", "bold")).screenCenter(0x01);
+    headers.add(new AtlasText(0, lastItemY, "QT: Rewired", "bold")).screenCenter(0x01);
 
     lastItemY += 70;
     var label = labels.add(new AtlasText(ControlsMenu.CONTROL_BASE_X, lastItemY, "DODGE", "bold"));
@@ -186,7 +186,7 @@ class QtOptionsCategory extends Module
     var preferencesPage = options.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemCheckbox("Plush Advert", "Whether or not you want the plush advert to show in the main menu.", function(value:Bool):Void
+      preferencesPage.createPrefItemCheckbox("Plushie Button", "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.", function(value:Bool):Void
       {
         Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
         trace('do i want the plush to show? $value');
