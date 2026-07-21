@@ -22,7 +22,7 @@ class ObliteratedErectSong extends Song
   var shouldHuzz:Bool = false;
   var colorShader:AdjustColorShader;
   var timeVideo1:Float = 149673;
-  var timeVideo2:Float = 153500;
+  var timeVideo2:Float = 153800;
   var timeFadeOut1Start:Float = 148300;
   var durFadeOut1:Float = 1.8;
   var timeLayoutChange:Float = 152220;
