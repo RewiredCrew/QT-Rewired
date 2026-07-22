@@ -77,9 +77,7 @@ class BlissfulPicoSong extends Song
       }
     }
 
-    if ((PlayState.instance.controls.CUTSCENE_ADVANCE #if mobile || mobilePausePressed #end)
-      && !cutsceneSkipped
-      && canSkipCutscene)
+    if ((PlayState.instance.controls.CUTSCENE_ADVANCE #if mobile || mobilePausePressed #end) && !cutsceneSkipped && canSkipCutscene)
     {
       skipCutscene();
     }

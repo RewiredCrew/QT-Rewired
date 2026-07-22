@@ -1,344 +1,232 @@
 {
-	"version": "1.0.0",
-	"renderType": "multianimateatlas",
-	"offsets": [
-		0,
-		0
-	],
-	"danceEvery": 1,
-	"applyStageMatrix": false,
-	"scale": 1,
-	"name": "QT (Rewired)",
-	"flipX": false,
-	"cameraOffsets": [
-		0,
-		0
-	],
-	"startingAnimation": "idle",
-	"singTime": 8,
-	"isPixel": false,
-	"assetPath": "shared:characters/QT_assets/qt",
-	"healthIcon": {
-		"offsets": [
-			0,
-			0
-		],
-		"isPixel": false,
-		"scale": 1,
-		"flipX": false,
-		"id": "QT"
-	},
-	"atlasSettings": {
-		"applyStageMatrix": false,
-		"swfMode": true,
-		"useRenderTexture": false,
-		"cacheOnLoad": false,
-		"filterQuality": 1
-	},
-	"animations": [
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "idle",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "idle"
-		},
-		{
-			"offsets": [
-				0,
-				0
-			],
-			"prefix": "hi cutie",
-			"frameIndices": [
-				0
-			],
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "still",
-			"flipY": false,
-			"frameRate": 24
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "hi cutie",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "intro"
-		},
-		{
-			"offsets": [
-				0,
-				0
-			],
-			"prefix": "dance",
-			"frameIndices": [
-				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9
-			],
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "danceRight-alt",
-			"flipY": false,
-			"frameRate": 24
-		},
-		{
-			"offsets": [
-				0,
-				0
-			],
-			"prefix": "dance",
-			"frameIndices": [
-				10,
-				11,
-				12,
-				13,
-				14,
-				15,
-				16,
-				17,
-				18,
-				19
-			],
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "danceLeft-alt",
-			"flipY": false,
-			"frameRate": 24
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "left",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "singLEFT"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "left angry",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "singLEFT-alt"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "ew",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "disgust"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "hey",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "cheer"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "pre dance",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "preDance"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "down",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "singDOWN"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				0,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "up",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "singUP"
-		},
-		{
-			"flipY": false,
-			"offsets": [
-				20,
-				0
-			],
-			"frameRate": 24,
-			"prefix": "right",
-			"animType": "framelabel",
-			"flipX": false,
-			"looped": false,
-			"name": "singRIGHT"
-		},
-		{
-			"offsets": [
-				-45,
-				9
-			],
-			"prefix": "qt erect intro 1",
-			"flipX": false,
-			"animType": "framelabel",
-			"name": "erectIntro1",
-			"looped": false,
-			"flipY": false,
-			"assetPath": "shared:characters/QT_assets/qt-erect",
-			"frameRate": 24
-		},
-		{
-			"offsets": [
-				-45,
-				9
-			],
-			"prefix": "qt erect intro 2",
-			"flipX": false,
-			"animType": "framelabel",
-			"name": "erectIntro2",
-			"looped": false,
-			"flipY": false,
-			"assetPath": "shared:characters/QT_assets/qt-erect",
-			"frameRate": 24
-		},
-		{
-			"offsets": [
-				-45,
-				9
-			],
-			"prefix": "qt erect ending",
-			"flipX": false,
-			"animType": "framelabel",
-			"name": "erectEnding",
-			"looped": false,
-			"flipY": false,
-			"assetPath": "shared:characters/QT_assets/qt-erect",
-			"frameRate": 24
-		},
-		{
-			"offsets": [
-				-45,
-				9
-			],
-			"prefix": "transition caramelldansen",
-			"looped": false,
-			"flipX": false,
-			"animType": "framelabel",
-			"name": "preDance-erect",
-			"flipY": false,
-			"frameRate": 24,
-			"assetPath": "shared:characters/QT_assets/qt-erect"
-		},
-		{
-			"offsets": [
-				-63,
-				-10
-			],
-			"prefix": "caramelldansen",
-			"frameIndices": [
-				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9
-			],
-			"flipX": false,
-			"looped": false,
-			"name": "danceRight-erect",
-			"animType": "symbol",
-			"flipY": false,
-			"assetPath": "shared:characters/QT_assets/qt-erect",
-			"frameRate": 24
-		},
-		{
-			"offsets": [
-				-63,
-				-10
-			],
-			"prefix": "caramelldansen",
-			"frameIndices": [
-				10,
-				11,
-				12,
-				13,
-				14,
-				15,
-				16,
-				17,
-				18,
-				19
-			],
-			"flipX": false,
-			"looped": false,
-			"name": "danceLeft-erect",
-			"animType": "symbol",
-			"flipY": false,
-			"assetPath": "shared:characters/QT_assets/qt-erect",
-			"frameRate": 24
-		}
-	]
+  "version": "1.0.0",
+  "renderType": "multianimateatlas",
+  "offsets": [0, 0],
+  "danceEvery": 1,
+  "applyStageMatrix": false,
+  "scale": 1,
+  "name": "QT (Rewired)",
+  "flipX": false,
+  "cameraOffsets": [0, 0],
+  "startingAnimation": "idle",
+  "singTime": 8,
+  "isPixel": false,
+  "assetPath": "shared:characters/QT_assets/qt",
+  "healthIcon": {
+    "offsets": [0, 0],
+    "isPixel": false,
+    "scale": 1,
+    "flipX": false,
+    "id": "QT"
+  },
+  "atlasSettings": {
+    "applyStageMatrix": false,
+    "swfMode": true,
+    "useRenderTexture": false,
+    "cacheOnLoad": false,
+    "filterQuality": 1
+  },
+  "animations": [
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "idle",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "idle"
+    },
+    {
+      "offsets": [0, 0],
+      "prefix": "hi cutie",
+      "frameIndices": [0],
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "still",
+      "flipY": false,
+      "frameRate": 24
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "hi cutie",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "intro"
+    },
+    {
+      "offsets": [0, 0],
+      "prefix": "dance",
+      "frameIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "danceRight-alt",
+      "flipY": false,
+      "frameRate": 24
+    },
+    {
+      "offsets": [0, 0],
+      "prefix": "dance",
+      "frameIndices": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "danceLeft-alt",
+      "flipY": false,
+      "frameRate": 24
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "left",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFT"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "left angry",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFT-alt"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "ew",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "disgust"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "hey",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "cheer"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "pre dance",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "preDance"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "down",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWN"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "up",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUP"
+    },
+    {
+      "flipY": false,
+      "offsets": [20, 0],
+      "frameRate": 24,
+      "prefix": "right",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHT"
+    },
+    {
+      "offsets": [-45, 9],
+      "prefix": "qt erect intro 1",
+      "flipX": false,
+      "animType": "framelabel",
+      "name": "erectIntro1",
+      "looped": false,
+      "flipY": false,
+      "assetPath": "shared:characters/QT_assets/qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [-45, 9],
+      "prefix": "qt erect intro 2",
+      "flipX": false,
+      "animType": "framelabel",
+      "name": "erectIntro2",
+      "looped": false,
+      "flipY": false,
+      "assetPath": "shared:characters/QT_assets/qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [-45, 9],
+      "prefix": "qt erect ending",
+      "flipX": false,
+      "animType": "framelabel",
+      "name": "erectEnding",
+      "looped": false,
+      "flipY": false,
+      "assetPath": "shared:characters/QT_assets/qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [-45, 9],
+      "prefix": "transition caramelldansen",
+      "looped": false,
+      "flipX": false,
+      "animType": "framelabel",
+      "name": "preDance-erect",
+      "flipY": false,
+      "frameRate": 24,
+      "assetPath": "shared:characters/QT_assets/qt-erect"
+    },
+    {
+      "offsets": [-63, -10],
+      "prefix": "caramelldansen",
+      "frameIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "flipX": false,
+      "looped": false,
+      "name": "danceRight-erect",
+      "animType": "symbol",
+      "flipY": false,
+      "assetPath": "shared:characters/QT_assets/qt-erect",
+      "frameRate": 24
+    },
+    {
+      "offsets": [-63, -10],
+      "prefix": "caramelldansen",
+      "frameIndices": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+      "flipX": false,
+      "looped": false,
+      "name": "danceLeft-erect",
+      "animType": "symbol",
+      "flipY": false,
+      "assetPath": "shared:characters/QT_assets/qt-erect",
+      "frameRate": 24
+    }
+  ]
 }

@@ -188,12 +188,13 @@ class QtOptionsCategory extends Module
     var preferencesPage = options.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemCheckbox("Plushie Button", "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.", function(value:Bool):Void
-      {
-        Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
-        trace('do i want the plush to show? $value');
-        Save.instance.flush();
-      }, getQtPlush());
+      preferencesPage.createPrefItemCheckbox("Plushie Button", "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.",
+        function(value:Bool):Void
+        {
+          Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
+          trace('do i want the plush to show? $value');
+          Save.instance.flush();
+        }, getQtPlush());
     }
   }
 

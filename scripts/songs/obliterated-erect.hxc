@@ -132,7 +132,6 @@ class ObliteratedErectSong extends Song
       dad.eyes.shader = colorShader;
     }
 
-    
     video1Triggered = false;
     video2Triggered = false;
     fadeOut1Triggered = false;

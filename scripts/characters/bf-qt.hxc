@@ -36,13 +36,12 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
 
   public var suffix = "";
 
-
   override function onNoteMiss(event)
   {
     super.onNoteMiss(event);
-    if(event.note.kind != 'caramella') return;
+    if (event.note.kind != 'caramella') return;
     var animName;
-    switch(event.note.direction)
+    switch (event.note.direction)
     {
       case 0:
         animName = "LEFT";
@@ -59,7 +58,7 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
   override public function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
   {
     trace('[$name]');
-    if(name.startsWith('dodge-'))
+    if (name.startsWith('dodge-'))
     {
       trace('this is a dodge anim');
       this.superClass.canPlayOtherAnims = true;

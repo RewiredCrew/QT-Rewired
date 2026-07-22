@@ -382,8 +382,8 @@ class BlissfulErectSong extends Song
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
-    
-    currentFlashIndex = 0; 
+
+    currentFlashIndex = 0;
     if (pinkFlash != null)
     {
       FlxTween.cancelTweensOf(pinkFlash);
