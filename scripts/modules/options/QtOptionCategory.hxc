@@ -67,7 +67,7 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT: Rewired v2.0.0', 16);
+      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT: Rewired v2.0.1', 16);
       versionText.zIndex = 100000;
       versionText.scrollFactor.set(0, 0);
       versionText.setFormat("VCR OSD Mono", 16, 0xFFffffff, "left", FlxTextBorderStyle.OUTLINE, 0xFF000000);

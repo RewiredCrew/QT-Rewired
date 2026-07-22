@@ -1,7 +1,7 @@
 {
   "version": "1.1.0",
-  "name": "Funkin'",
-  "author": "PhantomArcade",
+  "name": "Funkin' [KE 1.4.2]",
+  "author": "PhantomArcade + Kade",
   "fallback": null,
   "assets": {
     "note": {
@@ -47,7 +47,7 @@
       "alpha": 0.8,
       "offsets": [25, -5],
       "data": {
-        "enabled": true,
+        "enabled": false,
         "leftSplashes": [
           { "prefix": "note impact 1 purple0" },
           { "prefix": "note impact 2 purple0" }
@@ -70,7 +70,7 @@
       "assetPath": "",
       "offsets": [0, 0],
       "data": {
-        "enabled": true,
+        "enabled": false,
         "left": {
           "assetPath": "shared:holdCoverPurple",
           "start": { "prefix": "holdCoverStartPurple" },

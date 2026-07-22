@@ -14,7 +14,7 @@
       "playerVocals": ["bf-qt"]
     },
     "stage": "qtStage2021",
-    "noteStyle": "funkin",
+    "noteStyle": "funkin-qt-2021",
     "ratings": {
       "easy": 2,
       "normal": 5,

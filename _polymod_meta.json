@@ -10,7 +10,7 @@
     },
     {
       "name": "FatzFries",
-      "role": "Co-Director & Gameplay Designer",
+      "role": "Director & Gameplay Designer",
       "url": "https://x.com/FatzFries"
     },
     {
@@ -90,7 +90,7 @@
     },
     {
       "name": "SicOn",
-      "role": "Composer + Sound Designer & Chromatic Scales",
+      "role": "Composer + Sound Designer & Chromatic Scale(s)",
       "url": "https://x.com/_SicOn_"
     },
     {
@@ -145,6 +145,6 @@
     }
   ],
   "api_version": "0.8.4",
-  "mod_version": "2.0.0",
+  "mod_version": "2.0.1",
   "license": "CC BY 4.0,MIT"
 }
