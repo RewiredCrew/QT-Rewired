@@ -53,6 +53,11 @@ class ObliteratedErectSong extends Song
     });
   }
 
+  override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    return !Save.instance.hasBeatenSong('obliterated', null, 'erect');
+  }
+
   override public function onCreate(event)
   {
     super.onCreate(event);

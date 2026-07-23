@@ -99,11 +99,6 @@ class BlissfulSongScript extends Song
     lang = Save.instance.modOptions.get('qt-rewiredLang');
   }
 
-  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
-  {
-    return false;
-  }
-
   public override function onSongStart(event)
   {
     super.onSongStart(event);
