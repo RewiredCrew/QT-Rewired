@@ -19,7 +19,9 @@ class QtOptionsCategory extends Module
 {
   public function new()
   {
-    super('QtOptionsCategory', 1, {state: OptionsState});
+    super('QtOptionsCategory', 1, {
+      state: OptionsState
+    });
 
     if (!Save.instance.modOptions.exists(QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND))
     {
@@ -151,8 +153,13 @@ class QtOptionsCategory extends Module
       var keyName:String = InputUtil.getKeyName(currentKeys[i]);
       var keyNameReal:String = (currentKeys[i] == 0 ? UNBOUND_TEXT : keyName);
 
-      var item:TextMenuItem = new TextMenuItem(label.x + ControlsMenu.CONTROL_MARGIN_X + i * ControlsMenu.CONTROL_SPACING_X, lastItemY, keyNameReal,
-        "default", () -> openPrompt(i));
+      var item:TextMenuItem = new TextMenuItem(
+        label.x + ControlsMenu.CONTROL_MARGIN_X + i * ControlsMenu.CONTROL_SPACING_X,
+        lastItemY,
+        keyNameReal,
+        "default",
+        () -> openPrompt(i)
+      );
       item.fireInstantly = true;
       cPage.controlGrid.addItem(item.name, item);
     }
@@ -162,9 +169,7 @@ class QtOptionsCategory extends Module
       cPage.camFollow.y = selected.y;
 
       labels.forEach((label:FlxSprite) -> label.alpha = 0.6);
-      labels.members[
-        Std.int(cPage.controlGrid.selectedIndex / 2)
-      ].alpha = 1.0;
+      labels.members[Std.int(cPage.controlGrid.selectedIndex / 2)].alpha = 1.0;
     });
   }
 
@@ -173,13 +178,15 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemEnum('Sawblade Mode', "Changes how the Sawblade Mechanic works.",
-        ["Default" => "default", "Instakill" => "instakill", "Disabled" => "disabled"], function(value:String, oValue:String):Void
+      preferencesPage.createPrefItemEnum('Sawblade Mode', "Changes how the Sawblade Mechanic works.", [
+        "Default" => "default",
+        "Instakill" => "instakill",
+        "Disabled" => "disabled"
+      ], function(value:String, oValue:String):Void
       {
         Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT, oValue);
         Save.instance.flush();
-      },
-        getSawbladeModeDisplay(Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT)));
+      }, getSawbladeModeDisplay(Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT)));
     }
   }
 
@@ -188,12 +195,16 @@ class QtOptionsCategory extends Module
     var preferencesPage = options.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemCheckbox("Plushie Button", "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.",
+      preferencesPage.createPrefItemCheckbox(
+        "Plushie Button",
+        "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.",
         function(value:Bool):Void
         {
           Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
           Save.instance.flush();
-        }, getQtPlush());
+        },
+        getQtPlush()
+      );
     }
   }
 
@@ -202,8 +213,10 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemEnum('Language', "Changes the language used in the mod.", ["English" => "english", "Spanish" => "spanish"],
-        (value:String, oValue:String) ->
+      preferencesPage.createPrefItemEnum('Language', "Changes the language used in the mod.", [
+        "English" => "english",
+        "Spanish" => "spanish"
+      ], (value:String, oValue:String) ->
         {
           Save.instance.modOptions.set("qt-rewiredLang", oValue);
           Save.instance.flush();
@@ -284,18 +297,14 @@ class QtOptionsCategory extends Module
       keyArray.reverse();
       if (cPage.controlGrid.selectedIndex % 2 == 1)
       {
-        var leftItem:AtlasText = cPage.controlGrid.members[
-          cPage.controlGrid.selectedIndex - 1
-        ];
+        var leftItem:AtlasText = cPage.controlGrid.members[cPage.controlGrid.selectedIndex - 1];
 
         leftItem.label.text = (keyArray[0] == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(keyArray[0]));
         item.label.text = UNBOUND_TEXT;
       }
       else
       {
-        var rightItem:AtlasText = cPage.controlGrid.members[
-          cPage.controlGrid.selectedIndex + 1
-        ];
+        var rightItem:AtlasText = cPage.controlGrid.members[cPage.controlGrid.selectedIndex + 1];
         item.label.text = (keyArray[0] == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(keyArray[0]));
         rightItem.label.text = UNBOUND_TEXT;
       }

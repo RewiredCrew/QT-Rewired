@@ -15,7 +15,9 @@ class RetrySprite extends FunkinSprite
   public function new(x:Float, y:Float)
   {
     super(x, y);
-    loadTextureAtlas("characters/PICO/death/retry", "shared", {cacheOnLoad: true});
+    loadTextureAtlas("characters/PICO/death/retry", "shared", {
+      cacheOnLoad: true
+    });
     this.applyStageMatrix = true;
     this.animation.addByFrameLabel("retry", "retry", 24, true);
     this.animation.addByFrameLabel("retry confirm", "retry confirm", 24, false);

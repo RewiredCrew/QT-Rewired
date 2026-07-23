@@ -17,7 +17,9 @@ class GameOverSubtitles extends Module
 
   public function new()
   {
-    super('GameOverSubtitles', 999, {state: GameOverSubState});
+    super('GameOverSubtitles', 999, {
+      state: GameOverSubState
+    });
   }
 
   override function onSubStateOpenEnd(event:ScriptEvent)
@@ -42,7 +44,8 @@ class GameOverSubtitles extends Module
 
     subtitles = PlayState.instance.subtitles;
 
-    var subtitlesPath = 'subtitles/'
+    var subtitlesPath =
+      'subtitles/'
       + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT)
       + '/gameover/'
       + GameOverSubState.instance.boyfriend.characterId

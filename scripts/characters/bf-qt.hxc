@@ -99,14 +99,11 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
       GameOverSubState.instance.goBack();
     }
 
-    var inputCondition = (GameOverSubState.instance.controls.ACCEPT
-      || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton)))
-      && GameOverSubState.instance.canInput;
+    var inputCondition =
+      (GameOverSubState.instance.controls.ACCEPT || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton)))
+        && GameOverSubState.instance.canInput;
 
-    if (GameOverSubState.blueBallSuffix == '-sawblade'
-      && inputCondition
-      && GameOverSubState.blueballed
-      && !GameOverSubState.instance.isEnding)
+    if (GameOverSubState.blueBallSuffix == '-sawblade' && inputCondition && GameOverSubState.blueballed && !GameOverSubState.instance.isEnding)
     {
       GameOverSubState.blueballed = false;
       GameOverSubState.instance.isEnding = true;

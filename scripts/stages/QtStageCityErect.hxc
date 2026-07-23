@@ -86,9 +86,18 @@ class QtStageCityErect extends Stage
     }
 
     carSequenceData = [
-      {time: 1.0, callback: () -> doCarHaptics = true},
-      {time: 1.4, callback: () -> doCarHaptics = false},
-      {time: 2.0, callback: () -> resetFastCar()}
+      {
+        time: 1.0,
+        callback: () -> doCarHaptics = true
+      },
+      {
+        time: 1.4,
+        callback: () -> doCarHaptics = false
+      },
+      {
+        time: 2.0,
+        callback: () -> resetFastCar()
+      }
     ];
 
     resetFastCar();

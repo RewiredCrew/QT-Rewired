@@ -184,7 +184,9 @@ class QtStagePico extends Stage
     cars.x = startX;
     cars.offset.y = 0;
 
-    FlxTween.tween(cars, {x: endX}, duration, {
+    FlxTween.tween(cars, {
+      x: endX
+    }, duration, {
       ease: FlxEase.sineInOut,
       onComplete: function(_)
       {
@@ -194,7 +196,9 @@ class QtStagePico extends Stage
       }
     });
 
-    FlxTween.tween(cars.offset, {y: 3}, 0.1, {
+    FlxTween.tween(cars.offset, {
+      y: 3
+    }, 0.1, {
       ease: FlxEase.sineInOut,
       type: 4,
       loopDelay: 0

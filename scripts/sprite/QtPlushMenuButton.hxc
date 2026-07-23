@@ -47,7 +47,9 @@ class QtPlushMenuButton extends Module
 
   public function new()
   {
-    super('QtPlushMenuButton', 1, {state: MainMenuState});
+    super('QtPlushMenuButton', 1, {
+      state: MainMenuState
+    });
   }
 
   override public function onCreate(event)
@@ -358,14 +360,19 @@ class QtPlushMenuButton extends Module
     var startY = currentOffsetY;
 
     if (offsetTween != null) offsetTween.cancel();
-    offsetTween = FlxTween.num(0, 1, 0.3, {ease: FlxEase.cubeOut}, function(v:Float)
+    offsetTween = FlxTween.num(0, 1, 0.3, {
+      ease: FlxEase.cubeOut
+    }, function(v:Float)
     {
       currentOffsetX = startX + (selectOffsetX - startX) * v;
       currentOffsetY = startY + (selectOffsetY - startY) * v;
     });
 
     if (scaleTween != null) scaleTween.cancel();
-    scaleTween = FlxTween.tween(plushButton.scale, {x: selectScale, y: selectScale}, 0.3, {
+    scaleTween = FlxTween.tween(plushButton.scale, {
+      x: selectScale,
+      y: selectScale
+    }, 0.3, {
       ease: FlxEase.cubeOut,
       onUpdate: function(tween)
       {
@@ -374,7 +381,11 @@ class QtPlushMenuButton extends Module
     });
 
     if (gradientTween != null) gradientTween.cancel();
-    gradientTween = FlxTween.tween(gradient, {alpha: 1}, 0.45, {ease: FlxEase.cubeOut});
+    gradientTween = FlxTween.tween(gradient, {
+      alpha: 1
+    }, 0.45, {
+      ease: FlxEase.cubeOut
+    });
 
     if (FlxG.onMobile) HapticUtil.vibrate(0, 0.01, 0.5);
   }
@@ -394,14 +405,19 @@ class QtPlushMenuButton extends Module
     var startY = currentOffsetY;
 
     if (offsetTween != null) offsetTween.cancel();
-    offsetTween = FlxTween.num(0, 1, 0.3, {ease: FlxEase.cubeOut}, function(v:Float)
+    offsetTween = FlxTween.num(0, 1, 0.3, {
+      ease: FlxEase.cubeOut
+    }, function(v:Float)
     {
       currentOffsetX = startX + (idleOffsetX - startX) * v;
       currentOffsetY = startY + (idleOffsetY - startY) * v;
     });
 
     if (scaleTween != null) scaleTween.cancel();
-    scaleTween = FlxTween.tween(plushButton.scale, {x: idleScale, y: idleScale}, 0.3, {
+    scaleTween = FlxTween.tween(plushButton.scale, {
+      x: idleScale,
+      y: idleScale
+    }, 0.3, {
       ease: FlxEase.cubeOut,
       onUpdate: function(tween)
       {
@@ -410,7 +426,11 @@ class QtPlushMenuButton extends Module
     });
 
     if (gradientTween != null) gradientTween.cancel();
-    gradientTween = FlxTween.tween(gradient, {alpha: 0}, 0.45, {ease: FlxEase.cubeOut});
+    gradientTween = FlxTween.tween(gradient, {
+      alpha: 0
+    }, 0.45, {
+      ease: FlxEase.cubeOut
+    });
   }
 
   function onPlushClick()

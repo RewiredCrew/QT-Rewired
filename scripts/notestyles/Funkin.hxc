@@ -24,7 +24,12 @@ class FunkinNoteStyleScriptedExample extends ScriptedNoteStyle
     // result.scale.set(.65, .65);
     result.scale.set(0.75, 0.75);
     // result.angle = 15;
-    FlxTween.tween(result.scale, {x: 0.65, y: 0.65}, 0.5, {ease: FlxEase.expoOut});
+    FlxTween.tween(result.scale, {
+      x: 0.65,
+      y: 0.65
+    }, 0.5, {
+      ease: FlxEase.expoOut
+    });
     result.scrollFactor.set(0.2, 0.2);
     result.updateHitbox();
     return result;

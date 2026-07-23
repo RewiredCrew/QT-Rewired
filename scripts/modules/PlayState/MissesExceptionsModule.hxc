@@ -11,7 +11,9 @@ class MissesExceptionsModule extends Module
 
   public function new()
   {
-    super('MissesExceptionsModule', 1, {state: PlayState});
+    super('MissesExceptionsModule', 1, {
+      state: PlayState
+    });
   }
 
   /*

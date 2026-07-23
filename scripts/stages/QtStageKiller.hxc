@@ -113,8 +113,16 @@ class QtStageKiller extends Stage
 
   private function setupRedTweens():Void
   {
-    tweenWarning = FlxTween.tween(getNamedProp("warningScreen"), {alpha: 0}, 0.5, {type: 1});
-    tweenLight = FlxTween.tween(getNamedProp("tvLights"), {alpha: 0}, 0.5, {type: 1});
+    tweenWarning = FlxTween.tween(getNamedProp("warningScreen"), {
+      alpha: 0
+    }, 0.5, {
+      type: 1
+    });
+    tweenLight = FlxTween.tween(getNamedProp("tvLights"), {
+      alpha: 0
+    }, 0.5, {
+      type: 1
+    });
   }
 
   private function handleStageChange(charName:String):Void

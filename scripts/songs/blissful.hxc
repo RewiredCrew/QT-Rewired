@@ -69,7 +69,11 @@ class BlissfulSongScript extends Song
       {
         if (skipText != null)
         {
-          FlxTween.tween(skipText, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+          FlxTween.tween(skipText, {
+            alpha: 1
+          }, 0.5, {
+            ease: FlxEase.quadOut
+          });
           new FlxTimer().start(0.5, _ ->
           {
             canSkipCutscene = true;
@@ -78,9 +82,7 @@ class BlissfulSongScript extends Song
       }
     }
 
-    if ((PlayState.instance.controls.CUTSCENE_ADVANCE #if mobile || isMobilePauseButtonPressed #end)
-      && !cutsceneSkipped
-      && canSkipCutscene)
+    if ((PlayState.instance.controls.CUTSCENE_ADVANCE #if mobile || isMobilePauseButtonPressed #end) && !cutsceneSkipped && canSkipCutscene)
     {
       skipCutscene();
     }
@@ -148,7 +150,9 @@ class BlissfulSongScript extends Song
   {
     cutsceneSfx = FunkinSound.load(Paths.sound("qtsfx"), true);
     cutsceneSfx.volume = 1;
-    tweens.push(FlxTween.tween(playState.camHUD, {alpha: 0}, 1));
+    tweens.push(FlxTween.tween(playState.camHUD, {
+      alpha: 0
+    }, 1));
 
     var songMusicData = SongRegistry.instance.parseMusicData('qtsfx');
 
@@ -185,17 +189,37 @@ class BlissfulSongScript extends Song
 
     new FlxTimer().start(2.26, _ ->
     {
-      tweens.push(FlxTween.tween(playStage.getNamedProp("lightOverlay"), {alpha: 0}, 1.10, {ease: FlxEase.linear}));
-      tweens.push(FlxTween.tween(playStage.getNamedProp("blackScreen"), {alpha: 1}, 1.10, {ease: FlxEase.linear}));
-      tweens.push(FlxTween.tween(playStage.getNamedProp("spotLight"), {alpha: 1}, 1.10, {ease: FlxEase.linear}));
+      tweens.push(FlxTween.tween(playStage.getNamedProp("lightOverlay"), {
+        alpha: 0
+      }, 1.10, {
+        ease: FlxEase.linear
+      }));
+      tweens.push(FlxTween.tween(playStage.getNamedProp("blackScreen"), {
+        alpha: 1
+      }, 1.10, {
+        ease: FlxEase.linear
+      }));
+      tweens.push(FlxTween.tween(playStage.getNamedProp("spotLight"), {
+        alpha: 1
+      }, 1.10, {
+        ease: FlxEase.linear
+      }));
     });
 
     new FlxTimer().start(12, _ ->
     {
       PlayState.instance.camGame.shake(0.002, 8);
       if (FlxG.onMobile) HapticUtil.increasingVibrate(0.05, 0.2, 8);
-      tweens.push(FlxTween.tween(playStage.getNamedProp("redScreen"), {alpha: 1}, 0.7, {ease: FlxEase.linear}));
-      tweens.push(FlxTween.tween(playStage.getNamedProp("spotLight"), {alpha: 0}, 0.7, {ease: FlxEase.linear}));
+      tweens.push(FlxTween.tween(playStage.getNamedProp("redScreen"), {
+        alpha: 1
+      }, 0.7, {
+        ease: FlxEase.linear
+      }));
+      tweens.push(FlxTween.tween(playStage.getNamedProp("spotLight"), {
+        alpha: 0
+      }, 0.7, {
+        ease: FlxEase.linear
+      }));
     });
 
     new FlxTimer().start(13, _ ->
@@ -314,7 +338,8 @@ class BlissfulSongScript extends Song
     cutsceneMusic.volume = 0.1;
 
     conduct = new Conductor();
-    var songData = SongRegistry.instance.parseMusicDataRaw('{
+    var songData = SongRegistry.instance.parseMusicDataRaw(
+      '{
   "timeFormat": "ms",
   "artist": "Pohsan",
   "songName": "Intro Countdown (Boyfriend Mix)",
@@ -331,7 +356,8 @@ class BlissfulSongScript extends Song
   "looped": false,
   "version": "2.0.0"
 }
-');
+'
+    );
     conduct.mapTimeChanges(songData.timeChanges);
     conduct.onBeatHit.add(bopGf);
 
@@ -418,6 +444,10 @@ class BlissfulSongScript extends Song
   {
     PlayState.instance.camHUD.visible = true;
     PlayState.instance.camHUD.alpha = 0;
-    FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, duration, {ease: FlxEase.smoothStepInOut});
+    FlxTween.tween(PlayState.instance.camHUD, {
+      alpha: 1
+    }, duration, {
+      ease: FlxEase.smoothStepInOut
+    });
   }
 }

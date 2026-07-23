@@ -14,7 +14,9 @@ class FreeplayTextTweaksModule extends Module
 {
   public function new()
   {
-    super('FreeplayTextTweaksModule', {state: MainMenuState});
+    super('FreeplayTextTweaksModule', {
+      state: MainMenuState
+    });
   }
 
   var starSprites:FunkinSprite;
@@ -111,9 +113,7 @@ class FreeplayTextTweaksModule extends Module
         label.text = "VOICE TRACK";
         sub.instSelectMenu.instrumentalIds = ["", "Revox"]; // Revox is current, "" is Legacy, its old! - Gerson Deltarune
         sub.instSelectMenu.currentInstrumentalIndex = 1;
-        sub.instSelectMenu.currentInstrumental.text = sub.instSelectMenu.instrumentalIds[
-          sub.instSelectMenu.currentInstrumentalIndex
-        ];
+        sub.instSelectMenu.currentInstrumental.text = sub.instSelectMenu.instrumentalIds[sub.instSelectMenu.currentInstrumentalIndex];
         sub.instSelectMenu.onConfirm = (targetInstId:String) -> sub.capsuleOnConfirmDefault(sub.currentCapsule, targetInstId == "Revox" ? "" : "legacy");
       }
     }

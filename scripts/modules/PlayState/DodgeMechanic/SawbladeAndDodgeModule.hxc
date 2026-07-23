@@ -82,7 +82,9 @@ class SawbladeAndDodgeModule extends Module
 
   public function new()
   {
-    super('SawbladeAndDodgeModule', 1, {state: PlayState});
+    super('SawbladeAndDodgeModule', 1, {
+      state: PlayState
+    });
   }
 
   function destroyAssets():Void
@@ -150,7 +152,9 @@ class SawbladeAndDodgeModule extends Module
     playState.add(dimOverlay);
 
     warningVfx = new FunkinSprite();
-    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared", {cacheOnLoad: true});
+    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared", {
+      cacheOnLoad: true
+    });
     warningVfx.animation.addByFrameLabel('1-alert-1', "alert 1 beat 1", 24, false);
     warningVfx.animation.addByFrameLabel('2-alert-1', "alert 1 beat 2", 24, false);
     warningVfx.animation.addByFrameLabel('attack-1', "alert 1 attack", 24, false);
@@ -209,15 +213,31 @@ class SawbladeAndDodgeModule extends Module
   function darkenScreen():Void
   {
     var blackScreen = playState.currentStage.getNamedProp("blackScreen");
-    if (blackScreen != null) FlxTween.tween(blackScreen, {alpha: 0.3}, 0.35, {ease: FlxEase.linear});
-    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {alpha: 0.3}, 0.35, {ease: FlxEase.linear});
+    if (blackScreen != null) FlxTween.tween(blackScreen, {
+      alpha: 0.3
+    }, 0.35, {
+      ease: FlxEase.linear
+    });
+    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {
+      alpha: 0.3
+    }, 0.35, {
+      ease: FlxEase.linear
+    });
   }
 
   function undarkenScreen():Void
   {
     var blackScreen = playState.currentStage.getNamedProp("blackScreen");
-    if (blackScreen != null) FlxTween.tween(blackScreen, {alpha: 0}, 0.35, {ease: FlxEase.quadInOut});
-    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {alpha: 0}, 0.35, {ease: FlxEase.quadInOut});
+    if (blackScreen != null) FlxTween.tween(blackScreen, {
+      alpha: 0
+    }, 0.35, {
+      ease: FlxEase.quadInOut
+    });
+    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {
+      alpha: 0
+    }, 0.35, {
+      ease: FlxEase.quadInOut
+    });
   }
 
   public function playWarningStep(animName:String, offsetX:Float, offsetY:Float, showVfx:Bool = true, suffix:Int = 1):Void
@@ -307,7 +327,11 @@ class SawbladeAndDodgeModule extends Module
     bfCanDodge = true;
 
     if (dodgeText == null) return;
-    FlxTween.tween(dodgeText, {alpha: 0}, 1, {ease: FlxEase.smoothStepInOut}, {
+    FlxTween.tween(dodgeText, {
+      alpha: 0
+    }, 1, {
+      ease: FlxEase.smoothStepInOut
+    }, {
       onComplete: function(_)
       {
         dodgeText.kill();
@@ -317,7 +341,11 @@ class SawbladeAndDodgeModule extends Module
     });
     if (dodgeText2 != null)
     {
-      FlxTween.tween(dodgeText2, {alpha: 0}, 1, {ease: FlxEase.smoothStepInOut}, {
+      FlxTween.tween(dodgeText2, {
+        alpha: 0
+      }, 1, {
+        ease: FlxEase.smoothStepInOut
+      }, {
         onComplete: function(_)
         {
           dodgeText2.kill();
@@ -414,14 +442,15 @@ class SawbladeAndDodgeModule extends Module
     {
       dodgeText = new FlxText().setFormat(Paths.font('vcr.ttf'), 28, 0xFF0000, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
       dodgeText.scrollFactor.set();
-      dodgeFormat = FlxG.onMobile ? "TAP the sign" : "Press " + InputUtil.getKeyName(Save.instance.modOptions[
-        QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND
-      ][0]).toUpperCase();
+      dodgeFormat =
+        FlxG.onMobile ? "TAP the sign" : "Press "
+          + InputUtil.getKeyName(Save.instance.modOptions[QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND][0]).toUpperCase();
       var isErectVariation = playState.currentVariation == "erect";
       dodgeText.text = dodgeFormat + ' on third beat to dodge' + (isErectVariation ? '...' : '!');
       dodgeText.screenCenter();
-      dodgeText.y = (FlxG.onMobile || Preferences.downscroll) ? FlxG.height - dodgeText.height - 15 - FullScreenScaleMode.cutoutSize.y : PlayState.instance.healthBarBG.y
-        - 90;
+      dodgeText.y =
+        (FlxG.onMobile || Preferences.downscroll) ? FlxG.height - dodgeText.height - 15 - FullScreenScaleMode.cutoutSize.y : PlayState.instance.healthBarBG.y
+          - 90;
       dodgeText.zIndex = 999;
       dodgeText.alpha = 1;
       playState.add(dodgeText);
@@ -441,8 +470,16 @@ class SawbladeAndDodgeModule extends Module
 
         dodgeTextSwapTimer = new FlxTimer().start(DODGE_TEXT_SWAP_DELAY, (_) ->
         {
-          if (dodgeText != null) FlxTween.tween(dodgeText, {alpha: 0}, DODGE_TEXT_FADE_DURATION, {ease: FlxEase.smoothStepInOut});
-          if (dodgeText2 != null) FlxTween.tween(dodgeText2, {alpha: 1}, DODGE_TEXT_FADE_DURATION, {ease: FlxEase.smoothStepInOut});
+          if (dodgeText != null) FlxTween.tween(dodgeText, {
+            alpha: 0
+          }, DODGE_TEXT_FADE_DURATION, {
+            ease: FlxEase.smoothStepInOut
+          });
+          if (dodgeText2 != null) FlxTween.tween(dodgeText2, {
+            alpha: 1
+          }, DODGE_TEXT_FADE_DURATION, {
+            ease: FlxEase.smoothStepInOut
+          });
           dodgeTextSwapTimer = null;
         });
       }
@@ -551,8 +588,7 @@ class SawbladeAndDodgeModule extends Module
     super.onUpdate(elapsed);
     if (PlayState.instance == null || Conductor.instance == null) return;
 
-    if (!PlayState.instance.isGamePaused
-      && ((FlxG.onMobile && TouchUtil.overlapsComplex(touchAreaSprite) && TouchUtil.justPressed) || dodgeBindJustPressed()))
+    if (!PlayState.instance.isGamePaused && ((FlxG.onMobile && TouchUtil.overlapsComplex(touchAreaSprite) && TouchUtil.justPressed) || dodgeBindJustPressed()))
     {
       bfDodge();
     }
@@ -561,8 +597,6 @@ class SawbladeAndDodgeModule extends Module
   function dodgeBindJustPressed():Bool
   {
     if (activeEvent == null) return false;
-    return FlxG.keys.anyJustPressed(Save.instance.modOptions[
-      QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND
-    ]);
+    return FlxG.keys.anyJustPressed(Save.instance.modOptions[QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND]);
   }
 }

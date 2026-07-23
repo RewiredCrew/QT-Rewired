@@ -48,7 +48,9 @@ class ObliteratedErectSong extends Song
 
   public function new()
   {
-    super('obliterated', {variation: 'erect'});
+    super('obliterated', {
+      variation: 'erect'
+    });
   }
 
   override public function onCreate(event)
@@ -336,7 +338,9 @@ class ObliteratedErectSong extends Song
       else
       {
         if (targetAlpha > 0) obj.visible = true;
-        FlxTween.tween(obj, {alpha: targetAlpha}, duration, {
+        FlxTween.tween(obj, {
+          alpha: targetAlpha
+        }, duration, {
           ease: FlxEase.quadInOut,
           onComplete: _ ->
           {

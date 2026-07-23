@@ -31,7 +31,9 @@ class BlissfulPicoSong extends Song
 
   public function new()
   {
-    super('blissful', {variation: 'pico'});
+    super('blissful', {
+      variation: 'pico'
+    });
   }
 
   override public function onSongStart(event)
@@ -66,7 +68,11 @@ class BlissfulPicoSong extends Song
       {
         if (skipText != null)
         {
-          FlxTween.tween(skipText, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+          FlxTween.tween(skipText, {
+            alpha: 1
+          }, 0.5, {
+            ease: FlxEase.quadOut
+          });
           new FlxTimer().start(0.5, _ ->
           {
             canSkipCutscene = true;
@@ -129,7 +135,8 @@ class BlissfulPicoSong extends Song
     cutsceneMusic.volume = 0.1;
 
     conduct = new Conductor();
-    var songData = SongRegistry.instance.parseMusicDataRaw('{
+    var songData = SongRegistry.instance.parseMusicDataRaw(
+      '{
   "timeFormat": "ms",
   "artist": "Pohsan",
   "songName": "Intro Countdown (Pico Mix)",
@@ -146,7 +153,8 @@ class BlissfulPicoSong extends Song
   "looped": false,
   "version": "2.0.0"
 }
-');
+'
+    );
     if (songData != null)
     {
       conduct.mapTimeChanges(songData.timeChanges);
@@ -279,7 +287,9 @@ class BlissfulPicoSong extends Song
 
     if (skipText != null)
     {
-      FlxTween.tween(skipText, {alpha: 0}, 0.5, {
+      FlxTween.tween(skipText, {
+        alpha: 0
+      }, 0.5, {
         ease: FlxEase.quadIn,
         onComplete: _ ->
         {
@@ -329,7 +339,11 @@ class BlissfulPicoSong extends Song
   {
     PlayState.instance.camHUD.visible = true;
     PlayState.instance.camHUD.alpha = 0;
-    FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, duration, {ease: FlxEase.smoothStepInOut});
+    FlxTween.tween(PlayState.instance.camHUD, {
+      alpha: 1
+    }, duration, {
+      ease: FlxEase.smoothStepInOut
+    });
   }
 
   function bopGf()
