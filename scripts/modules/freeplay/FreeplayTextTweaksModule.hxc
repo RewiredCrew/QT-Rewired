@@ -25,10 +25,6 @@ class FreeplayTextTweaksModule extends Module
   {
     super.onSubStateOpenEnd(event);
     if (!(event.targetState is FreeplayState)) return;
-    var sprite = new FunkinSprite();
-    sprite.visible = false;
-    sprite.kill();
-    event.targetState.grpCapsules.members[0].add(sprite);
     starSprites = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/question-marks-stars'));
     starSprites.x = event.targetState.albumRoll.difficultyStars.x + 83;
     starSprites.y = event.targetState.albumRoll.difficultyStars.y + 12;
@@ -47,30 +43,28 @@ class FreeplayTextTweaksModule extends Module
     for (cap in FlxG.state.subState?.grpCapsules?.members)
     {
       if (cap.freeplayData == null || cap.freeplayData.data == null) continue;
-      @:privateAccess
       if (cap.freeplayData.data.id == "obliterated" && cap.freeplayData.curVariation == "erect")
       {
-        var grp = new FlxSpriteGroup();
-        var spr = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/difficultyQuestionMark'));
-        grp.add(spr);
-        var spr2 = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/difficultyQuestionMark'));
-        grp.add(spr2);
-
-        cap.add(grp);
-        spr.x += 467;
-        spr.y += 41;
-        spr.scale.set(0.9, 0.9);
-
-        spr2.x += 499;
-        spr2.y += 41;
-        spr2.scale.set(0.9, 0.9);
-
-        for (i in 0...cap.difficultyNumbers?.length)
-        {
-          cap.difficultyNumbers[i].visible = false;
-        }
+        hideDifficulty(cap);
         break;
       }
+    }
+  }
+
+  function hideDifficulty(capsule:SongMenuItem)
+  {
+    var subTexture = Paths.getSparrowAtlas('freeplay/diffOverride/questionMark');
+    subTexture.parent.destroyOnNoUse = false;  
+    for (num in capsule.difficultyNumbers)
+    {
+      if (num == null) continue;
+      if (!num.numToString.contains('QUESTION'))
+      {
+        num.frames.addAtlas(subTexture);
+        num.animation.addByPrefix('QUESTION', 'Numbers Big Question instance 1');
+        num.numToString.push('QUESTION');
+      }
+      num.digit = num.numToString.indexOf('QUESTION');
     }
   }
 
@@ -131,6 +125,10 @@ class FreeplayTextTweaksModule extends Module
   public function onCapsuleSelected(event:CapsuleScriptEvent):Void
   {
     if (event.capsule.freeplayData == null) return;
+    if (event.capsule.freeplayData?.data?.id == 'obliterated' && event.variationId == 'erect')
+    {
+      hideDifficulty(event.capsule);
+    }  
     if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
     {
       var cap = event.capsule;
