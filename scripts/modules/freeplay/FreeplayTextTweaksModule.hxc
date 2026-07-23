@@ -54,7 +54,7 @@ class FreeplayTextTweaksModule extends Module
   function hideDifficulty(capsule:SongMenuItem)
   {
     var subTexture = Paths.getSparrowAtlas('freeplay/diffOverride/questionMark');
-    subTexture.parent.destroyOnNoUse = false;  
+    subTexture.parent.destroyOnNoUse = false;
     for (num in capsule.difficultyNumbers)
     {
       if (num == null) continue;
@@ -128,7 +128,7 @@ class FreeplayTextTweaksModule extends Module
     if (event.capsule.freeplayData?.data?.id == 'obliterated' && event.variationId == 'erect')
     {
       hideDifficulty(event.capsule);
-    }  
+    }
     if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
     {
       var cap = event.capsule;
