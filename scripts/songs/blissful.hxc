@@ -93,6 +93,7 @@ class BlissfulSongScript extends Song
     super.onCreate(event);
     hasPlayedOutro = false;
     hasPlayedCutscene = false;
+    cutsceneSkipped = false;
     canSkipCutscene = false;
     playState = PlayState.instance;
     playStage = playState.currentStage;
@@ -309,6 +310,7 @@ class BlissfulSongScript extends Song
 
     PlayState.instance.camHUD.visible = false;
     PlayState.instance.camHUD.alpha = 0;
+    PlayState.instance.isInCutscene = true;
 
     event.cancel();
 
