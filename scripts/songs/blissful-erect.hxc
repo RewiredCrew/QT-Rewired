@@ -60,7 +60,7 @@ class BlissfulErectSong extends Song
 
   override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
-    return Save.instance.hasBeatenSong('blissful', null, 'erect');
+    return !Save.instance.hasBeatenSong('blissful', null, 'erect');
   }
 
   override public function onCreate(event:ScriptEvent):Void
