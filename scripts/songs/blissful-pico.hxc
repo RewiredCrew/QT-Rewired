@@ -47,6 +47,7 @@ class BlissfulPicoSong extends Song
     super.onCreate(event);
     lang = Save.instance.modOptions.get("qt-rewiredLang");
     hasPlayedCutscene = false;
+    cutsceneSkipped = false;
   }
 
   override public function onUpdate(event)
