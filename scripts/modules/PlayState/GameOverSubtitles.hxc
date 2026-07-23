@@ -42,8 +42,6 @@ class GameOverSubtitles extends Module
 
     subtitles = PlayState.instance.subtitles;
 
-    trace(randomIntValue);
-
     var subtitlesPath = 'subtitles/'
       + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT)
       + '/gameover/'

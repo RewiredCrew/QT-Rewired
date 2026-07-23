@@ -37,7 +37,6 @@ class FreeplayTextTweaksModule extends Module
   override public function onDifficultySwitch(event)
   {
     super.onDifficultySwitch(event);
-    trace('chud');
     var capsule = FlxG.state.subState.grpCapsules.members[FlxG.state.subState.curSelected];
     var data = capsule.freeplayData;
     var id = (data != null) ? data.levelId : null;
@@ -49,7 +48,6 @@ class FreeplayTextTweaksModule extends Module
       @:privateAccess
       if (cap.freeplayData.data.id == "obliterated" && cap.freeplayData.curVariation == "erect")
       {
-        trace('[found it]');
         var grp = new FlxSpriteGroup();
         var spr = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/difficultyQuestionMark'));
         grp.add(spr);
@@ -133,7 +131,6 @@ class FreeplayTextTweaksModule extends Module
   public function onCapsuleSelected(event:CapsuleScriptEvent):Void
   {
     if (event.capsule.freeplayData == null) return;
-    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
     if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
     {
       var cap = event.capsule;
@@ -142,8 +139,6 @@ class FreeplayTextTweaksModule extends Module
       cap.pixelIcon.setCharacter("qt");
       cap.songText.text = "Blissful";
     }
-
-    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
   }
 
   var expirationDate = "2026-04-02";
@@ -151,7 +146,6 @@ class FreeplayTextTweaksModule extends Module
   public function onSongSelected(event:CapsuleScriptEvent):Void
   {
     if (event.capsule.freeplayData == null) return;
-    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
     if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
     {
       var cap = event.capsule;
@@ -160,7 +154,5 @@ class FreeplayTextTweaksModule extends Module
       cap.pixelIcon.setCharacter("qt-legacy");
       cap.songText.text = "Blissful Legacy";
     }
-
-    trace(event.capsule.freeplayData?.data.id, event.difficultyId, event.variationId);
   }
 }

@@ -179,7 +179,6 @@ class ObliteratedErectSong extends Song
     PlayState.instance.isInCountdown = true;
 
     Conductor.instance.update(PlayState.instance.startTimestamp);
-    trace('skipped countdown');
   }
 
   override function onSongStart(event)

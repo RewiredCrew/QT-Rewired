@@ -161,7 +161,6 @@ class SawbladeAndDodgeModule extends Module
     warningVfx.animation.addByFrameLabel('attack-2-2', "alert 2 attack 2", 24, false);
     warningVfx.camera = playState.camHUD;
     warningVfx.visible = false;
-    trace("ASDASD");
     warningVfx.zIndex = 633;
     playState.add(warningVfx);
 
@@ -176,7 +175,6 @@ class SawbladeAndDodgeModule extends Module
 
   public function executeWarning(interval, saws):Void
   {
-    trace(saws);
     var postfx = switch (saws)
     {
       case 2:
@@ -193,12 +191,10 @@ class SawbladeAndDodgeModule extends Module
     {
       if (activeEvent.amntSaws > 1)
       {
-        trace(activeEvent.amntSaws);
         playWarningStep('2-alert' + postfx, 0, 0, true, 2);
       }
       else
       {
-        trace('this is a certified single saw bruh');
         playWarningStep('2-alert' + postfx, 0, 0);
       }
     });
@@ -229,7 +225,6 @@ class SawbladeAndDodgeModule extends Module
     if (animName.indexOf("attack") == -1) FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
     else if (animName.indexOf("attack") != -1 && showVfx && suffix == 3)
     {
-      trace('yeah man');
       FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
     }
     else
@@ -343,7 +338,6 @@ class SawbladeAndDodgeModule extends Module
 
     if (!canDie)
     {
-      trace('player cant die rn');
       canDie = true;
       playState.mayPauseGame = true;
       return;
@@ -516,8 +510,6 @@ class SawbladeAndDodgeModule extends Module
   {
     if (!canDodge() || Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
 
-    trace('are you trying to dodge?');
-
     performDodge();
     checkHitTiming();
   }
@@ -543,15 +535,8 @@ class SawbladeAndDodgeModule extends Module
 
     if (Math.abs(timeDiff) <= hitWindow)
     {
-      trace('yay you did it');
       canDie = false;
       onGoodHit();
-    }
-    else
-    {
-      trace('die');
-      trace(hitWindow);
-      trace(Math.abs(timeDiff));
     }
   }
 

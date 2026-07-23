@@ -25,9 +25,6 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     super.onCreate(event);
 
     // snd = FunkinSound.load(Paths.sound('sfxfkberect'), true); //we have the curse of eric
-    // snd.onComplete = () -> {
-    //   trace("yes, i'm working!");
-    // }
     // snd.volume = 0;
     // snd.play();
 
@@ -56,14 +53,11 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     {
       if (name == "intro-erect")
       {
-        // trace('[SND] $snd');
         // if(snd != null)
         // {                               ///one day....
         //   snd.volume = 1;
-        //   trace('yeah dude');
         //   snd.play();
         // }
-        trace('haha...');
       }
       if (name == "intro-erect" || name == "tsundere" || this.animation.curAnim.name == "tsundere")
       {

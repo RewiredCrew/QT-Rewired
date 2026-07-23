@@ -42,7 +42,6 @@ class BlissfulSongScript extends Song
 
   public inline function bopGf()
   {
-    trace('bopping');
     PlayState.instance.currentStage.getGirlfriend().dance(true);
   }
 
@@ -55,7 +54,6 @@ class BlissfulSongScript extends Song
 
   override public function onUpdate(event):Void
   {
-    trace(lang);
     super.onUpdate(event);
 
     if (conduct != null)

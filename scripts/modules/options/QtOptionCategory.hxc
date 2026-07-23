@@ -192,7 +192,6 @@ class QtOptionsCategory extends Module
         function(value:Bool):Void
         {
           Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
-          trace('do i want the plush to show? $value');
           Save.instance.flush();
         }, getQtPlush());
     }
@@ -206,10 +205,8 @@ class QtOptionsCategory extends Module
       preferencesPage.createPrefItemEnum('Language', "Changes the language used in the mod.", ["English" => "english", "Spanish" => "spanish"],
         (value:String, oValue:String) ->
         {
-          trace(oValue);
           Save.instance.modOptions.set("qt-rewiredLang", oValue);
           Save.instance.flush();
-          trace(Save.instance.modOptions.get("qt-rewiredLang"));
         }, getCoolQtLang(Save.instance.modOptions.get("qt-rewiredLang")));
     }
   }

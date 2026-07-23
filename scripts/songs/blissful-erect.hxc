@@ -90,7 +90,6 @@ class BlissfulErectSong extends Song
 
   function setupQTDanceSprite(qt)
   {
-    trace("DO QT DANCEY");
     danceQT = new QTErectDanceSprite(qt.x - 10, qt.y - 30);
     PS.currentStage.add(danceQT);
     danceQT.zIndex = 301;
@@ -391,7 +390,6 @@ class BlissfulErectSong extends Song
     }
 
     PS.currentStage.getDad().visible = true;
-    trace('chud');
     if (danceQT != null)
     {
       danceQT.visible = false;

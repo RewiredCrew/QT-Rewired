@@ -39,13 +39,11 @@ class SawbladeEvent extends SongEvent
     playState.mayPauseGame = false;
 
     interval = Conductor.instance.beatLengthMs / 1000;
-    trace('interval is $interval');
 
     amntSaws = data?.value?.num_sawblades ?? 1;
     if (amntSaws == "Single") amntSaws = 1;
     if (amntSaws == "Double") amntSaws = 2;
     if (amntSaws == "Triple") amntSaws = 3;
-    trace('[SAWBLADE] $amntSaws');
 
     var isTriple = (amntSaws == 3);
 
@@ -60,7 +58,6 @@ class SawbladeEvent extends SongEvent
         callback: () ->
         {
           dodgeModule.executeWarning(interval, amntSaws);
-          trace('[SAWBLADE] single hit time $hitTime');
         }
       },
       {
@@ -71,8 +68,6 @@ class SawbladeEvent extends SongEvent
           dodgeModule.executeAttack(interval);
           dodgeModule.animSuffix = 0;
           hitTime = Conductor.instance.songPosition + interval * 1000;
-          trace('[SAWBLADE] $hitTime');
-          trace('[SAWBLADE] ${Conductor.instance.songPosition}');
         }
       },
       {
@@ -81,8 +76,6 @@ class SawbladeEvent extends SongEvent
         {
           PlayState.instance.mayPauseGame = false;
           dodgeModule.playWarningStep('attack-1', 0, 0);
-          trace('single attack!');
-          trace(Conductor.instance.songPosition);
           dodgeModule.eventReady = false;
         }
       }
@@ -172,7 +165,6 @@ class SawbladeEvent extends SongEvent
         callback: () ->
         {
           PlayState.instance.mayPauseGame = false;
-          trace("asdadsas");
           dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
           // dodgeModule.executeAttack(interval);
           // hitTime = Conductor.instance.songPosition + interval * 1000;

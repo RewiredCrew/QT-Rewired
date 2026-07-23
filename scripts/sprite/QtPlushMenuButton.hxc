@@ -58,7 +58,6 @@ class QtPlushMenuButton extends Module
       if (plushButton != null && plushButton.exists) plushButton.kill();
       else
         return;
-      trace('main menu oncreate create plush');
       plushButton = null;
       initialized = false;
       initButton();

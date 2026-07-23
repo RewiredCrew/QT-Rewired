@@ -57,10 +57,8 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
 
   override public function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
   {
-    trace('[$name]');
     if (name.startsWith('dodge-'))
     {
-      trace('this is a dodge anim');
       this.superClass.canPlayOtherAnims = true;
       super.playAnimation(name, restart, true);
       return;
