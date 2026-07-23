@@ -70,7 +70,7 @@ class QtPlushMenuButton extends Module
   {
     super.onUpdate(event);
 
-    if (!Save.instance.modOptions.get("com.rewired.plush-show-plush-advert")) return;
+    if (!shouldPlush) return;
     if (currentTimestamp.substring(0, 10) > expirationDate) return;
     if (plushButton == null) return;
 
@@ -285,17 +285,22 @@ class QtPlushMenuButton extends Module
     }
   }
 
-  function initButton()
+  static var shouldPlush(get, never):Bool;
+
+  static function get_shouldPlush():Bool
   {
-    var shouldPlush;
+    var result:Bool = true;
+
     if (Save.instance.modOptions.exists("com.rewired.plush-show-plush-advert"))
     {
-      shouldPlush = Save.instance.modOptions.get("com.rewired.plush-show-plush-advert");
+      result = Save.instance.modOptions.get("com.rewired.plush-show-plush-advert");
     }
-    else
-    {
-      shouldPlush = true;
-    }
+
+    return result;
+  }
+
+  function initButton()
+  {
     if (!shouldPlush) return;
     if (currentTimestamp.substring(0, 10) > expirationDate) return;
 
