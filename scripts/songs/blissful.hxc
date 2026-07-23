@@ -16,6 +16,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.text.FlxTextBorderStyle;
 import funkin.Conductor;
+import rewired.characters.QtTransformSongOutro;
 #if mobile
 import funkin.util.TouchUtil;
 #end
