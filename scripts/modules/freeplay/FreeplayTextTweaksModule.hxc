@@ -14,7 +14,7 @@ class FreeplayTextTweaksModule extends Module
 {
   public function new()
   {
-    super('FreeplayTextTweaksModule', {
+    super('FreeplayTextTweaksModule', 1000, {
       state: MainMenuState
     });
   }
