@@ -12,11 +12,18 @@ import flixel.group.FlxSpriteGroup;
 
 class FreeplayTextTweaksModule extends Module
 {
+  var sub(get, null):MusicBeatSubState;
+
+  function get_sub():MusicBeatSubState
+  {
+    return FlxG.state.subState;
+  }
+
+  var isObliteratedErect:Bool = false;
+
   public function new()
   {
-    super('FreeplayTextTweaksModule', 1000, {
-      state: MainMenuState
-    });
+    super('FreeplayTextTweaksModule', 1000, {state: FreeplayState});
   }
 
   var starSprites:FunkinSprite;
@@ -25,19 +32,23 @@ class FreeplayTextTweaksModule extends Module
   {
     super.onSubStateOpenEnd(event);
     if (!(event.targetState is FreeplayState)) return;
+    var state:FreeplayState = event.targetState;
+    var album = state.albumRoll;
     starSprites = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/question-marks-stars'));
-    starSprites.x = event.targetState.albumRoll.difficultyStars.x + 83;
-    starSprites.y = event.targetState.albumRoll.difficultyStars.y + 12;
-    event.targetState.albumRoll.add(starSprites);
-    event.targetState.refresh();
+    starSprites.x = album.difficultyStars.x + 83;
+    starSprites.y = album.difficultyStars.y + 12;
+    starSprites.alpha = 0;
+    starSprites.visible = false;
+    album.add(starSprites);
+
+    state.refresh();
   }
 
   override public function onDifficultySwitch(event)
   {
     super.onDifficultySwitch(event);
-    var capsule = FlxG.state.subState.grpCapsules.members[FlxG.state.subState.curSelected];
-    var data = capsule.freeplayData;
-    var id = (data != null) ? data.levelId : null;
+
+    var cap = event.capsule;
 
     // thanks mighty and comedy for helping me figure this out
     for (cap in FlxG.state.subState?.grpCapsules?.members)
@@ -72,36 +83,21 @@ class FreeplayTextTweaksModule extends Module
   {
     super.onUpdate(event);
 
-    var sub = FlxG.state.subState;
-    if (!(sub is FreeplayState))
-    {
-      return;
-    }
-
-    @:privateAccess
-    var capsule = FlxG.state.subState.currentCapsule;
-    var data = capsule.freeplayData;
-    var id = (data != null) ? data.levelId : null;
-
-    if (capsule?.freeplayData?.data?.id == "obliterated" && capsule?.freeplayData?.curVariation == "erect")
+    if (starSprites != null && isObliteratedErect)
     {
       sub.albumRoll.difficultyStars.stars.visible = false;
       for (member in sub.albumRoll.difficultyStars.flames.members)
       {
         member.visible = false;
       }
-      starSprites?.visible = true;
-    }
-    else
-    {
-      sub.albumRoll.difficultyStars.stars.visible = true;
-      sub.albumRoll.difficultyStars.flameCheck();
-      starSprites?.visible = false;
+      starSprites.x = sub.albumRoll.difficultyStars.x + 83;
+      starSprites.y = sub.albumRoll.difficultyStars.y + 12;
     }
 
     if (sub.instSelectMenu != null)
     {
       var label = sub.instSelectMenu.members[3];
+      var data = sub.currentCapsule?.freeplayData;
       if (data != null && data.data != null && data.data.id == "obliterated" && label.text == "INSTRUMENTAL")
       {
         label.text = "VOICE TRACK";
@@ -125,10 +121,32 @@ class FreeplayTextTweaksModule extends Module
   public function onCapsuleSelected(event:CapsuleScriptEvent):Void
   {
     if (event.capsule.freeplayData == null) return;
-    if (event.capsule.freeplayData?.data?.id == 'obliterated' && event.variationId == 'erect')
+
+    var capsule = event.capsule;
+    var data = capsule.freeplayData;
+    var id = (data != null) ? data.songId : null;
+
+    if (id == "obliterated" && data?.curVariation == "erect")
     {
-      hideDifficulty(event.capsule);
+      isObliteratedErect = true;
+      
+      sub.albumRoll.difficultyStars.stars.visible = false;
+      for (member in sub.albumRoll.difficultyStars.flames.members)
+      {
+        member.visible = false;
+      }
+      starSprites.alpha = 1;
+      starSprites?.visible = true;
     }
+    else
+    {
+      isObliteratedErect = false;
+
+      sub.albumRoll.difficultyStars.stars.visible = true;
+      sub.albumRoll.difficultyStars.flameCheck();
+      starSprites?.visible = false;
+    }
+    if (isObliteratedErect) hideDifficulty(event.capsule);
     if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
     {
       var cap = event.capsule;
