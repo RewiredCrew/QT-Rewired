@@ -1,11 +1,7 @@
 package rewired.sprite;
 
-import flixel.FlxG;
-import funkin.Paths;
 import funkin.ui.mainmenu.MainMenuState;
-import funkin.ui.title.TitleState;
 import funkin.ui.freeplay.FreeplayState;
-import funkin.util.ReflectUtil;
 import funkin.modding.module.Module;
 import funkin.audio.FunkinSound;
 import funkin.util.HapticUtil;
@@ -13,14 +9,14 @@ import funkin.graphics.FunkinSprite;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import funkin.util.TouchUtil;
-import funkin.PlayerSettings;
-import funkin.Preferences;
+import funkin.input.Cursor;
+import funkin.input.CursorMode;
 import flixel.effects.FlxFlicker;
 import funkin.util.WindowUtil;
 import flixel.FlxSprite;
-import funkin.util.DateUtil;
 import funkin.save.Save;
 import flixel.util.FlxTimer;
+import Date;
 
 class QtPlushMenuButton extends Module
 {
@@ -32,15 +28,13 @@ class QtPlushMenuButton extends Module
   var selectOffsetY:Float = 70;
   var plushButton:FunkinSprite;
   var gradient:FunkinSprite;
+  var qtHitbox:FlxSprite;
+  var bubbleHitbox:FlxSprite;
   var isHovering:Bool = false;
   var plushFocused:Bool = false;
-  var scaleTween:FlxTween;
-  var gradientTween:FlxTween;
   var offsetTween:FlxTween;
   var busy:Bool = false;
   var lastSelectedIndex:Int = 0;
-  var currentTimestamp = DateUtil.generateTimestamp();
-  var expirationDate = "2026-08-14";
   var initialized:Bool = false;
   var currentOffsetX:Float = 0;
   var currentOffsetY:Float = 0;
@@ -52,46 +46,15 @@ class QtPlushMenuButton extends Module
     });
   }
 
-  override public function onCreate(event)
-  {
-    super.onCreate(event);
-    if (FlxG.state == MainMenuState)
-    {
-      if (plushButton != null && plushButton.exists) plushButton.kill();
-      else
-        return;
-      plushButton = null;
-      initialized = false;
-      initButton();
-    }
-  }
-
   function onUpdate(event)
   {
     super.onUpdate(event);
 
     if (!shouldPlush) return;
-    if (currentTimestamp.substring(0, 10) > expirationDate) return;
+    if (isExpired) return;
     if (plushButton == null) return;
 
-    var currentState = ReflectUtil.getClassNameOf(FlxG.state).split(".");
-    var stateName = currentState[currentState.length - 1];
-    var stateDyn:Dynamic = FlxG.state;
-
-    if (stateName != "MainMenuState")
-    {
-      if (busy)
-      {
-        busy = false;
-        var menuItems = stateDyn.menuItems;
-        if (menuItems != null)
-        {
-          menuItems.enabled = true;
-          menuItems.busy = false;
-        }
-      }
-      return;
-    }
+    var stateDyn:MainMenuState = FlxG.state;
 
     if (!plushButton.alive || !plushButton.exists)
     {
@@ -102,17 +65,12 @@ class QtPlushMenuButton extends Module
       initButton();
     }
 
-    var subState = FlxG.state.subState;
-    if (subState != null && ReflectUtil.getClassNameOf(subState) == "funkin.ui.freeplay.FreeplayState")
-    {
-      return;
-    }
+    if (FlxG.state.subState is FreeplayState) return;
 
-    var controls = PlayerSettings.player1.controls;
+    var controls = stateDyn.controls;
     var menuItems = stateDyn.menuItems;
 
-    if (FlxG.onMobile)
-    {
+    #if mobile
       var backBtn = stateDyn.backButton;
       var optionsBtn = stateDyn.optionsButton;
 
@@ -127,7 +85,7 @@ class QtPlushMenuButton extends Module
         optionsBtn.enabled = !shouldDisable;
         optionsBtn.active = !shouldDisable;
       }
-    }
+    #end
 
     if (busy)
     {
@@ -172,20 +130,17 @@ class QtPlushMenuButton extends Module
     }
 
     var isOverlapping = false;
-    if (FlxG.onMobile)
-    {
+    #if mobile
       if (TouchUtil.pressed)
       {
-        isOverlapping = TouchUtil.overlaps(plushButton);
+        isOverlapping = TouchUtil.overlaps(qtHitbox) || TouchUtil.overlaps(bubbleHitbox);
         if (isOverlapping && TouchUtil.justPressed)
         {
           onPlushClick();
         }
       }
-    }
-    else
-    {
-      if (plushButton.exists) isOverlapping = FlxG.mouse.overlaps(plushButton);
+    #else
+      if (plushButton.exists) isOverlapping = FlxG.mouse.overlaps(qtHitbox) || FlxG.mouse.overlaps(bubbleHitbox);
       else
         initButton();
 
@@ -193,10 +148,13 @@ class QtPlushMenuButton extends Module
       {
         onPlushClick();
       }
-    }
+     #end
 
     if (isOverlapping && !isHovering)
     {
+      #if !mobile
+      Cursor.cursorMode = CursorMode.Pointer;
+      #end
       isHovering = true;
       var wasKeyboardFocused = plushFocused;
       if (plushFocused) plushFocused = false;
@@ -214,6 +172,9 @@ class QtPlushMenuButton extends Module
     }
     else if (!isOverlapping && isHovering && !plushFocused)
     {
+      #if !mobile
+      Cursor.cursorMode = CursorMode.Default;
+      #end
       isHovering = false;
       if (menuItems != null)
       {
@@ -228,20 +189,16 @@ class QtPlushMenuButton extends Module
   override public function onStateChangeBegin(event)
   {
     super.onStateChangeBegin(event);
-    if (event.targetState == MainMenuState)
-    {
-      initialized = false;
-      if (plushButton != null) plushButton.kill();
-      initButton();
-      return;
-    }
+    #if !mobile
+    Cursor.hide();
+    #end
     initialized = false;
-    if (plushButton != null) plushButton.kill();
   }
 
   public function onStateChangeEnd(event)
   {
     super.onStateChangeEnd(event);
+    if(isExpired) return;
     if (plushButton == null)
     {
       initialized = false;
@@ -254,27 +211,14 @@ class QtPlushMenuButton extends Module
     isHovering = false;
     lastSelectedIndex = 0;
 
-    if (scaleTween != null)
-    {
-      scaleTween.cancel();
-      scaleTween = null;
-    }
-    if (gradientTween != null)
-    {
-      gradientTween.cancel();
-      gradientTween = null;
-    }
-    if (offsetTween != null)
-    {
-      offsetTween.cancel();
-      offsetTween = null;
-    }
+    FlxTween.cancelTweensOf(plushButton.scale);
+    FlxTween.cancelTweensOf(qtHitbox.scale);
+    FlxTween.cancelTweensOf(bubbleHitbox.scale);
+    FlxTween.cancelTweensOf(gradient);
 
-    currentTimestamp = DateUtil.generateTimestamp();
-    if (currentTimestamp.substring(0, 10) > expirationDate) return;
+    offsetTween?.cancel();
 
-    if (FlxG.onMobile)
-    {
+    #if mobile
       var stateDyn:Dynamic = FlxG.state;
       var backBtn = stateDyn.backButton;
       if (backBtn != null)
@@ -282,7 +226,24 @@ class QtPlushMenuButton extends Module
         backBtn.x = FlxG.width - 230;
         backBtn.y = 50;
       }
-    }
+    #end
+  }
+
+  override public function onSubStateOpenBegin(event)
+  {
+    super.onSubStateOpenBegin(event);
+    #if !mobile
+    Cursor.hide();
+    #end
+  }
+
+  override public function onSubStateCloseEnd(event)
+  {
+    super.onSubStateCloseEnd(event);
+    if (isExpired) return;
+    #if !mobile
+    Cursor.show();
+    #end
   }
 
   static var shouldPlush(get, never):Bool;
@@ -299,10 +260,22 @@ class QtPlushMenuButton extends Module
     return result;
   }
 
+
+  static var isExpired(get, never):Bool;
+
+  static function get_isExpired():Bool
+  {
+    var date = Date.now();
+    var currentDate:String = '${date.getUTCFullYear()}-${(date.getUTCMonth() + 1 < 10 ? '0' : "") + (date.getUTCMonth() + 1)}-${(date.getUTCDate() < 10 ? '0' : "") + date.getUTCDate()}';
+    var expirationDate:String = "2026-08-04";
+    if(currentDate == expirationDate) return date.getUTCHours() >= 19;
+    return currentDate > expirationDate;
+  }
+
   function initButton()
   {
     if (!shouldPlush) return;
-    if (currentTimestamp.substring(0, 10) > expirationDate) return;
+    if (isExpired) return;
 
     if (!initialized) initialized = true;
     else
@@ -329,25 +302,48 @@ class QtPlushMenuButton extends Module
     currentOffsetX = idleOffsetX;
     currentOffsetY = idleOffsetY;
 
-    updatePlushPosition();
-    plushButton.scrollFactor.set(0, 0);
+    qtHitbox = new FlxSprite(plushButton.x, plushButton.y).makeGraphic(plushButton.width / 1.4, plushButton.height / 1.4);    
+    bubbleHitbox = new FlxSprite(plushButton.x, plushButton.y).makeGraphic(plushButton.width / 1.6, plushButton.height / 2);
 
-    if (!FlxG.onMobile) FlxG.mouse.visible = true;
+    qtHitbox.scale.set(idleScale, idleScale);
+    bubbleHitbox.scale.set(idleScale, idleScale);
+
+    qtHitbox.visible = false;
+    bubbleHitbox.visible = false;
+
+    updatePlushPosition();
+    plushButton.scrollFactor.set();
+    qtHitbox.scrollFactor.set();
+
+    #if !mobile Cursor.show(); #end
 
     plushButton.revive();
     FlxG.state.add(plushButton);
+    FlxG.state.add(qtHitbox);
+    FlxG.state.add(bubbleHitbox);
   }
 
   function updatePlushPosition()
   {
-    plushButton.updateHitbox();
     var baseMargin:Float = 20;
 
-    var baseX:Float = FlxG.width - plushButton.width - baseMargin;
-    var baseY:Float = FlxG.height - plushButton.height - baseMargin;
+    for(sprite in [plushButton, qtHitbox, bubbleHitbox])
+    {
+      sprite?.updateHitbox();
+      var baseX:Float = FlxG.width - sprite?.width - baseMargin;
+      var baseY:Float = FlxG.height - sprite?.height - baseMargin;
 
-    plushButton.x = baseX + currentOffsetX;
-    plushButton.y = baseY + currentOffsetY;
+      sprite?.setPosition(baseX + currentOffsetX, baseY + currentOffsetY)
+      if(sprite == qtHitbox)
+      {
+        sprite.y -= 30;
+      }
+      else if(sprite == bubbleHitbox)
+      {
+        sprite.y -= 530;
+        sprite.x -= 150;
+      }
+    }
   }
 
   function setPlushSelect()
@@ -364,7 +360,7 @@ class QtPlushMenuButton extends Module
     var startX = currentOffsetX;
     var startY = currentOffsetY;
 
-    if (offsetTween != null) offsetTween.cancel();
+    offsetTween?.cancel();
     offsetTween = FlxTween.num(0, 1, 0.3, {
       ease: FlxEase.cubeOut
     }, function(v:Float)
@@ -373,8 +369,24 @@ class QtPlushMenuButton extends Module
       currentOffsetY = startY + (selectOffsetY - startY) * v;
     });
 
-    if (scaleTween != null) scaleTween.cancel();
-    scaleTween = FlxTween.tween(plushButton.scale, {
+    FlxTween.cancelTweensOf(qtHitbox.scale);
+    FlxTween.tween(qtHitbox.scale, {
+      x: selectScale,
+      y: selectScale
+    }, 0.3, {
+      ease: FlxEase.cubeOut
+    });
+
+    FlxTween.cancelTweensOf(bubbleHitbox.scale);
+    FlxTween.tween(bubbleHitbox.scale, {
+      x: selectScale * 1.3,
+      y: selectScale * 1.5
+    }, 0.3, {
+      ease: FlxEase.cubeOut
+    });
+
+    FlxTween.cancelTweensOf(plushButton.scale);
+    FlxTween.tween(plushButton.scale, {
       x: selectScale,
       y: selectScale
     }, 0.3, {
@@ -385,14 +397,14 @@ class QtPlushMenuButton extends Module
       }
     });
 
-    if (gradientTween != null) gradientTween.cancel();
-    gradientTween = FlxTween.tween(gradient, {
+    FlxTween.cancelTweensOf(gradient);
+    FlxTween.tween(gradient, {
       alpha: 1
     }, 0.45, {
       ease: FlxEase.cubeOut
     });
 
-    if (FlxG.onMobile) HapticUtil.vibrate(0, 0.01, 0.5);
+    #if mobile HapticUtil.vibrate(0, 0.01, 0.5); #end
   }
 
   function setPlushIdle()
@@ -409,8 +421,8 @@ class QtPlushMenuButton extends Module
     var startX = currentOffsetX;
     var startY = currentOffsetY;
 
-    if (offsetTween != null) offsetTween.cancel();
-    offsetTween = FlxTween.num(0, 1, 0.3, {
+    offsetTween?.cancel();
+    offsetTween = FlxTween.num(0, 1, 0.6, {
       ease: FlxEase.cubeOut
     }, function(v:Float)
     {
@@ -418,8 +430,25 @@ class QtPlushMenuButton extends Module
       currentOffsetY = startY + (idleOffsetY - startY) * v;
     });
 
-    if (scaleTween != null) scaleTween.cancel();
-    scaleTween = FlxTween.tween(plushButton.scale, {
+
+    FlxTween.cancelTweensOf(qtHitbox.scale);
+    FlxTween.tween(qtHitbox.scale, {
+      x: idleScale,
+      y: idleScale
+    }, 0.3, {
+      ease: FlxEase.cubeOut
+    });
+
+    FlxTween.cancelTweensOf(bubbleHitbox.scale);
+    FlxTween.tween(bubbleHitbox.scale, {
+      x: idleScale,
+      y: idleScale
+    }, 0.3, {
+      ease: FlxEase.cubeOut
+    });
+
+    FlxTween.cancelTweensOf(plushButton.scale);
+    FlxTween.tween(plushButton.scale, {
       x: idleScale,
       y: idleScale
     }, 0.3, {
@@ -430,8 +459,8 @@ class QtPlushMenuButton extends Module
       }
     });
 
-    if (gradientTween != null) gradientTween.cancel();
-    gradientTween = FlxTween.tween(gradient, {
+    FlxTween.cancelTweensOf(gradient);
+    FlxTween.tween(gradient, {
       alpha: 0
     }, 0.45, {
       ease: FlxEase.cubeOut
@@ -441,6 +470,9 @@ class QtPlushMenuButton extends Module
   function onPlushClick()
   {
     if (busy) return;
+    #if !mobile
+    Cursor.cursorMode = CursorMode.Grabbing;
+    #end
     busy = true;
 
     var stateDyn:Dynamic = FlxG.state;
@@ -452,60 +484,26 @@ class QtPlushMenuButton extends Module
     }
 
     FunkinSound.playOnce(Paths.sound('confirmMenu'));
-    if (FlxG.onMobile) HapticUtil.vibrate(0, 0.05, 1);
+    #if mobile HapticUtil.vibrate(0, 0.05, 1); #end
 
     if (Preferences.flashingLights)
     {
       FlxFlicker.flicker(plushButton, 1, 0.06, true, false, function(_)
       {
+        #if !mobile
+        if(isHovering) Cursor.cursorMode = CursorMode.Pointer;
+        #end
         busy = false;
         WindowUtil.openURL("https://www.makeship.com/products/qt-plushie");
       });
     }
     else
     {
+      #if !mobile
+      new FlxTimer().start(0.2, t -> if(isHovering) Cursor.cursorMode = CursorMode.Pointer);
+      #end
       busy = false;
       WindowUtil.openURL("https://www.makeship.com/products/qt-plushie");
-    }
-  }
-
-  override function onDestroy(event)
-  {
-    super.onDestroy(event);
-    if (plushButton != null && plushButton.exists)
-    {
-      plushButton.kill();
-      plushButton.destroy();
-      plushButton = null;
-      new FlxTimer().start(0.1, function(_)
-      {
-        FlxG.switchState(new MainMenuState());
-      });
-    }
-    initialized = false;
-
-    var stateDyn:Dynamic = FlxG.state;
-    var menuItems = stateDyn.menuItems;
-    if (menuItems != null)
-    {
-      menuItems.enabled = true;
-      menuItems.busy = false;
-    }
-
-    if (scaleTween != null)
-    {
-      scaleTween.cancel();
-      scaleTween = null;
-    }
-    if (gradientTween != null)
-    {
-      gradientTween.cancel();
-      gradientTween = null;
-    }
-    if (offsetTween != null)
-    {
-      offsetTween.cancel();
-      offsetTween = null;
     }
   }
 }
