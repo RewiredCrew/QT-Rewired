@@ -87,7 +87,6 @@ class ObliteratedErectSong extends Song
 
     editVideo.bitmap.onEndReached.add(() ->
     {
-      editVideo.stop();
       editVideo.visible = false;
       shouldPlayEdit = false;
       PlayState.instance.currentStage.getDad().playAnimation('tsundere', true, true);
@@ -149,11 +148,27 @@ class ObliteratedErectSong extends Song
     camFade4Triggered = false;
   }
 
+  override function onPause(event:PauseScriptEvent):Void
+  {
+    super.onPause(event);
+    if (shouldHuzz && huzzVideo != null) huzzVideo.pause();
+    if (shouldPlayEdit && editVideo != null) editVideo.pause();
+  }
+
+  override function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
+    if (shouldHuzz && huzzVideo != null) huzzVideo.resume();
+    if (shouldPlayEdit && editVideo != null) editVideo.resume();
+  }
+  
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
+    huzzVideo.bitmap.time = 0;
     huzzVideo.pause();
     huzzVideo.visible = false;
+    editVideo.bitmap.time = 0;
     editVideo.pause();
     editVideo.visible = false;
 
@@ -173,6 +188,14 @@ class ObliteratedErectSong extends Song
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
     PlayState.instance.playerStrumline.x = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + ((FSSM.gameCutoutSize / 2.5) / 2.0);
+  }
+
+  function onGameOver(event:ScriptEvent)
+  {
+    super.onGameOver(event);
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
+    huzzVideo.visible = false;
+    editVideo.visible = false;
   }
 
   override public function onCountdownStart(event)
@@ -288,7 +311,7 @@ class ObliteratedErectSong extends Song
       huzzVideo.bitmap.time = 0;
       huzzVideo.resume();
       shouldHuzz = true;
-      PlayState.instance.mayPauseGame = false;
+      // PlayState.instance.mayPauseGame = false;
     }
 
     if (!video2Triggered && currentTime >= timeVideo2)
@@ -422,7 +445,7 @@ class ObliteratedErectSong extends Song
 
   function focusGainedCallback(?_)
   {
-    if (!Preferences.autoPause) return;
+    if (!Preferences.autoPause || PlayState.instance.isGamePaused) return;
     if (shouldHuzz && huzzVideo != null) huzzVideo.resume();
     if (shouldPlayEdit && editVideo != null) editVideo.resume();
   }
