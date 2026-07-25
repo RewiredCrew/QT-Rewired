@@ -21,6 +21,7 @@ import funkin.play.GameOverSubState;
 import funkin.Preferences;
 import funkin.play.ResultState;
 import funkin.util.ReflectUtil;
+import funkin.util.FlxTweenUtil;
 
 class ObliteratedSongScript extends Song
 {
@@ -31,7 +32,6 @@ class ObliteratedSongScript extends Song
   var tweens = [];
   var pausedTweens = [];
   var midVideo:FunkinVideoSprite;
-  var blackTween:FlxTween;
   var _currentChange:String;
   var hasDanced:Bool = false;
 
@@ -127,6 +127,9 @@ class ObliteratedSongScript extends Song
   {
     super.onPause(event);
 
+    FlxTweenUtil.pauseTweensOf(PlayState.instance.currentStage.getNamedProp("blackScreenR"));
+    FlxTweenUtil.pauseTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
+
     if (midVideo != null && midVideo.bitmap != null && midVideo.bitmap.isPlaying)
     {
       midVideo.pause();
@@ -136,6 +139,10 @@ class ObliteratedSongScript extends Song
   override function onResume(event:ScriptEvent):Void
   {
     super.onResume(event);
+
+    FlxTweenUtil.resumeTweensOf(PlayState.instance.currentStage.getNamedProp("blackScreenR"));
+    FlxTweenUtil.resumeTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
+
     if (midVideo != null && isOnVideo) midVideo.resume();
   }
 
@@ -152,7 +159,7 @@ class ObliteratedSongScript extends Song
 
     focusGainedCallback = function(?_)
     {
-      if (midVideo == null || !isOnVideo || !Preferences.autoPause) return;
+      if (midVideo == null || !isOnVideo || !Preferences.autoPause || PlayState.instance.isGamePaused) return;
       midVideo.resume();
     }
 
@@ -163,13 +170,16 @@ class ObliteratedSongScript extends Song
   function onSongRetry(event:ScriptEvent)
   {
     super.onSongRetry(event);
+    FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp("blackScreenR"));
     PlayState.instance.currentStage.getNamedProp("blackScreenR").alpha = 1;
 
-    if (blackTween != null) blackTween.cancel();
+    FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
+    PlayState.instance.currentStage.getNamedProp('blackScreenVideo').alpha = 0;
 
     if (midVideo != null)
     {
-      midVideo.stop();
+      midVideo.bitmap.time = 0;
+      midVideo.pause();
       midVideo.visible = false;
       isOnVideo = false;
     }
@@ -192,7 +202,8 @@ class ObliteratedSongScript extends Song
   override function onSongStart(event)
   {
     super.onSongStart(event);
-    blackTween = FlxTween.tween(PlayState.instance.currentStage.getNamedProp('blackScreenR'), {
+    FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp("blackScreenR"));
+    FlxTween.tween(PlayState.instance.currentStage.getNamedProp('blackScreenR'), {
       alpha: 0
     }, 5, {
       ease: FlxEase.quadInOut
@@ -210,7 +221,7 @@ class ObliteratedSongScript extends Song
     PlayState.instance.currentStage.getNamedProp("blackScreenR").cameras = [PlayState.instance.camCutscene];
     PlayState.instance.currentStage.getNamedProp("blackScreenR").zIndex = 9999;
 
-    if (blackTween != null) blackTween.cancel();
+    FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp("blackScreenR"));
 
     PlayState.instance.currentStage.getNamedProp("blackScreenR").alpha = 1;
     PlayState.instance.tweenCameraZoom(1.2, 0, true, FlxEase.quadInOut);
@@ -287,6 +298,7 @@ class ObliteratedSongScript extends Song
           midVideo.stop();
           midVideo.visible = false;
           hudAlpha(1, true);
+          FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
           PlayState.instance.currentStage.getNamedProp('blackScreenVideo').alpha = 0;
           FlxTween.tween(PlayState.instance.playerStrumline, {
             alpha: 1
@@ -297,6 +309,7 @@ class ObliteratedSongScript extends Song
 
       case "fadeStart":
         hudAlpha(0, false);
+        FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
         FlxTween.tween(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'), {
           alpha: 1
         }, 3, {
