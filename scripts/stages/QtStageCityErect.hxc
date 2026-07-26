@@ -43,6 +43,12 @@ class QtStageCityErect extends Stage
     for (snd in ['carPass0', 'carPass1']) FunkinMemory.cacheSound(Paths.sound(snd, "week4"));
   }
 
+  override function onSongLoaded(event)
+  {
+    super.onSongLoaded(event);
+    PlayState.instance.comboPopUps.offsets = [-300, 0];
+  }
+
   override function buildStage()
   {
     isPico = PlayState.instance.currentVariation == 'pico';
