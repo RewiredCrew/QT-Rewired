@@ -21,11 +21,11 @@ import Date;
 class QtPlushMenuButton extends Module
 {
   var idleScale:Float = 0.5;
-  var idleOffsetX:Float = 40;
-  var idleOffsetY:Float = 50;
+  var idleOffsetX:Float = 50;
+  var idleOffsetY:Float = 80;
   var selectScale:Float = 0.75;
   var selectOffsetX:Float = 40;
-  var selectOffsetY:Float = 70;
+  var selectOffsetY:Float = 110;
   var plushButton:FunkinSprite;
   var gradient:FunkinSprite;
   var qtHitbox:FlxSprite;
@@ -150,11 +150,12 @@ class QtPlushMenuButton extends Module
       }
      #end
 
+    #if !mobile
+    Cursor.cursorMode = isHovering ? CursorMode.Pointer:CursorMode.Default;
+    #end
+
     if (isOverlapping && !isHovering)
     {
-      #if !mobile
-      Cursor.cursorMode = CursorMode.Pointer;
-      #end
       isHovering = true;
       var wasKeyboardFocused = plushFocused;
       if (plushFocused) plushFocused = false;
@@ -172,9 +173,6 @@ class QtPlushMenuButton extends Module
     }
     else if (!isOverlapping && isHovering && !plushFocused)
     {
-      #if !mobile
-      Cursor.cursorMode = CursorMode.Default;
-      #end
       isHovering = false;
       if (menuItems != null)
       {
@@ -237,6 +235,14 @@ class QtPlushMenuButton extends Module
     #end
   }
 
+  override public function onFreeplayIntroDone(event)
+  {
+    super.onFreeplayIntroDone(event);
+    #if !mobile
+    Cursor.hide();
+    #end
+  }
+
   override public function onSubStateCloseEnd(event)
   {
     super.onSubStateCloseEnd(event);
@@ -290,20 +296,16 @@ class QtPlushMenuButton extends Module
     gradient.alpha = 0;
     FlxG.state.add(gradient);
 
-    plushButton = new FunkinSprite();
-    plushButton.frames = Paths.getSparrowAtlas('plushButton/qt_makeship');
-
-    plushButton.animation.addByPrefix("idle", "idle", 24, true);
-    plushButton.animation.addByPrefix("select", "select", 24, true);
-
-    plushButton.animation.play("idle", true);
-    plushButton.scale.set(idleScale, idleScale);
+    plushButton = new FunkinSprite().loadTextureAtlas("mainmenu/plushButton");
+    plushButton.anim.play("idle");
+    plushButton.anim.curAnim.looped = true;
+    plushButton.scale.set(idleScale * 2, idleScale * 2);
 
     currentOffsetX = idleOffsetX;
     currentOffsetY = idleOffsetY;
 
-    qtHitbox = new FlxSprite(plushButton.x, plushButton.y).makeGraphic(plushButton.width / 1.4, plushButton.height / 1.4);    
-    bubbleHitbox = new FlxSprite(plushButton.x, plushButton.y).makeGraphic(plushButton.width / 1.6, plushButton.height / 2);
+    qtHitbox = new FlxSprite(plushButton.x, plushButton.y).makeGraphic(plushButton.width * 1.2, plushButton.height * 1.38);    
+    bubbleHitbox = new FlxSprite(plushButton.x, plushButton.y).makeGraphic(plushButton.width * 1.15, plushButton.height * 0.85);
 
     qtHitbox.scale.set(idleScale, idleScale);
     bubbleHitbox.scale.set(idleScale, idleScale);
@@ -314,13 +316,15 @@ class QtPlushMenuButton extends Module
     updatePlushPosition();
     plushButton.scrollFactor.set();
     qtHitbox.scrollFactor.set();
-
-    #if !mobile Cursor.show(); #end
+    bubbleHitbox.scrollFactor.set();
 
     plushButton.revive();
     FlxG.state.add(plushButton);
     FlxG.state.add(qtHitbox);
     FlxG.state.add(bubbleHitbox);
+    #if !mobile 
+    Cursor.show();
+    #end
   }
 
   function updatePlushPosition()
@@ -337,11 +341,12 @@ class QtPlushMenuButton extends Module
       if(sprite == qtHitbox)
       {
         sprite.y -= 30;
+        sprite.x -= 30;
       }
       else if(sprite == bubbleHitbox)
       {
-        sprite.y -= 530;
-        sprite.x -= 150;
+        sprite.y -= 250;
+        sprite.x -= 170;
       }
     }
   }
@@ -351,10 +356,10 @@ class QtPlushMenuButton extends Module
     var syncFrame:Int = 0;
     if (plushButton.animation.curAnim != null)
     {
-      syncFrame = plushButton.animation.curAnim.curFrame;
+      syncFrame = plushButton.anim.curAnim.curFrame;
     }
-    plushButton.animation.play("select", true, false, syncFrame);
-
+    plushButton.anim.play("select", true, false, syncFrame);
+    plushButton.anim.curAnim.looped = true;
     updatePlushPosition();
 
     var startX = currentOffsetX;
@@ -379,7 +384,7 @@ class QtPlushMenuButton extends Module
 
     FlxTween.cancelTweensOf(bubbleHitbox.scale);
     FlxTween.tween(bubbleHitbox.scale, {
-      x: selectScale * 1.3,
+      x: selectScale * 1.15,
       y: selectScale * 1.5
     }, 0.3, {
       ease: FlxEase.cubeOut
@@ -387,8 +392,8 @@ class QtPlushMenuButton extends Module
 
     FlxTween.cancelTweensOf(plushButton.scale);
     FlxTween.tween(plushButton.scale, {
-      x: selectScale,
-      y: selectScale
+      x: selectScale * 2,
+      y: selectScale * 2
     }, 0.3, {
       ease: FlxEase.cubeOut,
       onUpdate: function(tween)
@@ -449,8 +454,8 @@ class QtPlushMenuButton extends Module
 
     FlxTween.cancelTweensOf(plushButton.scale);
     FlxTween.tween(plushButton.scale, {
-      x: idleScale,
-      y: idleScale
+      x: idleScale * 2,
+      y: idleScale * 2
     }, 0.3, {
       ease: FlxEase.cubeOut,
       onUpdate: function(tween)
