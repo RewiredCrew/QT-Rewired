@@ -56,7 +56,7 @@ class ObliteratedErectSong extends Song
 
   override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
-    return !Save.instance.hasBeatenSong('obliterated', null, null);
+    return !Save.instance.hasBeatenSong('obliterated', ["erect", "nightmare"]);
   }
 
   override public function onCreate(event)
