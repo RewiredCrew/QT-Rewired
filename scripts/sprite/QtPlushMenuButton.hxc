@@ -273,8 +273,8 @@ class QtPlushMenuButton extends Module
   {
     var date = Date.now();
     var currentDate:String = '${date.getUTCFullYear()}-${(date.getUTCMonth() + 1 < 10 ? '0' : "") + (date.getUTCMonth() + 1)}-${(date.getUTCDate() < 10 ? '0' : "") + date.getUTCDate()}';
-    var expirationDate:String = "2026-08-04";
-    if(currentDate == expirationDate) return date.getUTCHours() >= 19;
+    var expirationDate:String = "2026-08-13";
+    if(currentDate == expirationDate) return date.getUTCHours() >= 4;
     return currentDate > expirationDate;
   }
 
