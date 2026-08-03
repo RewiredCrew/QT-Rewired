@@ -40,7 +40,7 @@ class QtPlushMenuButton extends Module
   var busy:Bool = false;
   var lastSelectedIndex:Int = 0;
   var currentTimestamp = DateUtil.generateTimestamp();
-  var expirationDate = "2026-08-04";
+  var expirationDate = "2026-08-14";
   var initialized:Bool = false;
   var currentOffsetX:Float = 0;
   var currentOffsetY:Float = 0;
