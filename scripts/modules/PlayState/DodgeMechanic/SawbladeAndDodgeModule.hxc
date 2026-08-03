@@ -169,7 +169,7 @@ class SawbladeAndDodgeModule extends Module
     playState.add(warningVfx);
 
     var dadMidpoint = stage.getDad().getGraphicMidpoint();
-    sawSprite = new SawBladeSprite(dadMidpoint.x - 50, dadMidpoint.y - 275);
+    sawSprite = new SawBladeSprite(dadMidpoint.x + 100, dadMidpoint.y - 275);
     sawSprite.visible = false;
     sawSprite.shader = stage.getDad().shader;
     stage.add(sawSprite);
@@ -264,6 +264,8 @@ class SawbladeAndDodgeModule extends Module
   {
     if (playState.health <= 0) return;
 
+    var dadMidpoint = playState.currentStage.getDad().getGraphicMidpoint();
+    sawSprite?.setPosition(dadMidpoint.x + 100, dadMidpoint.y - 275);
     sawSprite?.zIndex = dodgeToggleAnim == 0 ? 299 : 199;
     sawSprite?.animation?.play('saw anim alert', true, false, 0);
     sawSprite?.offset?.y = 0;
@@ -300,6 +302,8 @@ class SawbladeAndDodgeModule extends Module
 
     new FlxTimer().start(interval, (_) ->
     {
+      var dadMidpoint = playState.currentStage.getDad().getGraphicMidpoint();
+      sawSprite.setPosition(dadMidpoint.x + 100, dadMidpoint.y - 275);
       sawSprite?.animation?.play("saw anim attack", true, false, 0);
       sawSprite?.offset?.y = -300;
       playState.camGame.shake(0.007, 0.25);
