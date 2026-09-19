@@ -144,25 +144,37 @@ class BlissfulErectSong extends Song
     if (ev.beat == 221) FlxTween.tween(PS.opponentStrumline, {
       alpha: 0.3
     }, 1.5, {
-      ease: FlxEase.quadInOut
+      ease: FlxEase.quadInOut,
+      onStart : function (tween:FlxTween) {
+          PS.comboPopUps.visible = false;
+      }
     });
 
     if (ev.beat == 348) FlxTween.tween(PS.opponentStrumline, {
       alpha: 1
     }, 1.5, {
-      ease: FlxEase.quadInOut
+      ease: FlxEase.quadInOut,
+      onComplete : function (tween:FlxTween) {
+        PS.comboPopUps.visible = true;
+      }
     });
 
     if (ev.beat == 478) FlxTween.tween(PS.opponentStrumline, {
       alpha: 0.3
     }, 1.5, {
-      ease: FlxEase.quadInOut
+      ease: FlxEase.quadInOut,
+      onStart : function (tween:FlxTween) {
+          PS.comboPopUps.visible = false;
+      }
     });
 
     if (ev.beat == 544) FlxTween.tween(PS.opponentStrumline, {
       alpha: 1
     }, 1.5, {
-      ease: FlxEase.quadInOut
+      ease: FlxEase.quadInOut,
+      onComplete : function (tween:FlxTween) {
+        PS.comboPopUps.visible = true;
+      }
     });
 
     if (danceQT != null) danceQT.onBeatHit(ev.beat);
@@ -405,6 +417,8 @@ class BlissfulErectSong extends Song
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
+
+    PS.comboPopUps.visible = true;
 
     currentFlashIndex = 0;
     if (pinkFlash != null)
