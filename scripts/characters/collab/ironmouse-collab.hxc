@@ -88,14 +88,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     super.onCreate(event);
 
     tail = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/tail-ironmouse", "shared");
-
-    var prefixes:Array<String> = ["Wiggle Loop"];
-
-    for (prefix in prefixes)
-    {
-      tail.animation.addByPrefix(prefix, prefix, 24, true);
-    }
-
+    tail.anim.addByFrameLabel("Wiggle Loop", "Wiggle Loop", 24, true);
     tail.animation.play("Wiggle Loop", true);
 
     var element:FlxSpriteElement = new FlxSpriteElement(tail);
@@ -108,7 +101,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     }
 
     lipSync = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/lipsync-ironmouse", "shared");
-    lipSync.animation.addByPrefix("Lip Sync Full", "Lip Sync Full", 24, false);
+    lipSync.anim.addByFrameLabel("Lip Sync Full", "Lip Sync Full", 24, false);
     lipSync.animation.play("Lip Sync Full", true);
 
     if (lipSync.animation.curAnim != null)

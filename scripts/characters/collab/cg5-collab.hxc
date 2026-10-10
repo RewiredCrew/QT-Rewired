@@ -38,7 +38,7 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
     super.onCreate(event);
 
     lipSync = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/lipsync-cg5", "shared");
-    lipSync.animation.addByPrefix("Lip Sync Full", "Lip Sync Full", 24, false);
+    lipSync.anim.addByFrameLabel("Lip Sync Full", "Lip Sync Full", 24, false);
     lipSync.animation.play("Lip Sync Full", true);
 
     if (lipSync.animation.curAnim != null)
