@@ -1,259 +1,259 @@
 ﻿1
 00:00:03,312 --> 00:00:04,032
-(Beats!)
+[w:0.05] 0.45:(Beats!)
 
 2
 00:00:07,816 --> 00:00:09,600
-Where's the love in your life?
+0.29:Where's 0.21:the 0.19:love 0.37:in your 0.28:life?
 
 3
 00:00:09,768 --> 00:00:11,336
-Where's the love in your life?
+0.29:Where's 0.21:the 0.19:love 0.37:in your 0.28:life?
 
 4
 00:00:11,656 --> 00:00:13,040
-I see dark and no light
+0.17:I 0.23:see [w:0.05]0.25:dark 0.25:and no [w:0.05]0.3:light
 
 5
 00:00:13,040 --> 00:00:15,152
-You're not in sight
+0.41:You're not [w:0.23]0.16:in [w:0.23]0.5:sight
 
 6
 00:00:21,140 --> 00:00:22,512
-(Oh-oh)
+0.56:(Oh-0.35:oh)
 
 7
 00:00:22,912 --> 00:00:25,024
-But walk my way
+0.26:But 0.91:walk 0.24:my 0.3:way
 
 8
 00:00:25,020 --> 00:00:26,704
-Walk my way
+0.72:Walk 0.52:my way
 
 9
 00:00:26,904 --> 00:00:28,544
-Oh, 'cause you need
+0.67:Oh, 0.28:'cause 0.19:you 0.44:need
 
 10
 00:00:28,540 --> 00:00:30,248
-Yeah, you need to stay
+0.27:Yeah, 0.19:you 0.44:need 0.18:to 0.43:stay
 
 11
 00:00:34,230 --> 00:00:35,272
-Oh-oh
+0.3:Oh[w:0.17]0.3:-oh
 
 12
 00:00:35,270 --> 00:00:36,860
-You need to stay
+0.2:You 0.48:need 0.19:to 0.56:stay
 
 13
 00:00:36,860 --> 00:00:38,040
-And don't let...
+[w:0.22]0.2:And 0.51:don't let...
 
 14
 00:00:38,040 --> 00:00:40,872
-GO, GO, GO, GO, GO, GO
+0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO
 
 15
-00:00:40,870 --> 00:00:41,816
-Don't- Don't let
+00:00:40,870 --> 00:00:41,570
+0.23:Don't- 0.48:Don't let
 
 16
-00:00:41,820 --> 00:00:43,928
-GO-GO-GO, GO, GO, GO
+00:00:41,570 --> 00:00:43,928
+0.11:GO-0.12:GO-0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO
 
 17
 00:00:43,930 --> 00:00:45,584
-Don't- Don't- Do- Do- Don't let
+0.39:Don't- 0.24:Don't- 0.35:Do- Do- 0.48:Don't let
 
 18
 00:00:45,580 --> 00:00:46,320
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 19
 00:00:46,528 --> 00:00:47,256
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 20
 00:00:48,424 --> 00:00:49,216
-Don't- Don't let
+0.23:Don't- 0.48:Don't let
 
 21
 00:00:49,352 --> 00:00:50,096
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 22
 00:00:50,320 --> 00:00:51,032
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 23
 00:00:51,896 --> 00:00:53,008
-(Don't let go)
+[w:0.04](0.25:Don't 0.26:let 0.3:go)
 
 24
 00:00:53,216 --> 00:00:54,920
-Where's the love in my life?
+0.3:<font color="#FB6FB5">Where's</font> 0.15:<font color="#FB6FB5">the</font> 0.11:<font color="#FB6FB5">love</font> 0.05:<font color="#FB6FB5">in</font> 0.67:<font color="#FB6FB5">my life?</font>
 
 25
 00:00:55,024 --> 00:00:56,792
-The one thing that I can't find
+0.35:<font color="#FB6FB5">The one</font> 0.17:<font color="#FB6FB5">thing</font> 0.33:<font color="#FB6FB5">that I</font> [w:0.07]0.17:<font color="#FB6FB5">can't</font> 0.39:<font color="#FB6FB5">find</font>
 
 26
 00:01:00,688 --> 00:01:02,464
-But they keep treatin' me wrong
+0.15:<font color="#FB6FB5">But</font> 0.14:<font color="#FB6FB5">they</font> [w:0.06]0.2:<font color="#FB6FB5">keep</font> [w:0.02]0.24:<font color="#FB6FB5">treatin'</font> [w:0.03]0.31:<font color="#FB6FB5">me</font> 0.34:<font color="#FB6FB5">wrong</font>
 
 27
-00:01:02,460 --> 00:01:04,184
-I'll stay a little too long
+00:01:02,460 --> 00:01:04,130
+0.25:<font color="#FB6FB5">I'll</font> 0.18:<font color="#FB6FB5">stay</font> 0.6:<font color="#FB6FB5">a little</font> 0.64:<font color="#FB6FB5">too long</font>
 
 28
-00:01:04,180 --> 00:01:07,296
-For one more mistake (Oh-oh)
+00:01:04,130 --> 00:01:07,296
+0.12:<font color="#FB6FB5">For</font> 0.22:<font color="#FB6FB5">one</font> 0.21:<font color="#FB6FB5">more</font> 0.28:<font color="#FB6FB5">mist</font>1.41:<font color="#FB6FB5">a</font>0.13:<font color="#FB6FB5">ke</font> (0.56:Oh-0.35:oh)
 
 29
 00:01:07,300 --> 00:01:09,416
-Listen up! I'll tell you what I really want
+[w:0.03]0.41:<font color="#FB6FB5">Listen up!</font> [w:0.04]0.19:<font color="#FB6FB5">I'll</font> [w:0.04]0.22:<font color="#FB6FB5">tell you</font> 0.3:<font color="#FB6FB5">what I</font> 0.4:<font color="#FB6FB5">really</font> 0.32:<font color="#FB6FB5">want</font>
 
 30
 00:01:09,420 --> 00:01:11,352
-It's a no-brainer, don't take a savant
+0.19:<font color="#FB6FB5">It's a</font> 0.32:<font color="#FB6FB5">no-</font>0.22:<font color="#FB6FB5">brainer,</font> 0.25:<font color="#FB6FB5">don't</font> 0.21:<font color="#FB6FB5">take</font> 0.42:<font color="#FB6FB5">a savant</font>
 
 31
 00:01:11,350 --> 00:01:13,472
-If you can't take me to froyo, then go go
+0.43:<font color="#FB6FB5">If you can't</font> 0.38:<font color="#FB6FB5">take me</font> 0.56:<font color="#FB6FB5">to froyo,</font> 0.24:<font color="#FB6FB5">then</font> 0.24:<font color="#FB6FB5">go</font> 0.24:<font color="#FB6FB5">go</font>
 
 32
 00:01:13,470 --> 00:01:15,296
-All I need is your time and your love
+0.45:<font color="#FB6FB5">All I need</font> 0.5:<font color="#FB6FB5">is your time</font> 0.43:<font color="#FB6FB5">and your love</font>
 
 33
 00:01:20,600 --> 00:01:23,192
-I won't let go, not anymore
+[w:0.09]0.29:<font color="#FB6FB5">I won't</font> 0.26:<font color="#FB6FB5">let</font> 0.24:<font color="#FB6FB5">go,</font> 1.43:<font color="#FB6FB5">not anymore</font>
 
 34
 00:01:23,190 --> 00:01:25,360
-So walk my way
+0.26:<font color="#FB6FB5">So</font> 0.91:<font color="#FB6FB5">walk</font> 0.24:<font color="#FB6FB5">my</font> 0.3:<font color="#FB6FB5">way</font>
 
 35
 00:01:25,360 --> 00:01:27,272
-Walk my way
+0.72:<font color="#FB6FB5">Walk</font> 0.52:<font color="#FB6FB5">my way</font>
 
 36
 00:01:27,392 --> 00:01:29,008
-Oh, 'cause you need
+0.67:<font color="#FB6FB5">Oh,</font> 0.28:<font color="#FB6FB5">'cause</font> 0.19:<font color="#FB6FB5">you</font> 0.44:<font color="#FB6FB5">need</font>
 
 37
 00:01:29,010 --> 00:01:30,992
-Yeah you need to stay
+0.27:<font color="#FB6FB5">Yeah,</font> 0.19:<font color="#FB6FB5">you</font> 0.44:<font color="#FB6FB5">need</font> 0.18:<font color="#FB6FB5">to</font> 0.43:<font color="#FB6FB5">stay</font>
 
 38
-00:01:30,990 --> 00:01:32,808
-Don't walk away
+00:01:30,990 --> 00:01:32,920
+0.28:Don't 0.83:walk 0.68:away
 
 39
-00:01:32,810 --> 00:01:34,696
-Just walk my way
+00:01:32,920 --> 00:01:34,696
+0.24:Just 0.63:walk 0.24:my 0.3:way
 
 40
 00:01:34,700 --> 00:01:35,856
-Oh-oh
+0.3:Oh[w:0.17]0.3:-oh
 
 41
 00:01:35,860 --> 00:01:37,560
-You need to stay!
+0.16:<font color="#FB6FB5">You</font> 0.59:<font color="#FB6FB5">need</font> 0.86:<font color="#FB6FB5">to stay!</font>
 
 42
 00:01:37,560 --> 00:01:38,392
-And don't let...
+[w:0.22]0.2:And 0.51:don't let...
 
 43
 00:01:38,520 --> 00:01:40,016
-GO, GO, GO
+0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO
 
 44
 00:01:40,392 --> 00:01:41,328
-GO, GO
+0.22:GO, [w:0.25]0.22:GO
 
 45
 00:01:41,330 --> 00:01:42,040
-Don't- Don't let
+0.23:Don't- 0.48:Don't let
 
 46
 00:01:42,040 --> 00:01:43,952
-GO-GO-GO, GO, GO, GO
+0.11:GO-0.12:GO-0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO, [w:0.25]0.22:GO
 
 47
 00:01:44,392 --> 00:01:45,968
-You need to stay
+0.16:You 0.59:need 0.86:to stay!
 
 48
 00:01:45,981 --> 00:01:46,824
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 49
 00:01:46,984 --> 00:01:47,816
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 50
 00:01:48,648 --> 00:01:49,608
-Don't- Don't let
+0.23:Don't- 0.48:Don't let
 
 51
 00:01:49,824 --> 00:01:50,584
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 52
 00:01:50,760 --> 00:01:51,488
-Don't let go
+0.23:Don't 0.22:let 0.24:go
 
 53
 00:01:51,490 --> 00:01:52,408
-Do- Don't, Don't- Don't
+[w:0.01]0.11:Do- 0.24:Don't, 0.35:Don't- 0.35:Don't
 
 54
 00:01:52,410 --> 00:01:53,304
-(Don't let go)
+[w:0.04](0.25:Don't 0.26:let 0.3:go)
 
 55
-00:01:53,592 --> 00:01:55,320
-Rockin' them beats, yeah!
+00:01:53,592 --> 00:01:55,512
+0.27:Rockin' 0.19:them 0.45:beats, [w:0.53]0.17:yeah!
 
 56
-00:01:55,512 --> 00:01:57,376
-We rockin' them- Rockin' them beats!
+00:01:55,512 --> 00:01:57,640
+0.19:We 0.27:rockin' 0.19:them- 0.27:Rockin' 0.19:them 0.45:beats!
 
 57
-00:01:57,640 --> 00:01:59,152
-Rockin' them beats, yeah!
+00:01:57,640 --> 00:01:59,260
+0.27:Rockin' 0.19:them 0.45:beats, [w:0.53]0.17:yeah!
 
 58
-00:01:59,260 --> 00:02:01,184
-We rockin' them- Rockin' them- Rockin' them!
+00:01:59,260 --> 00:02:01,180
+0.19:We 0.27:rockin' 0.19:them- 0.27:Rockin' 0.19:them- 0.27:Rockin' 0.19:them!
 
 59
-00:02:01,180 --> 00:02:02,936
-Rockin' them beats, yeah!
+00:02:01,180 --> 00:02:02,940
+0.27:Rockin' 0.19:them 0.45:beats, [w:0.53]0.17:yeah!
 
 60
-00:02:02,940 --> 00:02:04,960
-We rockin them- Rockin' them beats!
+00:02:02,940 --> 00:02:05,184
+0.19:We 0.27:rockin 0.19:them- 0.27:Rockin' 0.19:them 0.45:beats!
 
 61
-00:02:05,184 --> 00:02:06,620
-Rockin' them beats, yeah!
+00:02:05,184 --> 00:02:06,850
+0.27:Rockin' 0.19:them 0.45:beats, [w:0.53]0.17:yeah!
 
 62
-00:02:06,620 --> 00:02:08,672
-We rockin' them- Rockin' them- Rockin' them!
+00:02:06,850 --> 00:02:08,672
+0.19:We 0.27:rockin' 0.19:them- 0.27:Rockin' 0.19:them- 0.27:Rockin' 0.19:them!
 
 63
 00:02:08,984 --> 00:02:10,792
-Walk my way
+0.72:Walk 0.52:my way
 
 64
 00:02:15,576 --> 00:02:16,408
-(Oh-oh)
+0.67:<font color="#FB6FB5">(Oh-</font>0.39:<font color="#FB6FB5">oh)</font>
 
 65
 00:02:16,410 --> 00:02:17,992
-Where's the love in your life?
+0.29:Where's 0.21:the 0.19:love 0.37:in your 0.28:life?
