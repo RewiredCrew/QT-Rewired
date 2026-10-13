@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "name": "Girlfriend (Rewired)",
   "assetPath": "shared:characters/gf-qt",
-  "renderType": "multianimateatlas",
+  "renderType": "animateatlas",
   "startingAnimation": "danceRight",
   "singTime": 4.0,
   "animations": [

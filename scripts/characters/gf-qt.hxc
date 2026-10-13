@@ -1,12 +1,12 @@
 package rewired.characters;
 
 import funkin.play.PlayState;
-import funkin.play.character.MultiAnimateAtlasCharacter;
+import funkin.play.character.AnimateAtlasCharacter;
 import flixel.FlxG;
 import animate.internal.elements.FlxSpriteElement;
 import funkin.graphics.shaders.AdjustColorShader;
 
-class GirlfriendCharacterQtAnims extends MultiAnimateAtlasCharacter
+class GirlfriendCharacterQtAnims extends AnimateAtlasCharacter
 {
   function new()
   {
