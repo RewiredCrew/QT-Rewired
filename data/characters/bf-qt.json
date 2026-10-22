@@ -143,17 +143,14 @@
     },
     {
       "offsets": [22, 15],
-      "asset": "shared:characters/bf-death",
+      "assetPath": "shared:characters/bf-death",
       "prefix": "Death Intro",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "firstDeath",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [22, 15],
@@ -168,7 +165,7 @@
     },
     {
       "offsets": [22, 15],
-      "asset": "shared:characters/bf-death",
+      "assetPath": "shared:characters/bf-death",
       "prefix": "Death Confirm",
       "animType": "framelabel",
       "flipX": false,
@@ -186,38 +183,29 @@
       "name": "firstDeath-saw",
       "flipY": false,
       "assetPath": "shared:characters/BF/bf_saw_death",
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [420, 62],
-      "asset": "shared:characters/BF/bf_saw_death",
+      "assetPath": "shared:characters/BF/bf_saw_death",
       "prefix": "bf dead loop",
       "animType": "framelabel",
       "flipX": false,
       "looped": true,
       "name": "deathLoop-saw",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [420, 62],
-      "asset": "shared:characters/BF/bf_saw_death",
+      "assetPath": "shared:characters/BF/bf_saw_death",
       "prefix": "bf undeading",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "deathConfirm-saw",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -228,14 +216,11 @@
       "name": "preDance",
       "flipY": false,
       "assetPath": "shared:characters/BF/bf-qt",
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dance",
       "frameIndices": [14, 15, 16, 17, 18, 19, 0, 1, 2, 3],
       "animType": "framelabel",
@@ -243,14 +228,11 @@
       "looped": false,
       "name": "danceLeft-alt",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dance",
       "frameIndices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
       "animType": "framelabel",
@@ -258,80 +240,62 @@
       "looped": false,
       "name": "danceRight-alt",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "obliterated intro",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "intro",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dodge back",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "dodge-0",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dodge",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "dodge-1",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "hurt back",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "sawHit-0",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "hurt",
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
       "name": "sawHit-1",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [-3, -65],
