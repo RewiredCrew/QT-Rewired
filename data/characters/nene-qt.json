@@ -85,19 +85,17 @@
       "prefix": "huh",
       "offsets": [-9, -6],
       "atlasSettings": {
-        "applyStageMatrix": true,
-        "uniqueInCache": true
+        "applyStageMatrix": true
       }
     },
     {
-      "asset": "shared:characters/NENE/love",
+      "assetPath": "shared:characters/NENE/love",
       "name": "idle-alt",
       "prefix": "love",
       "offsets": [-9, -6],
       "looped": true,
       "atlasSettings": {
-        "applyStageMatrix": true,
-        "uniqueInCache": true
+        "applyStageMatrix": true
       }
     }
   ]
