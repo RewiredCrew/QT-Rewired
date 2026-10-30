@@ -28,6 +28,7 @@
 - [NNovasaur](https://x.com/NNovasaur) — QT's Voice Actor
 
 ##
+and borja! am i right guys?
 
 <p align="center">
   <img src="https://i.imgur.com/2LtbTPQ.gif" width="100%" />
