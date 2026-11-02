@@ -29,6 +29,7 @@ class AwesomeSubtitles extends Module
   static final TOP_TEXT_SCALE:Float = 0.914;
   static final BOTTOM_TEXT_SCALE:Float = 0.777;
   static final LINE_DISTANCE:Float = 24;
+  static final ACTIVE_LINE_DISTANCE:Float = 30; // spacing between simultaneously active lines
 
   static final MOBILE_SCALE:Float = 1.22;
 
@@ -52,16 +53,23 @@ class AwesomeSubtitles extends Module
   var pool:Array<FlxText> = [];
   var highlightPool:Array<FlxText> = [];
 
-  var topText:FlxText;
-  var bottomText:FlxText;
-  var topHighlight:FlxText;
-  var bottomHighlight:FlxText;
-
   var owner:PlayState;
   var entries:Array<Dynamic> = [];
   var cursor:Int = 0;
-  var shownCur:Int = -1;
-  var shownNext:Int = -1;
+  var scanFloor:Int = 0;
+  var lastSongPosition:Float = -999999999;
+
+  var lineOf:Map<Int, FlxText> = createMap();
+  var lineY:Map<Int, Float> = createMap();
+  var previewIdx:Int = -1;
+
+  // Helper function to create maps since its fixed on 0.9 but not 0.8
+  static function createMap()
+  {
+    var newMap = [0 => 0];
+    newMap.remove(0);
+    return newMap;
+  }
 
   public function new()
   {
@@ -138,17 +146,24 @@ class AwesomeSubtitles extends Module
     }
 
     var songPosition:Float = Conductor.instance.songPosition;
+    if (songPosition < lastSongPosition) scanFloor = 0;
+    lastSongPosition = songPosition;
+
     while (cursor < entries.length && entries[cursor].start <= songPosition)
       cursor++;
     while (cursor > 0 && entries[cursor - 1].start > songPosition)
       cursor--;
 
-    var currentIdx:Int = (cursor > 0 && songPosition < entries[cursor - 1].end) ? cursor - 1 : -1;
-    var nextIdx:Int = (cursor < entries.length && canPreview(cursor, songPosition)) ? cursor : -1;
-    syncLines(currentIdx, nextIdx);
+    while (scanFloor < cursor && entries[scanFloor].end <= songPosition)
+      scanFloor++;
 
-    updateHighlight(topText, songPosition);
-    updateHighlight(bottomText, songPosition);
+    var active:Array<Int> = [];
+    for (i in scanFloor...cursor) if (entries[i].end > songPosition) active.push(i);
+
+    var nextIdx:Int = (cursor < entries.length && canPreview(cursor, songPosition)) ? cursor : -1;
+    syncLines(active, nextIdx);
+
+    for (idx in lineOf.keys()) updateHighlight(lineOf.get(idx), entries[idx], songPosition);
 
     for (poolArr in [pool, highlightPool])
       for (text in poolArr)
@@ -184,17 +199,7 @@ class AwesomeSubtitles extends Module
 
   function buildTextPool(state:PlayState):Void
   {
-    for (i in 0...6)
-    {
-      var text:FlxText = makeText(state, FlxColor.GRAY);
-      var highlight:FlxText = makeText(state, FlxColor.WHITE);
-
-      state.add(text);
-      state.add(highlight);
-
-      pool.push(text);
-      highlightPool.push(highlight);
-    }
+    for (i in 0...6) addPoolPair(state);
   }
 
   function makeText(state:PlayState, color:FlxColor):FlxText
@@ -220,33 +225,40 @@ class AwesomeSubtitles extends Module
     return text;
   }
 
+  function addPoolPair(state:PlayState):FlxText
+  {
+    var text:FlxText = makeText(state, FlxColor.GRAY);
+    var highlight:FlxText = makeText(state, FlxColor.WHITE);
+
+    state.add(text);
+    state.add(highlight);
+
+    pool.push(text);
+    highlightPool.push(highlight);
+
+    return text;
+  }
+
   function releaseState():Void
   {
-    for (text in pool)
+    for (poolArr in [pool, highlightPool])
     {
-      if (!text.exists) continue;
+      for (text in poolArr)
+      {
+        if (!text.exists) continue;
 
-      cancelTweens(text);
-      owner.remove(text, true);
-      text.destroy();
-    }
-
-    for (text in highlightPool)
-    {
-      if (!text.exists) continue;
-
-      cancelTweens(text);
-      owner.remove(text, true);
-      text.destroy();
+        cancelTweens(text);
+        if (owner != null) owner.remove(text, true);
+        text.destroy();
+      }
     }
 
     pool = [];
     highlightPool = [];
 
-    topText = null;
-    bottomText = null;
-    topHighlight = null;
-    bottomHighlight = null;
+    lineOf = createMap();
+    lineY = createMap();
+    previewIdx = -1;
 
     owner = null;
     entries = [];
@@ -254,83 +266,104 @@ class AwesomeSubtitles extends Module
 
   function resetDisplay():Void
   {
-    for (text in pool)
+    for (poolArr in [pool, highlightPool])
     {
-      cancelTweens(text);
-      text.visible = false;
-      text.clipRect = null;
+      for (text in poolArr)
+      {
+        cancelTweens(text);
+        text.visible = false;
+        text.clipRect = null;
+      }
     }
 
-    for (text in highlightPool)
-    {
-      cancelTweens(text);
-      text.visible = false;
-      text.clipRect = null;
-    }
-
-    topText = null;
-    bottomText = null;
-    topHighlight = null;
-    bottomHighlight = null;
+    lineOf = createMap();
+    lineY = createMap();
+    previewIdx = -1;
 
     cursor = 0;
-    shownCur = -1;
-    shownNext = -1;
+    scanFloor = 0;
+    lastSongPosition = -999999999;
   }
-
-  function syncLines(currentIdx:Int, nextIdx:Int):Void
+  
+  function moveTo(text:FlxText, y:Float, alpha:Float):Void
   {
-    if (currentIdx != shownCur)
+    for (t in [text, getHighlight(text)])
     {
-      var outgoing:FlxText = topText;
+      if (t == null) continue;
 
-      if (currentIdx != -1 && currentIdx == shownNext)
-      {
-        topText = bottomText;
-        topHighlight = bottomHighlight;
-
-        bottomText = null;
-        bottomHighlight = null;
-
-        shownNext = -1;
-
-        promoteToTop(topText);
-        promoteToTop(topHighlight);
-      }
-      else
-      {
-        topText = (currentIdx == -1) ? null : acquireText();
-        topHighlight = getHighlight(topText);
-
-        if (topText != null)
-          showLine(topText, entries[currentIdx], true, 1);
-      }
-
-      fadeOut(outgoing);
-      shownCur = currentIdx;
-    }
-
-    if (nextIdx != shownNext)
-    {
-      fadeOut(bottomText);
-
-      bottomText = (nextIdx == -1) ? null : acquireText();
-      bottomHighlight = getHighlight(bottomText);
-
-      if (bottomText != null)
-        showLine(bottomText, entries[nextIdx], false, NEXT_ALPHA);
-
-      shownNext = nextIdx;
+      FlxTween.cancelTweensOf(t);
+      FlxTween.tween(t, {y: y, alpha: alpha}, PROMOTE_TIME, {ease: FlxEase.quadOut});
     }
   }
 
-  function showLine(text:FlxText, entry:Dynamic, isTop:Bool, targetAlpha:Float):Void
+  function syncLines(newActive:Array<Int>, nextIdx:Int):Void
+  {
+    var stale:Array<Int> = [];
+    for (idx in lineOf.keys()) if (newActive.indexOf(idx) == -1 && idx != nextIdx) stale.push(idx);
+
+    for (idx in stale)
+    {
+      fadeOut(lineOf.get(idx));
+      lineOf.remove(idx);
+      lineY.remove(idx);
+      if (idx == previewIdx) previewIdx = -1;
+    }
+
+    for (i in 0...newActive.length)
+    {
+      var idx:Int = newActive[i];
+      var y:Float = slotY(activeOffset(i));
+      var text:FlxText = lineOf.get(idx);
+
+      if (text == null)
+      {
+        text = acquireText();
+        lineOf.set(idx, text);
+        lineY.set(idx, y);
+        showLine(text, entries[idx], true, 1, y);
+      }
+      else if (idx == previewIdx)
+      {
+        previewIdx = -1;
+        lineY.set(idx, y);
+        promote(text, y);
+      }
+      else if (lineY.get(idx) != y)
+      {
+        lineY.set(idx, y);
+        moveTo(text, y, 1);
+      }
+    }
+
+    if (nextIdx != -1)
+    {
+      var py:Float = slotY(previewOffset(newActive.length));
+
+      if (nextIdx != previewIdx)
+      {
+        var ptext:FlxText = acquireText();
+        lineOf.set(nextIdx, ptext);
+        lineY.set(nextIdx, py);
+        previewIdx = nextIdx;
+        showLine(ptext, entries[nextIdx], false, NEXT_ALPHA, py);
+      }
+      else if (lineY.get(nextIdx) != py)
+      {
+        lineY.set(nextIdx, py);
+        moveTo(lineOf.get(nextIdx), py, NEXT_ALPHA);
+      }
+    }
+  }
+
+  function showLine(text:FlxText, entry:Dynamic, isTop:Bool, targetAlpha:Float, targetY:Float):Void
   {
     var highlight:FlxText = getHighlight(text);
     if (highlight == null) return;
 
+    cancelTweens(text);
+    cancelTweens(highlight);
+
     var lineScale:Float = (isTop ? TOP_TEXT_SCALE : BOTTOM_TEXT_SCALE) * mobileScale();
-    var targetY:Float = slotY(isTop);
 
     text.italic = false;
     text.bold = false;
@@ -370,26 +403,23 @@ class AwesomeSubtitles extends Module
     text.clipRect = null;
     highlight.clipRect = FlxRect.get(0, 0, 0, highlight.frameHeight);
 
-    FlxTween.tween(text, {alpha: targetAlpha, y: targetY}, FADE_IN_TIME,
-      {ease: FlxEase.quadOut});
-
-    FlxTween.tween(highlight, {alpha: targetAlpha, y: targetY}, FADE_IN_TIME,
-      {ease: FlxEase.quadOut});
+    FlxTween.tween(text, {alpha: targetAlpha, y: targetY}, FADE_IN_TIME, {ease: FlxEase.quadOut});
+    FlxTween.tween(highlight, {alpha: targetAlpha, y: targetY}, FADE_IN_TIME, {ease: FlxEase.quadOut});
   }
 
-  function promoteToTop(text:FlxText):Void
+  function promote(text:FlxText, y:Float):Void
   {
-    if (text == null) return;
-
-    cancelTweens(text);
-
     var topScale:Float = TOP_TEXT_SCALE * mobileScale();
 
-    FlxTween.tween(text, {y: slotY(true), alpha: 1}, PROMOTE_TIME,
-      {ease: FlxEase.quadOut});
+    for (t in [text, getHighlight(text)])
+    {
+      if (t == null) continue;
 
-    FlxTween.tween(text.scale, {x: topScale, y: topScale}, PROMOTE_TIME,
-      {ease: FlxEase.quadOut});
+      cancelTweens(t);
+
+      FlxTween.tween(t, {y: y, alpha: 1}, PROMOTE_TIME, {ease: FlxEase.quadOut});
+      FlxTween.tween(t.scale, {x: topScale, y: topScale}, PROMOTE_TIME, {ease: FlxEase.quadOut});
+    }
   }
 
   function fadeOut(text:FlxText):Void
@@ -417,19 +447,43 @@ class AwesomeSubtitles extends Module
       });
   }
 
+  function isAssigned(text:FlxText):Bool
+  {
+    for (t in lineOf) if (t == text) return true;
+    return false;
+  }
+
   function acquireText():FlxText
   {
     var fallback:FlxText = null;
 
     for (text in pool)
     {
-      if (text == topText || text == bottomText) continue;
+      if (isAssigned(text)) continue;
       if (!text.visible) return text;
       fallback = text;
     }
 
+    if (fallback == null) return addPoolPair(owner);
+
     cancelTweens(fallback);
+    cancelTweens(getHighlight(fallback));
     return fallback;
+  }
+
+  function activeOffset(i:Int):Float
+  {
+    return i * ACTIVE_LINE_DISTANCE;
+  }
+
+  function previewOffset(activeCount:Int):Float
+  {
+    return activeCount > 0 ? (activeCount - 1) * ACTIVE_LINE_DISTANCE + LINE_DISTANCE : LINE_DISTANCE;
+  }
+
+  function slotY(offset:Float):Float
+  {
+    return FlxG.height - MARGIN_BOTTOM + mobileOffsetY() + offset * mobileScale();
   }
 
   function getHighlight(text:FlxText):FlxText
@@ -450,12 +504,6 @@ class AwesomeSubtitles extends Module
     FlxTween.cancelTweensOf(text.scale);
   }
 
-  function slotY(isTop:Bool):Float
-  {
-    var offsetY:Float = isTop ? 0 : LINE_DISTANCE;
-    return FlxG.height - MARGIN_BOTTOM + mobileOffsetY() + offsetY * mobileScale();
-  }
-
   function mobileScale():Float
   {
     return FlxG.onMobile ? MOBILE_SCALE : 1;
@@ -468,24 +516,15 @@ class AwesomeSubtitles extends Module
 
   function canPreview(idx:Int, time:Float):Bool
   {
-    var startsPhrase:Bool = idx == 0 || entries[idx].start - entries[idx - 1].end > PHRASE_GAP_MS;
-
-    return entries[idx].start - time <= (startsPhrase ? PHRASE_START_LEAD_MS : NEXT_LINE_LEAD_MS);
+    return entries[idx].start - time <= (entries[idx].startsPhrase ? PHRASE_START_LEAD_MS : NEXT_LINE_LEAD_MS);
   }
 
-  function updateHighlight(text:FlxText, songPosition:Float):Void
+  function updateHighlight(text:FlxText, entry:Dynamic, songPosition:Float):Void
   {
-    if (text == null || !text.visible) return;
+    if (text == null || entry == null || !text.visible) return;
 
     var highlight:FlxText = getHighlight(text);
     if (highlight == null || !highlight.visible) return;
-
-    var entry:Dynamic = findEntryForText(text);
-    if (entry == null)
-    {
-      highlight.clipRect = null;
-      return;
-    }
 
     var elapsed:Float = songPosition - entry.start;
 
@@ -537,13 +576,7 @@ class AwesomeSubtitles extends Module
     if (ratio < 0) ratio = 0;
     if (ratio > 1) ratio = 1;
 
-    var clipWidth:Float = highlight.frameWidth * ratio;
-    highlight.clipRect = FlxRect.get(
-      0,
-      0,
-      clipWidth,
-      highlight.frameHeight
-    );
+    highlight.clipRect = FlxRect.get(0, 0, highlight.frameWidth * ratio, highlight.frameHeight);
   }
 
   function findEntryForText(text:FlxText):Dynamic
@@ -613,6 +646,14 @@ class AwesomeSubtitles extends Module
     }
 
     parsed.sort((c, d) -> Std.int(c.start - d.start));
+
+    var maxEnd:Float = -999999999;
+    for (i in 0...parsed.length)
+    {
+      parsed[i].startsPhrase = (i == 0) || (parsed[i].start - maxEnd > PHRASE_GAP_MS);
+      if (parsed[i].end > maxEnd) maxEnd = parsed[i].end;
+    }
+
     return parsed;
   }
 
