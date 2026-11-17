@@ -90,7 +90,7 @@
       }
     },
     {
-      "asset": "shared:characters/NENE/love",
+      "assetPath": "shared:characters/NENE/love",
       "name": "idle-alt",
       "prefix": "love",
       "offsets": [-9, -6],

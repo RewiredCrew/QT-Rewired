@@ -143,7 +143,7 @@
     },
     {
       "offsets": [22, 15],
-      "asset": "shared:characters/bf-death",
+      "assetPath": "shared:characters/bf-death",
       "prefix": "Death Intro",
       "animType": "framelabel",
       "flipX": false,
@@ -168,7 +168,7 @@
     },
     {
       "offsets": [22, 15],
-      "asset": "shared:characters/bf-death",
+      "assetPath": "shared:characters/bf-death",
       "prefix": "Death Confirm",
       "animType": "framelabel",
       "flipX": false,
@@ -193,7 +193,7 @@
     },
     {
       "offsets": [420, 62],
-      "asset": "shared:characters/BF/bf_saw_death",
+      "assetPath": "shared:characters/BF/bf_saw_death",
       "prefix": "bf dead loop",
       "animType": "framelabel",
       "flipX": false,
@@ -207,7 +207,7 @@
     },
     {
       "offsets": [420, 62],
-      "asset": "shared:characters/BF/bf_saw_death",
+      "assetPath": "shared:characters/BF/bf_saw_death",
       "prefix": "bf undeading",
       "animType": "framelabel",
       "flipX": false,
@@ -235,7 +235,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dance",
       "frameIndices": [14, 15, 16, 17, 18, 19, 0, 1, 2, 3],
       "animType": "framelabel",
@@ -250,7 +250,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dance",
       "frameIndices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
       "animType": "framelabel",
@@ -265,7 +265,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "obliterated intro",
       "animType": "framelabel",
       "flipX": false,
@@ -279,7 +279,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dodge back",
       "animType": "framelabel",
       "flipX": false,
@@ -293,7 +293,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "dodge",
       "animType": "framelabel",
       "flipX": false,
@@ -307,7 +307,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "hurt back",
       "animType": "framelabel",
       "flipX": false,
@@ -321,7 +321,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/BF/bf-qt",
       "prefix": "hurt",
       "animType": "framelabel",
       "flipX": false,
