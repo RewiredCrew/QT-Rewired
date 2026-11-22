@@ -1,609 +1,307 @@
 package rewired.modules.playstate.dodgemechanic;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxRect;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
-import flixel.util.FlxColor;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.keyboard.FlxKeyInput;
 import funkin.Conductor;
-import funkin.Paths;
-import funkin.audio.FunkinSound;
-import funkin.graphics.FunkinSprite;
-import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.input.PreciseInputManager;
+//import funkin.input.PreciseInputEvent; //typedef....
+import funkin.modding.events.ScriptEvent;
+import funkin.modding.events.SongLoadScriptEvent;
+import funkin.modding.events.SongRetryEvent;
+import funkin.modding.events.StateChangeScriptEvent;
+import funkin.modding.events.UpdateScriptEvent;
 import funkin.modding.module.Module;
-import funkin.play.GameOverSubState;
 import funkin.play.PlayState;
-import funkin.play.event.SongEvent;
-import funkin.play.scoring.Scoring;
-import funkin.util.Constants;
-import funkin.util.HapticUtil;
-import funkin.util.TouchUtil;
-import flixel.text.FlxText;
-import flixel.text.FlxTextBorderStyle;
-import funkin.ui.FullScreenScaleMode;
-import StringTools;
-import funkin.save.Save;
-import funkin.Preferences;
-import funkin.util.InputUtil;
+import funkin.play.notes.NoteDirection;
 
-class SawbladeAndDodgeModule extends Module
+/**
+ * This module is the core point of Sawblade dodge mechanic.
+ */
+class SawbladeMechanicModule extends Module
 {
-  var bfDodging:Bool = false;
-  var animSuffix:Int = 0;
-  var bfCanDodge:Bool = true;
-  var songIsAllowed:Bool = false;
-  var dodgeBeatsCooldown:Int;
-  var dodgeToggleAnim:Int = 0;
-  var beatsSinceDodge:Int = 0;
-  var beatListener:Dynamic;
-  var activeEvent:SongEvent;
-  var stage:Dynamic;
-  var dodged:Bool = false;
-  var touchArea:FlxRect;
-  var touchX:Float;
-  var touchY:Float;
-  var touchWidth:Float = 280;
-  var touchHeight:Float = 280;
-  var touchAreaSprite:FlxSprite;
-  var warningVfx:FunkinSprite;
-  var sawSprite:FlxAtlasSprite;
-  var playState;
-  var dodgeText:FlxText;
-  var dodgeText2:FlxText;
-  var dodgeFormat:String;
-  var dimOverlay:FlxSprite;
-  var dodgeTextSwapTimer:FlxTimer;
-  var _interval:Float;
-  var hitWindow:Float;
-  var hitTime:Float;
-  var eventReady:Bool;
-  var canDie:Bool = true;
-  var spinVibrationPreset:VibrationPreset =
-    {
-      period: 0.05,
-      duration: 0.2,
-      amplitude: 0.6,
-      sharpness: 0.7
-    };
-  var attackVibrationPreset:VibrationPreset =
-    {
-      period: 0,
-      duration: 0.3,
-      amplitude: 1.0,
-      sharpness: 0.9
-    };
+  /*public static function query() {  
+  }*/
+  public static var instance:SawbladeMechanicModule = null;
 
-  static inline var BASE_BEAT_COOLDOWN:Int = 1;
-  static inline var MIN_COOLDOWN_MS:Float = 300;
-  static inline var DODGE_TEXT_SWAP_DELAY:Float = 5;
-  static inline var DODGE_TEXT_FADE_DURATION:Float = 2;
+  /**
+   * Defines Sawblade Dodge Mechanic event id to determine if we should use it in song or not.
+   */
+  private static var mechanicEventName:String = "sawKB";
+
+  //temp
+  public var dodgeKey:FlxKey = FlxKey.SPACE;
+
+  public var currentGame(get, never):PlayState;
+
+  function get_currentGame():PlayState
+  {
+    return PlayState.instance;
+  }
+
+  public var moduleActive:Bool = false;
+
+  private var preciseInputsRegistered:Bool = false;
+  private var dodgeKeyRegistered:Bool = false;
+  private var dodgeKeyInput:Null<FlxKeyInput> = null;
+
+  var inputPressQueue:Array<PreciseInputEvent> = [];
+  var inputReleaseQueue:Array<PreciseInputEvent> = [];
 
   public function new()
   {
-    super('SawbladeAndDodgeModule', 1,
-      {
-        state: PlayState
-      });
-  }
-
-  function destroyAssets():Void
-  {
-    if (warningVfx != null)
-    {
-      warningVfx.destroy();
-      warningVfx = null;
-    }
-    if (sawSprite != null)
-    {
-      sawSprite.destroy();
-      sawSprite = null;
-    }
-    if (dodgeText != null)
-    {
-      dodgeText.destroy();
-      dodgeText = null;
-    }
-    if (dodgeText2 != null)
-    {
-      dodgeText2.destroy();
-      dodgeText2 = null;
-    }
-    if (dodgeTextSwapTimer != null)
-    {
-      dodgeTextSwapTimer.cancel();
-      dodgeTextSwapTimer = null;
-    }
-    if (touchAreaSprite != null)
-    {
-      touchAreaSprite.destroy();
-      touchAreaSprite = null;
-    }
-    if (dimOverlay != null)
-    {
-      dimOverlay.destroy();
-      dimOverlay = null;
-    }
-  }
-
-  function initializeAssets():Void
-  {
-    var stage = playState.currentStage;
-
-    dimOverlay = new FlxSprite();
-    dimOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-    dimOverlay.scrollFactor.set();
-    dimOverlay.camera = playState.camHUD;
-    dimOverlay.alpha = 0;
-    dimOverlay.zIndex = 632;
-    playState.add(dimOverlay);
-
-    warningVfx = new FunkinSprite();
-    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared",
-      {
-        cacheOnLoad: true
-      });
-    warningVfx.animation.addByFrameLabel('1-alert-1', "alert 1 beat 1", 24, false);
-    warningVfx.animation.addByFrameLabel('2-alert-1', "alert 1 beat 2", 24, false);
-    warningVfx.animation.addByFrameLabel('attack-1', "alert 1 attack", 24, false);
-
-    warningVfx.animation.addByFrameLabel('1-alert-2', "alert 2 beat 1", 24, false);
-    warningVfx.animation.addByFrameLabel('2-alert-2', "alert 2 beat 2", 24, false);
-    warningVfx.animation.addByFrameLabel('attack-2-1', "alert 2 attack 1", 24, false);
-    warningVfx.animation.addByFrameLabel('attack-2-2', "alert 2 attack 2", 24, false);
-    warningVfx.camera = playState.camHUD;
-    warningVfx.visible = false;
-    warningVfx.zIndex = 633;
-    playState.add(warningVfx);
-
-    var dadMidpoint = stage.getDad().getGraphicMidpoint();
-    sawSprite = new SawBladeSprite(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
-    sawSprite.visible = false;
-    sawSprite.shader = stage.getDad().shader;
-    stage.add(sawSprite);
-
-    playState.refresh();
-  }
-
-  public function executeWarning(interval, saws):Void
-  {
-    var postfx = switch (saws)
-    {
-      case 2:
-        "-2";
-      default:
-        "-1";
-    }
-
-    darkenScreen();
-
-    playWarningStep('1-alert' + postfx, 0, 0);
-
-    new FlxTimer().start(interval, (_) -> {
-      if (activeEvent.amntSaws > 1)
-      {
-        playWarningStep('2-alert' + postfx, 0, 0, true, 2);
-      }
-      else
-      {
-        playWarningStep('2-alert' + postfx, 0, 0);
-      }
-    });
-  }
-
-  /**
-   * Oscurece la pantalla al mostrar las alertas. Usa el prop "blackScreen" del stage
-   * si este lo define (como en Obliterated normal) para respetar el efecto artistico
-   * original, y si no existe recurre al overlay propio del modulo para que el efecto
-   * siempre este disponible sin importar el stage/variacion.
-   */
-  function darkenScreen():Void
-  {
-    var blackScreen = playState.currentStage.getNamedProp("blackScreen");
-    if (blackScreen != null) FlxTween.tween(blackScreen,
-      {
-        alpha: 0.3
-      }, 0.35,
-      {
-        ease: FlxEase.linear
-      });
-    else if (dimOverlay != null) FlxTween.tween(dimOverlay,
-      {
-        alpha: 0.3
-      }, 0.35,
-      {
-        ease: FlxEase.linear
-      });
-  }
-
-  function undarkenScreen():Void
-  {
-    var blackScreen = playState.currentStage.getNamedProp("blackScreen");
-    if (blackScreen != null) FlxTween.tween(blackScreen,
-      {
-        alpha: 0
-      }, 0.35,
-      {
-        ease: FlxEase.quadInOut
-      });
-    else if (dimOverlay != null) FlxTween.tween(dimOverlay,
-      {
-        alpha: 0
-      }, 0.35,
-      {
-        ease: FlxEase.quadInOut
-      });
-  }
-
-  public function playWarningStep(animName:String, offsetX:Float, offsetY:Float, showVfx:Bool = true, suffix:Int = 1):Void
-  {
-    if (animName.indexOf("attack") == -1) FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
-    else if (animName.indexOf("attack") != -1 && showVfx && suffix == 3)
-    {
-      FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
-    }
-    else
-    {
-      FunkinSound.playOnce(Paths.sound('sawblades/attacks/attack-$suffix'));
-    }
-    if (warningVfx != null && warningVfx.animation != null && showVfx)
-    {
-      warningVfx.visible = true;
-      warningVfx.animation.play(animName);
-      warningVfx.offset.set(offsetX, offsetY);
-      warningVfx.screenCenter();
-    }
-  }
-
-  function doSawAnimation():Void
-  {
-    if (playState.health <= 0) return;
-
-    var dadMidpoint = playState.currentStage.getDad().getGraphicMidpoint();
-    sawSprite?.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
-    sawSprite?.zIndex = dodgeToggleAnim == 0 ? 299 : 199;
-    sawSprite?.animation?.play('saw anim alert', true, false, 0);
-    sawSprite?.offset?.y = 0;
-    HapticUtil.vibrateByPreset(spinVibrationPreset);
-
-    sawSprite?.animation?.onFinish?.addOnce((_) -> {
-      if (_ == "saw anim attack")
-      {
-        hideAllVisuals();
-      }
+    super("qt-rewired_SawbladeMechanicModule", 0, {
+      state: PlayState
     });
 
-    warningVfx?.visible = true;
-    sawSprite?.visible = true;
-    playState.currentStage.refresh();
+    instance = this;
   }
 
-  public function hideAllVisuals():Void
-  {
-    if (playState.health <= 0) return;
-    sawSprite?.visible = false;
-    warningVfx?.visible = false;
-    undarkenScreen();
-  }
-
-  public function executeAttack(interval):Void
-  {
-    if (playState.health <= 0) return;
-    eventReady = true;
-    bfDodging = false;
-    bfCanDodge = true;
-    doSawAnimation();
-
-    new FlxTimer().start(interval, (_) -> {
-      var dadMidpoint = playState.currentStage.getDad().getGraphicMidpoint();
-      sawSprite.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
-      sawSprite?.animation?.play("saw anim attack", true, false, 0);
-      sawSprite?.offset?.y = -300;
-      playState.camGame.shake(0.007, 0.25);
-      if (HapticUtil.hapticsAvailable) HapticUtil.vibrateByPreset(attackVibrationPreset);
-
-      playState.currentStage.getGirlfriend().playAnimation("dodge", true, true);
-
-      new FlxTimer().start(hitWindow / 1000, (_) -> {
-        trace('[EXECUTE ATTACK] can you pause the game? ${playState.mayPauseGame}');
-        if (!playState.mayPauseGame) onBadHit();
-        playState.mayPauseGame = true;
-        eventReady = false;
-      });
-    });
-  }
-
-  function onGoodHit():Void
-  {
-    playState.health += 0.20;
-    playState.popUpScore("dodged");
-    playState.mayPauseGame = true;
-
-    bfDodging = false;
-    bfCanDodge = true;
-
-    if (dodgeText == null) return;
-    FlxTween.tween(dodgeText,
-      {
-        alpha: 0
-      }, 1,
-      {
-        ease: FlxEase.smoothStepInOut
-      },
-      {
-        onComplete: function(_) {
-          dodgeText.kill();
-          playState.remove(dodgeText, true);
-          dodgeText = null;
-        }
-      });
-    if (dodgeText2 != null)
-    {
-      FlxTween.tween(dodgeText2,
-        {
-          alpha: 0
-        }, 1,
-        {
-          ease: FlxEase.smoothStepInOut
-        },
-        {
-          onComplete: function(_) {
-            dodgeText2.kill();
-            playState.remove(dodgeText2, true);
-            dodgeText2 = null;
-          }
-        });
-    }
-  }
-
-  function onBadHit():Void
-  {
-    if (playState.isBotPlayMode || playState.isPracticeMode)
-    {
-      onGoodHit();
-      return;
-    }
-
-    if (!canDie)
-    {
-      canDie = true;
-      playState.mayPauseGame = true;
-      return;
-    }
-
-    switch (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT))
-    {
-      case "instakill":
-        executeInstantKill();
-      case "disabled":
-        return;
-      default:
-        executeDamage();
-    }
-
-    HapticUtil.vibrateByPreset(attackVibrationPreset);
-
-    playState.mayPauseGame = true;
-  }
-
-  function executeDamage():Void
-  {
-    var damage = Constants.HEALTH_MAX * 0.5;
-    var newHealth = Math.max(playState.health - damage, Constants.HEALTH_MIN);
-
-    playState.health = newHealth;
-
-    if (newHealth <= Constants.HEALTH_MIN) executeInstantKill();
-    else
-    {
-      FlxG.camera.flash(0xFFff0000, 0.3);
-      playState.camGame.shake(0.008, 0.3);
-      playState.currentStage.getBoyfriend().playAnimation("sawHit-" + animSuffix, true, true);
-      playState.currentStage.refresh();
-    }
-  }
-
-  function executeInstantKill():Void
-  {
-    hideAllVisuals();
-    if (PlayState?.instance?.currentStage?.getBoyfriend()?.characterId == 'bf-qt') PlayState.instance.currentStage.getBoyfriend().setSuffix('-saw');
-    FlxG.camera.flash(0xFFff0000, 1.0);
-    GameOverSubState.musicSuffix = '-sawblade';
-    GameOverSubState.blueBallSuffix = '-sawblade';
-    playState.health = -1;
-    destroyAssets();
-  }
-
-  function getSawSpriteNudge():Float
-  {
-    return (PlayState?.instance?.currentStage?.id == "qtStageObliteratedErect") ? 100 : -50; // does this works? yes! should i feel bad about this code? maybe!
-  }
-
-  override public function onSongStart(event)
-  {
-    super.onSongStart(event);
-    eventReady = false;
-    canDie = true;
-  }
-
-  override function onSongLoaded(event):Void
+  override function onSongLoaded(event:SongLoadScriptEvent):Void
   {
     super.onSongLoaded(event);
-    destroyAssets();
-    resetState();
-    if (beatListener != null)
+
+    if (currentGame == null || currentGame.currentChart == null || currentGame.isMinimalMode) return;
+
+    for (ev in currentGame.currentChart.events)
     {
-      Conductor.beatHit.remove(beatListener);
-      beatListener = null;
-    }
-
-    playState = PlayState.instance;
-    var beatMs = Conductor.instance.beatLengthMs;
-    var beatsForMin = Std.int(Math.ceil(MIN_COOLDOWN_MS / beatMs));
-    songIsAllowed = StringTools.startsWith(playState.currentSong.id, "obliterated");
-    if (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
-
-    if (songIsAllowed)
-    {
-      dodgeText = new FlxText().setFormat(Paths.font('vcr.ttf'), 28, 0xFF0000, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
-      dodgeText.scrollFactor.set();
-      dodgeFormat = FlxG.onMobile ? "TAP the sign" : "Press "
-        + InputUtil.getKeyName(Save.instance.modOptions[QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND][0]).toUpperCase();
-      var isErectVariation = playState.currentVariation == "erect";
-      dodgeText.text = dodgeFormat + ' on third beat to dodge' + (isErectVariation ? '...' : '!');
-      dodgeText.screenCenter();
-      dodgeText.y = (FlxG.onMobile || Preferences.downscroll) ? FlxG.height - dodgeText.height - 15 - FullScreenScaleMode.cutoutSize.y : PlayState.instance.healthBarBG.y
-        - 90;
-      dodgeText.zIndex = 999;
-      dodgeText.alpha = 1;
-      playState.add(dodgeText);
-      dodgeText.cameras = [PlayState.instance.camHUD];
-
-      if (isErectVariation)
+      if (ev.eventKind == mechanicEventName)
       {
-        dodgeText2 = new FlxText().setFormat(Paths.font('vcr.ttf'), 28, 0xFF0000, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
-        dodgeText2.scrollFactor.set();
-        dodgeText2.text = 'But watch out, some attacks strike twice!';
-        dodgeText2.screenCenter();
-        dodgeText2.y = dodgeText.y;
-        dodgeText2.zIndex = 998;
-        dodgeText2.alpha = 0;
-        playState.add(dodgeText2);
-        dodgeText2.cameras = [playState.camHUD];
-
-        dodgeTextSwapTimer = new FlxTimer().start(DODGE_TEXT_SWAP_DELAY, (_) -> {
-          if (dodgeText != null) FlxTween.tween(dodgeText,
-            {
-              alpha: 0
-            }, DODGE_TEXT_FADE_DURATION,
-            {
-              ease: FlxEase.smoothStepInOut
-            });
-          if (dodgeText2 != null) FlxTween.tween(dodgeText2,
-            {
-              alpha: 1
-            }, DODGE_TEXT_FADE_DURATION,
-            {
-              ease: FlxEase.smoothStepInOut
-            });
-          dodgeTextSwapTimer = null;
-        });
+        moduleActive = true;
+        break;
       }
     }
-
-    initializeAssets();
-
-    touchX = (FlxG.width - touchWidth) / 2;
-    touchY = (FlxG.height - touchHeight) / 2 - 40;
-
-    touchAreaSprite = new FlxSprite(touchX, touchY);
-    touchAreaSprite.makeGraphic(Std.int(touchWidth), Std.int(touchHeight), 0x00000000); // TODO: Change this <-------- i dont think it got changed guys
-    touchAreaSprite.scrollFactor.set(0, 0);
-    touchAreaSprite.cameras = [playState.camHUD];
-    if (FlxG.onMobile) playState.add(touchAreaSprite);
-
-    dodgeBeatsCooldown = Math.max(BASE_BEAT_COOLDOWN, beatsForMin);
-    stage = playState.currentStage;
-
-    setupBeatListener();
   }
 
-  function setupBeatListener():Void
+  override function onCountdownStart(event:CountdownScriptEvent):Void
   {
-    beatListener = () -> {
-      var beatMs = Conductor.instance.beatLengthMs;
-      var beatsForMin = Std.int(Math.ceil(MIN_COOLDOWN_MS / beatMs));
-      dodgeBeatsCooldown = Math.max(BASE_BEAT_COOLDOWN, beatsForMin);
+    super.onCountdownStart(event);
 
-      if (!bfCanDodge && beatsSinceDodge > 0)
-      {
-        beatsSinceDodge++;
-        if (beatsSinceDodge >= dodgeBeatsCooldown)
-        {
-          bfCanDodge = true;
-          beatsSinceDodge = 0;
-        }
-      }
-    };
-    Conductor.beatHit.add(beatListener);
+    // Doing this here becase onSongLoaded BEFORE PreciseInputManager loaded PlayState's on key press/release functions >:(
+    if (moduleActive)
+    {
+      registerDodgeKey();
+      initPreciseInputs();
+    }
   }
 
-  override function onDestroy(event):Void
+  function registerDodgeKey():Void
+  {
+    if (dodgeKeyRegistered) return;
+
+    var manager = PreciseInputManager.instance;
+
+    // Do not steal a key which is already assigned to one of the note lanes. nuh UH!!!
+    if (manager.getInputByKey(dodgeKey) != null)
+    {
+      trace('[QT:REWIRED] Cannot register dodge key ${dodgeKey}: it is already bound to a note.');
+      return;
+    }
+
+    var input = new FlxKeyInput(dodgeKey);
+
+    // oh my sweet polymod STRYCT_SYNTAX
+    //@:privateAccess
+    //{
+      if (manager._keyList.indexOf(dodgeKey) == -1)
+        manager._keyList.push(dodgeKey);
+
+      manager._keyListArray.push(input);
+      manager._keyListMap.set(dodgeKey, input);
+
+      manager._keyListDir.set(dodgeKey, NoteDirection.LEFT);
+    //}
+
+    dodgeKeyInput = input;
+    dodgeKeyRegistered = true;
+
+    trace('[QT:REWIRED] Registered sawblade dodge key: ${dodgeKey}');
+  }
+
+  private function unregisterDodgeKey():Void
+  {
+    if (!dodgeKeyRegistered) return;
+
+    var manager = PreciseInputManager.instance;
+    var registeredInput:Null<FlxKeyInput> = null;
+
+    // oh my sweet polymod STRYCT_SYNTAX AGAIN
+    //@:privateAccess
+    //{
+      registeredInput = manager._keyListMap.get(dodgeKey);
+
+      if (registeredInput == dodgeKeyInput)
+      {
+        manager._keyList.remove(dodgeKey);
+        if (dodgeKeyInput != null)
+          manager._keyListArray.remove(dodgeKeyInput);
+        manager._keyListMap.remove(dodgeKey);
+        manager._keyListDir.remove(dodgeKey);
+      }
+      else if (registeredInput == null)
+      {
+        manager._keyList.remove(dodgeKey);
+        if (dodgeKeyInput != null)
+          manager._keyListArray.remove(dodgeKeyInput);
+      }
+    //}
+
+    if (dodgeKeyInput != null)
+      dodgeKeyInput.release();
+
+    dodgeKeyInput = null;
+    dodgeKeyRegistered = false;
+  }
+
+  private function initPreciseInputs():Void
+  {
+    if (preciseInputsRegistered) return;
+
+    var manager = PreciseInputManager.instance;
+    manager.onInputPressed.add(onKeyPress);
+    manager.onInputReleased.add(onKeyRelease);
+
+    preciseInputsRegistered = true;
+  }
+
+  private function isDodgeKeyEvent(event:PreciseInputEvent):Bool
+  {
+    if (!dodgeKeyRegistered) return false;
+
+    var eventKey:FlxKey;
+
+    @:privateAccess
+    eventKey = PreciseInputManager.convertKeyCode(event.keyCode);
+
+    return eventKey == dodgeKey;
+  }
+
+  private function onKeyPress(event:PreciseInputEvent):Void
+  {
+    if (currentGame == null || currentGame.isGamePaused) return;
+
+    if (isDodgeKeyEvent(event))
+    {
+      // remove key event from main keyshit :troll:
+      currentGame.inputPressQueue.remove(event);
+      
+      inputPressQueue.push(event);
+      event.position = Conductor.instance.songPosition;
+      //trace('DODGE PRESSED at ${event.position} ms');
+    }
+  }
+
+  private function onKeyRelease(event:PreciseInputEvent):Void
+  {
+    if (currentGame == null || currentGame.isGamePaused) return;
+
+    if (isDodgeKeyEvent(event))
+    {
+      // remove key event from main keyshit :troll:
+      currentGame.inputReleaseQueue.remove(event);
+
+      inputReleaseQueue.push(event);
+      event.position = Conductor.instance.songPosition;
+      //trace(' DODGE RELEASED at ${event.position} ms');
+    }
+  }
+
+  override function onUpdate(event):Void
+  {
+    if (moduleActive)
+      processInputQueue();
+    //else if (currentGame.isBotPlayMode) botplaysawbaldeshit
+  }
+
+  public var isDodgingInput:Bool = false;
+
+  //TODO: add BOTPLAY
+  function processInputQueue():Void
+  {
+    if (inputPressQueue.length + inputReleaseQueue.length == 0) return;
+
+    // Ignore inputs during cutscenes.
+    if (currentGame.isInCutscene || currentGame.disableKeys)
+    {
+      inputPressQueue = [];
+      inputReleaseQueue = [];
+      return;
+    }
+
+    while (inputPressQueue.length > 0)
+    {
+      var input:Null<PreciseInputEvent> = inputPressQueue.shift();
+      if (input == null) continue;
+
+      //FlxG.camera.angle += 5;
+      
+      isDodgingInput = true;
+
+      //TODO: do check if any sawblade event is in progress lmao
+      //var inputPosition:Float = input.position ?? 0.0;
+      //var inputLatencyNs:Int64 = PreciseInputManager.getCurrentTimestamp() - input.timestamp;
+      //var inputLatencyMs:Float = inputLatencyNs.toFloat() / Constants.NS_PER_MS;
+      //var noteDiff:Int = Std.int(inputPosition - note.noteData.time - inputLatencyMs);
+      //trace(inputLatencyMs);
+    }
+
+    while (inputReleaseQueue.length > 0)
+    {
+      var input:Null<PreciseInputEvent> = inputReleaseQueue.shift();
+      if (input == null || !isDodgingInput) continue;
+
+      //FlxG.camera.scrollAngle += 15;
+
+      isDodgingInput = false;
+    }
+  }
+
+  override function onStateChangeBegin(event:StateChangeScriptEvent):Void
+  {
+    super.onStateChangeBegin(event);
+    reset();
+  }
+
+  override function onSongEnd(event:ScriptEvent):Void
+  {
+    super.onSongEnd(event);
+    reset();
+  }
+
+  override function onGameOver(event:ScriptEvent):Void
+  {
+    super.onGameOver(event);
+    reset();
+  }
+
+  override function onSongRetry(event:SongRetryEvent):Void
+  {
+    super.onSongRetry(event);
+    reset();
+  }
+
+  override function onDestroy(event:ScriptEvent):Void
   {
     super.onDestroy(event);
-    if (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
-
-    resetState();
-    destroyAssets();
-    Conductor.beatHit.remove(beatListener);
+    reset();
   }
 
-  function resetState():Void
+  public function reset():Void
   {
-    bfDodging = false;
-    bfCanDodge = true;
-    dodged = false;
-    beatsSinceDodge = 0;
-    canDie = true;
-    eventReady = false;
-  }
+    moduleActive = false;
 
-  function bfDodge():Void
-  {
-    if (!canDodge() || Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
-
-    performDodge();
-    checkHitTiming();
-  }
-
-  function canDodge():Bool
-  {
-    return bfCanDodge && !bfDodging;
-  }
-
-  function performDodge():Void
-  {
-    if (stage?.getBoyfriend() != null)
+    if (preciseInputsRegistered)
     {
-      if (eventReady) stage.getBoyfriend().playAnimation('dodge-' + animSuffix, true, true);
+      var manager = PreciseInputManager.instance;
+      manager.onInputPressed.remove(onKeyPress);
+      manager.onInputReleased.remove(onKeyRelease);
+      preciseInputsRegistered = false;
     }
-  }
 
-  function checkHitTiming():Void
-  {
-    var hitTime = activeEvent?.hitTime;
-    var hitWindow = activeEvent?.hitWindow;
-    var timeDiff = Conductor.instance.songPosition - hitTime;
+    unregisterDodgeKey();
 
-    if (Math.abs(timeDiff) <= hitWindow)
-    {
-      canDie = false;
-      onGoodHit();
-    }
-  }
+    inputPressQueue = [];
+    inputReleaseQueue = [];
 
-  override function onUpdate(elapsed:Float):Void
-  {
-    /*if (FlxG.keys.justPressed.B)
-      {
-        warningVfx.visible = true;
-        warningVfx.animation.play("attack-2-1", true);
-    }*/
-
-    super.onUpdate(elapsed);
-    if (PlayState.instance == null || Conductor.instance == null) return;
-
-    if (!PlayState.instance.isGamePaused
-      && ((FlxG.onMobile && TouchUtil.overlapsComplex(touchAreaSprite) && TouchUtil.justPressed) || dodgeBindJustPressed()))
-    {
-      bfDodge();
-    }
-  }
-
-  function dodgeBindJustPressed():Bool
-  {
-    if (activeEvent == null) return false;
-    return FlxG.keys.anyJustPressed(Save.instance.modOptions[QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND]);
+    trace('Resetting sawblade module...');
   }
 }

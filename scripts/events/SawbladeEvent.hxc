@@ -10,7 +10,23 @@ import funkin.save.Save;
 import funkin.modding.module.ModuleHandler;
 import funkin.util.Sequence;
 import funkin.Conductor;
+import funkin.graphics.FunkinSprite;
+import funkin.audio.FunkinSound;
+import flixel.util.FlxTimer;
+import funkin.util.HapticUtil;
+import rewired.modules.playstate.dodgemechanic.SawBladeSprite;
+import funkin.save.Save;
+import flixel.util.FlxColor;
+import openfl.display.BlendMode;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
+/**
+ * HEY!!!!!!!
+ * This event is a LEGACY EVENT!!!! It's going to be reworked and renamed!
+ * Be sure to use the migrator tool that may or may not be present at the time of you reading this.
+ * Okay that's all have a nice day :)
+**/
 class SawbladeEvent extends SongEvent
 {
   public function new()
@@ -24,10 +40,39 @@ class SawbladeEvent extends SongEvent
   var amntSaws:Int;
   var seq:Sequence;
   var dodgeModule(get, never);
+  var warningVfx:FunkinSprite;
+  var sawSprite:SawBladeSprite;
+  var dimOverlay:FunkinSprite;
+  var sawsActive:Bool = false;
+  var hasDodged:Bool = false;
+  var remainingAttacks:Int = 0;
+  var currentSuffix:Int = 0;
+  function toggleSuffix() {
+    currentSuffix = currentSuffix == 0 ? 1 : 0;
+    if(currentSuffix == 0) sawSprite?.zIndex = PlayState.instance.currentStage.getBoyfriend().zIndex + 1;
+    else sawSprite?.zIndex = PlayState.instance.currentStage.getBoyfriend().zIndex - 1;
+    PlayState.instance.refresh();
+    trace('[QT:REWIRED] current suffix is $currentSuffix');
+  }
+  var attackVibrationPreset =
+  {
+      period: 0,
+      duration: 0.3,
+      amplitude: 1.0,
+      sharpness: 0.9
+  };
+
+  var spinVibrationPreset =
+  {
+      period: 0.05,
+      duration: 0.2,
+      amplitude: 0.6,
+      sharpness: 0.7
+  };
 
   function get_dodgeModule()
   {
-    return ModuleHandler.getModule('SawbladeAndDodgeModule');
+    return ModuleHandler.getModule('qt-rewired_SawbladeMechanicModule');
   }
 
   public override function handleEvent(data:SongEventData):Void
@@ -35,8 +80,6 @@ class SawbladeEvent extends SongEvent
     if (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT) == "disabled") return;
 
     Conductor.instance.update();
-    var playState = PlayState.instance;
-    playState.mayPauseGame = false;
 
     interval = Conductor.instance.beatLengthMs / 1000;
 
@@ -50,30 +93,30 @@ class SawbladeEvent extends SongEvent
     hitTime = data.time + interval * 2;
     if (isTriple) hitTime += interval;
 
-    dodgeModule.activeEvent = this.superClass;
+    // dodgeModule.activeEvent = this.superClass;
 
     var singleSequenceData = [
       {
         time: 0,
         callback: () -> {
-          dodgeModule.executeWarning(interval, amntSaws);
+          executeWarning(interval, amntSaws);
+          remainingAttacks = 1;
         }
       },
       {
         time: interval,
         callback: () -> {
-          // dodgeModule.executeWarning(interval, amntSaws);
-          dodgeModule.executeAttack(interval);
-          dodgeModule.animSuffix = 0;
+          // executeWarning(interval, amntSaws);
+          executeAttack(interval);
+          // dodgeModule.animSuffix = 0;
           hitTime = Conductor.instance.songPosition + interval * 1000;
         }
       },
       {
         time: interval * 2,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
-          dodgeModule.playWarningStep('attack-1', 0, 0);
-          dodgeModule.eventReady = false;
+          playWarningStep('attack-1', 0, 0);
+          // dodgeModule.eventReady = false;
         }
       }
     ];
@@ -82,44 +125,41 @@ class SawbladeEvent extends SongEvent
       {
         time: 0,
         callback: () -> {
-          dodgeModule.executeWarning(interval, amntSaws);
+          executeWarning(interval, amntSaws);
+          remainingAttacks = 3;
         }
       },
       {
         time: interval * 2,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
-          // dodgeModule.executeWarning(interval, 1);
-          dodgeModule.playWarningStep('attack-2-1', 0, 0, true, 1);
+          // executeWarning(interval, 1);
+          playWarningStep('attack-2-1', 0, 0, true, 1);
         }
       },
       {
         time: interval * 3,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
-          dodgeModule.playWarningStep('attack-2-1', 0, 0, true, 1);
+          playWarningStep('attack-2-1', 0, 0, true, 1);
           hitTime = Conductor.instance.songPosition + interval * 1000;
-          dodgeModule.animSuffix = 0;
-          dodgeModule.executeAttack(interval);
+          // dodgeModule.animSuffix = 0;
+          executeAttack(interval);
         }
       },
       {
         time: interval * 4,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
-          dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
+          playWarningStep('attack-2-2', 0, 0, true, 2);
           hitTime = Conductor.instance.songPosition + interval * 1000;
-          dodgeModule.animSuffix = 1;
-          dodgeModule.executeAttack(interval);
+          // dodgeModule.animSuffix = 1;
+          executeAttack(interval);
         }
       },
       {
         time: interval * 5,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
           hitTime = Conductor.instance.songPosition + interval * 1000;
-          dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 3);
-          dodgeModule.eventReady = false;
+          playWarningStep('attack-2-2', 0, 0, true, 3);
+          // dodgeModule.eventReady = false;
         }
       }
     ];
@@ -128,35 +168,34 @@ class SawbladeEvent extends SongEvent
       {
         time: 0,
         callback: () -> {
-          dodgeModule.executeWarning(interval, amntSaws);
+          executeWarning(interval, amntSaws);
+          remainingAttacks = 2;
         }
       },
       {
         time: interval,
         callback: () -> {
           hitTime = Conductor.instance.songPosition + interval * 1000;
-          dodgeModule.executeAttack(interval);
-          dodgeModule.animSuffix = 0;
+          executeAttack(interval);
+          // dodgeModule.animSuffix = 0;
         }
       },
       {
         time: interval * 2,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
-          dodgeModule.playWarningStep('attack-2-1', 0, 0);
-          dodgeModule.executeAttack(interval);
+          playWarningStep('attack-2-1', 0, 0);
+          executeAttack(interval);
           hitTime = Conductor.instance.songPosition + interval * 1000;
-          dodgeModule.animSuffix = 1;
+          // dodgeModule.animSuffix = 1;
         }
       },
       {
         time: interval * 3,
         callback: () -> {
-          PlayState.instance.mayPauseGame = false;
-          dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
-          // dodgeModule.executeAttack(interval);
+          playWarningStep('attack-2-2', 0, 0, true, 2);
+          // executeAttack(interval);
           // hitTime = Conductor.instance.songPosition + interval * 1000;
-          dodgeModule.eventReady = false;
+          // dodgeModule.eventReady = false;
         }
       }
     ];
@@ -172,12 +211,15 @@ class SawbladeEvent extends SongEvent
       default:
         throw new haxe.Exception('what the fuck');
     }
+
+    darkenScreen();
   }
 
   override public function onUpdate(event)
   {
     super.onUpdate(event);
-    if (seq == null || seq.completed) dodgeModule.activeEvent == null;
+    if(!sawsActive) return;
+    if(dodgeModule.isDodgingInput) hasDodged = true;
   }
 
   public override function getTitle():String
@@ -203,5 +245,245 @@ class SawbladeEvent extends SongEvent
       };
 
     return [sawblade_schema];
+  }
+
+  public function executeWarning(interval, saws):Void
+  {
+    var postfx = switch (saws)
+    {
+      case 2:
+        "-2";
+      default:
+        "-1";
+    }
+
+    playWarningStep('1-alert' + postfx, 0, 0);
+    trace('Alert!');
+
+    new FlxTimer().start(interval, (_) -> {
+      trace('Alert!');
+      if (saws > 1)
+      {
+        playWarningStep('2-alert' + postfx, 0, 0, true, 2);
+      }
+      else
+      {
+        playWarningStep('2-alert' + postfx, 0, 0);
+      }
+    });
+  }
+
+  public function executeAttack(interval):Void
+  {
+    doSawAnimation();
+    toggleSuffix();
+    sawsActive = true;
+    new FlxTimer().start(interval, (_) -> {
+      trace('Attack!');
+      var dadMidpoint = PlayState.instance.currentStage.getDad().getGraphicMidpoint();
+      sawSprite.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
+      sawSprite?.animation?.play("saw anim attack", true, false, 0);
+      sawSprite?.offset?.y = -300;
+      PlayState.instance.camGame.shake(0.007, 0.25);
+      if (HapticUtil.hapticsAvailable) HapticUtil.vibrateByPreset(attackVibrationPreset);
+
+      PlayState.instance.currentStage.getGirlfriend().playAnimation("dodge", true, true);
+
+      new FlxTimer().start(hitWindow / 1000, (_) -> {
+        remainingAttacks--;
+        if(remainingAttacks == 0)
+        { 
+          sawsActive = false;
+          undarkenScreen();
+        }
+        processDamage();
+      });
+      
+    });
+  }
+
+  public function processDamage()
+  {
+    if(hasDodged)
+    {
+      PlayState.instance.health += 0.20;
+      PlayState.instance.popUpScore("dodged");
+      PlayState.instance.currentStage.getBoyfriend().canPlayOtherAnims = true; //who remembers assets pr #364
+      PlayState.instance.currentStage.getBoyfriend().playAnimation('dodge-$currentSuffix', true, true);
+    }
+    else
+    {
+      if (PlayState.instance.isBotPlayMode)
+      {
+        PlayState.instance.health += 0.20;
+        PlayState.instance.popUpScore("dodged");
+        return;
+      }
+
+      switch (Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT))
+      {
+        case "instakill":
+          if(!PlayState.instance.isPracticeMode) 
+          {
+            PlayState.instance.health = 0;
+            hideAllVisuals();
+          }
+          else
+          {
+            doHitVfx();
+          }
+        case "disabled":
+          return;
+        default:
+          var dmg = Constants.HEALTH_MAX / 2;
+          if(!PlayState.instance.isPracticeMode) PlayState.instance.health = Math.max(PlayState.instance.health - dmg, 0);
+          doHitVfx();
+      }
+
+      HapticUtil.vibrateByPreset(attackVibrationPreset);
+    }
+
+    hasDodged = false;
+  }
+
+  function darkenScreen():Void
+  {
+    if (dimOverlay != null) {
+      FlxTween.cancelTweensOf(dimOverlay);
+      FlxTween.tween(dimOverlay,{alpha: 0.3}, 0.35,{ ease: FlxEase.linear});
+    }
+  }
+
+  function undarkenScreen():Void
+  {
+    if (dimOverlay != null)
+    {
+      FlxTween.cancelTweensOf(dimOverlay);
+      FlxTween.tween(dimOverlay,{alpha: 0}, 0.35,{ease: FlxEase.quadInOut});
+    }
+  }
+
+  function doHitVfx():Void
+  {
+    var redFlash = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.RED);
+    redFlash.camera = PlayState.instance.camHUD;
+    redFlash.scrollFactor.set(0,0);
+    redFlash.blend = BlendMode.MULTIPLY;
+    FlxTween.tween(redFlash, {alpha : 0}, 0.3, {onComplete : () -> {
+      PlayState.instance.remove(redFlash, true);
+      redFlash.kill();
+      redFlash.destroy();
+      redFlash = null; //ahhh the good old 1-2-3 combo!
+    }});
+    PlayState.instance.add(redFlash);
+    PlayState.instance.camGame.shake(0.008, 0.3);
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('sawHit-$currentSuffix', true, true);
+    PlayState.instance.currentStage.refresh();
+  }
+  
+  public function playWarningStep(animName:String, offsetX:Float, offsetY:Float, showVfx:Bool = true, suffix:Int = 1):Void
+  {
+    sawSprite?.visible = true;
+    if (animName.indexOf("attack") == -1) FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
+    else if (animName.indexOf("attack") != -1 && showVfx && suffix == 3)
+    {
+      FunkinSound.playOnce(Paths.sound('sawblades/alerts/alert-$suffix'));
+    }
+    else
+    {
+      FunkinSound.playOnce(Paths.sound('sawblades/attacks/attack-$suffix'));
+    }
+    if (warningVfx != null && warningVfx.animation != null && showVfx)
+    {
+      warningVfx.visible = true;
+      warningVfx.animation.play(animName);
+      warningVfx.offset.set(offsetX, offsetY);
+      warningVfx.screenCenter();
+    }
+  }
+
+  public override function onSongStart(event:Dynamic)
+  {
+    super.onSongStart(event);
+    warningVfx = new FunkinSprite();
+    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared",
+      {
+        cacheOnLoad: true
+      });
+    warningVfx.animation.addByFrameLabel('1-alert-1', "alert 1 beat 1", 24, false);
+    warningVfx.animation.addByFrameLabel('2-alert-1', "alert 1 beat 2", 24, false);
+    warningVfx.animation.addByFrameLabel('attack-1', "alert 1 attack", 24, false);
+
+    warningVfx.animation.addByFrameLabel('1-alert-2', "alert 2 beat 1", 24, false);
+    warningVfx.animation.addByFrameLabel('2-alert-2', "alert 2 beat 2", 24, false);
+    warningVfx.animation.addByFrameLabel('attack-2-1', "alert 2 attack 1", 24, false);
+    warningVfx.animation.addByFrameLabel('attack-2-2', "alert 2 attack 2", 24, false);
+    warningVfx.visible = false;
+    warningVfx.zIndex = 633;
+    warningVfx.camera = PlayState.instance.camHUD;
+    PlayState.instance.add(warningVfx);
+
+    var dadMidpoint = PlayState.instance.currentStage.getDad().getGraphicMidpoint();
+    sawSprite = new SawBladeSprite(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
+    sawSprite.visible = false;
+    sawSprite.shader = PlayState.instance.currentStage.getDad().shader;
+    PlayState.instance.currentStage.add(sawSprite);
+
+    dimOverlay = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.BLACK);
+    dimOverlay.scrollFactor.set();
+    dimOverlay.camera = PlayState.instance.camHUD;
+    dimOverlay.alpha = 0;
+    dimOverlay.zIndex = 632;
+    PlayState.instance.add(dimOverlay);
+    PlayState.instance.currentStage.getBoyfriend().ignoreExclusionPref = ['dodge-0', 'dodge-1'];
+  }
+  
+  public override function onPause(event:Dynamic):Void
+  {
+    super.onPause(event);
+    if(seq != null) seq.running = false;
+  }
+
+  public override function onResume(event:Dynamic):Void
+  {
+    super.onPause(event);
+    if(seq != null) seq.running = true;
+  }
+
+  function getSawSpriteNudge():Float
+  {
+    return (PlayState?.instance?.currentStage?.id == "qtStageObliteratedErect") ? 100 : -50; 
+  }
+
+  function doSawAnimation():Void
+  {
+    if (PlayState.instance.health <= 0) return;
+
+    var dadMidpoint = PlayState.instance.currentStage.getDad().getGraphicMidpoint();
+    sawSprite?.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
+    sawSprite?.zIndex = 299 //dodgeToggleAnim == 0 ? 299 : 199;
+    sawSprite?.animation?.play('saw anim alert', true, false, 0);
+    sawSprite?.offset?.y = 0;
+    HapticUtil.vibrateByPreset(spinVibrationPreset);
+
+    sawSprite?.animation?.onFinish?.addOnce((_) -> {
+      if (_ == "saw anim attack")
+      {
+        hideAllVisuals();
+      }
+    });
+
+    warningVfx?.visible = true;
+    sawSprite?.visible = true;
+    PlayState.instance.currentStage.refresh();
+  }
+
+  public function hideAllVisuals():Void
+  {
+    if (PlayState.instance.health <= 0) return;
+    sawSprite?.visible = false;
+    warningVfx?.visible = false;
+    if(dimOverlay!=null) FlxTween.cancelTweensOf(dimOverlay);
+    dimOverlay?.alpha = 0;
   }
 }
