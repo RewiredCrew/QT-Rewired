@@ -44,6 +44,8 @@ class SawbladeEvent extends SongEvent
   var sawSprite:SawBladeSprite;
   var dimOverlay:FunkinSprite;
   var sawsActive:Bool = false;
+  var warningTimer:Dynamic;
+  var sawTimer:Dynamic;
   var hasDodged:Bool = false;
   var remainingAttacks:Int = 0;
   var currentSuffix:Int = 0;
@@ -260,7 +262,7 @@ class SawbladeEvent extends SongEvent
     playWarningStep('1-alert' + postfx, 0, 0);
     trace('Alert!');
 
-    new FlxTimer().start(interval, (_) -> {
+    warningTimer = new FlxTimer().start(interval, (_) -> {
       trace('Alert!');
       if (saws > 1)
       {
@@ -270,6 +272,7 @@ class SawbladeEvent extends SongEvent
       {
         playWarningStep('2-alert' + postfx, 0, 0);
       }
+      warningTimer = null;
     });
   }
 
@@ -278,7 +281,7 @@ class SawbladeEvent extends SongEvent
     doSawAnimation();
     toggleSuffix();
     sawsActive = true;
-    new FlxTimer().start(interval, (_) -> {
+    sawTimer = new FlxTimer().start(interval, (_) -> {
       trace('Attack!');
       var dadMidpoint = PlayState.instance.currentStage.getDad().getGraphicMidpoint();
       sawSprite.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
@@ -442,12 +445,42 @@ class SawbladeEvent extends SongEvent
   {
     super.onPause(event);
     if(seq != null) seq.running = false;
+    if(warningTimer != null) warningTimer.active = false;
+    if(sawTimer != null) sawTimer.active = false;
   }
 
   public override function onResume(event:Dynamic):Void
   {
     super.onPause(event);
     if(seq != null) seq.running = true;
+    if(warningTimer != null) warningTimer.active = true;
+    if(sawTimer != null) sawTimer.active = true;
+  }
+
+  public override function onSongRetry(event:Dynamic):Void
+  {
+    super.onSongRetry(event);
+    hideAllVisuals();
+    seq?.stop();
+    seq?.destroy();
+    seq = null;
+    warningTimer?.destroy();
+    warningTimer = null;
+    sawTimer?.destroy();
+    sawTimer = null;
+  }
+
+  public override function onGameOver(event:Dynamic):Void
+  {
+    super.onGameOver(event);
+    hideAllVisuals();
+    seq?.stop();
+    seq?.destroy();
+    seq = null;
+    warningTimer?.destroy();
+    warningTimer = null;
+    sawTimer?.destroy();
+    sawTimer = null;
   }
 
   function getSawSpriteNudge():Float
