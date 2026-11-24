@@ -92,7 +92,7 @@
 
 24
 00:00:53,216 --> 00:00:54,920
-<font color="#FB6FB5">0.3:Where's 0.15: 0.11:love 0.05:in 0.67:my life?</font>
+<font color="#FB6FB5">0.3:Where's 0.15:the 0.11:love 0.05:in 0.67:my life?</font>
 
 25
 00:00:55,024 --> 00:00:56,792
