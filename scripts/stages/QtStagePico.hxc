@@ -93,7 +93,7 @@ class QtStagePico extends Stage
         colorShaderDad.contrast = -25;
         colorShaderDad.saturation = -30;
         character.shader = colorShaderDad;
-        character.colorTransform = new ColorTransform(0.9, 1, 1, 1, 0, 0, 0);
+        character.setColorTransform(0.9, 1, 1, 1, 0, 0, 0);
       case CharacterType.GF:
         character.shader = colorShaderBfGf;
     }
