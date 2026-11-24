@@ -150,10 +150,7 @@
       "looped": false,
       "name": "firstDeath",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [22, 15],
@@ -186,10 +183,7 @@
       "name": "firstDeath-saw",
       "flipY": false,
       "assetPath": "shared:characters/BF/bf_saw_death",
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [420, 62],
@@ -200,10 +194,7 @@
       "looped": true,
       "name": "deathLoop-saw",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [420, 62],
@@ -214,10 +205,7 @@
       "looped": false,
       "name": "deathConfirm-saw",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -228,10 +216,7 @@
       "name": "preDance",
       "flipY": false,
       "assetPath": "shared:characters/BF/bf-qt",
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -243,10 +228,7 @@
       "looped": false,
       "name": "danceLeft-alt",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -258,10 +240,7 @@
       "looped": false,
       "name": "danceRight-alt",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -272,10 +251,7 @@
       "looped": false,
       "name": "intro",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -286,10 +262,7 @@
       "looped": false,
       "name": "dodge-0",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -300,10 +273,7 @@
       "looped": false,
       "name": "dodge-1",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -314,10 +284,7 @@
       "looped": false,
       "name": "sawHit-0",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [67, -51],
@@ -328,10 +295,7 @@
       "looped": false,
       "name": "sawHit-1",
       "flipY": false,
-      "frameRate": 24,
-      "atlasSettings": {
-        "uniqueInCache": true
-      }
+      "frameRate": 24
     },
     {
       "offsets": [-3, -65],

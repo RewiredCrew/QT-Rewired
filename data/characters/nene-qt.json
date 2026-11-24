@@ -85,8 +85,7 @@
       "prefix": "huh",
       "offsets": [-9, -6],
       "atlasSettings": {
-        "applyStageMatrix": true,
-        "uniqueInCache": true
+        "applyStageMatrix": true
       }
     },
     {
@@ -96,8 +95,7 @@
       "offsets": [-9, -6],
       "looped": true,
       "atlasSettings": {
-        "applyStageMatrix": true,
-        "uniqueInCache": true
+        "applyStageMatrix": true
       }
     }
   ]
